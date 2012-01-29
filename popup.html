@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Deezer Control Popup</title>
+	<link type="text/css" rel="stylesheet" href="css/cover120px.css" />
+   	 <script src="popup.js"></script>
+   	 <style>
+
+</style>
+  </head>
+  <body onload="refreshPopup();">
+  	<div id="controls">
+  		<a href="javascript:void(0)" onclick="executePlayerAction('prev'); return false;" id="control-prev"><img src="imgs/backward.png"/></a><a href="javascript:void(0)" onclick="executePlayerAction('pause'); return false;" id="control-pause"><img src="imgs/pause.png"/></a><a href="javascript:void(0)" onclick="executePlayerAction('play'); return false;" id="control-play"><img src="imgs/play.png"/></a><a href="javascript:void(0)" onclick="executePlayerAction('next'); return false;" id="control-next"><img src="imgs/forward.png"/></a>
+  	</div>
+  	<div id="now_playing">
+  		<div id="now_playing_info">
+  			<span id="now_playing_info_track">Song title</span>
+  			<span id="now_playing_info_artist">Artist</span>
+  		</div>
+ 		<img src="imgs/logo_deezer.png" id="cover"/>
+	</div>
+  </body>
+</html>

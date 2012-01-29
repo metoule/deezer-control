@@ -1,0 +1,22 @@
+{
+  "name": "Deezer Control",
+  "version": "1.0",
+  "description": "This extension allows you to control Deezer from your browser.",
+  "browser_action": {
+    "default_icon": "imgs/deezer.ico",
+    "default_title": "", 
+    "popup": "popup.html"
+  },
+  "background_page":"background.html",
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "matches": ["http://*.deezer.com/*"],
+      "js": ["scripts/player_listener.js"],
+	  "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "tabs", "http://*.deezer.com/"
+  ]
+}
