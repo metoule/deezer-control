@@ -1,0 +1,86 @@
+body 
+{
+	background-color: black;
+	color: white;
+	min-height: 140px;
+	min-width: 120px;
+	margin: 0px 10px 10px 10px;
+	padding: 0px;
+}
+
+div#controls
+{
+	height: 20px;
+	line-height: 20px;
+	margin: 0;
+	text-align: right;
+}
+
+div#controls a 
+{ 
+	display: inline-block;
+	height: 10px;
+	margin-right: 5px; 
+	vertical-align: middle;
+}
+
+#control-prev 
+{
+	background: url(/imgs/minimal/prev.png);
+	width: 16px;
+}
+
+#control-pause 
+{
+	background: url(/imgs/minimal/pause.png);
+	width: 10px;
+}
+
+#control-play 
+{
+	background: url(/imgs/minimal/play.png);
+	width: 10px;
+}
+
+#control-next 
+{
+	background: url(/imgs/minimal/next.png);
+	width: 16px;
+}
+
+#now_playing
+{
+	font-weight: bold;
+	position: absolute;
+	vertical-align: baseline;
+	height: 120px;
+	width: 120px;
+}
+
+#now_playing_info
+{
+	background: url(/imgs/black1px.png);
+	bottom: 0px;
+	left: 0px;
+	padding-top: 5px;
+	position: absolute;
+	font-family: Arial,Helvetica,Verdana,sans-serif;
+	text-align: center;
+	height: 36px;
+	width: 120px;
+}
+
+#now_playing_info span { display: block; }
+#now_playing_info_track
+{
+	font-size: 13px;
+	margin-bottom: 2px;
+}
+#now_playing_info_artist { font-size: 11px; }
+
+img#cover 
+{
+	display: block;
+	height: 120px;
+	width: 120px;
+}
