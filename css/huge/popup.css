@@ -1,0 +1,86 @@
+body 
+{
+	background-color: black;
+	color: white;
+	min-height: 279px;
+	min-width: 250px;
+	margin: 0px 12px 12px 12px;
+	padding: 0px;
+}
+
+div#controls
+{
+	height: 36px;
+	line-height: 36px;
+	margin: 0;
+	text-align: right;
+}
+
+div#controls a 
+{ 
+	display: inline-block;
+	height: 16px;
+	margin-right: 8px; 
+	vertical-align: middle;
+}
+
+#control-prev 
+{
+	background: url(/imgs/huge/prev.png);
+	width: 28px;
+}
+
+#control-pause 
+{
+	background: url(/imgs/huge/pause.png);
+	width: 16px;
+}
+
+#control-play 
+{
+	background: url(/imgs/huge/play.png);
+	width: 16px;
+}
+
+#control-next 
+{
+	background: url(/imgs/huge/next.png);
+	width: 28px;
+}
+
+#now_playing
+{
+	font-weight: bold;
+	position: absolute;
+	vertical-align: baseline;
+	height: 250px;
+	width: 250px;
+}
+
+#now_playing_info
+{
+	background: url(/imgs/black1px.png);
+	bottom: 0px;
+	left: 0px;
+	padding-top: 8px;
+	position: absolute;
+	font-family: Arial,Helvetica,Verdana,sans-serif;
+	text-align: center;
+	height: 45px;
+	width: 250px;
+}
+
+#now_playing_info span { display: block; }
+#now_playing_info_track
+{
+	font-size: 15px;
+	margin-bottom: 2px;
+}
+#now_playing_info_artist { font-size: 12px; }
+
+img#cover 
+{
+	display: block;
+	height: 250px;
+	width: 250px;
+}

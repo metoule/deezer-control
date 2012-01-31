@@ -1,0 +1,49 @@
+<html>
+<head><title>My Test Extension Options</title></head>
+<script type="text/javascript">
+
+// Saves options to localStorage.
+function save_options() {
+  var select = document.getElementById("popup_style");
+  var popup_style = select.children[select.selectedIndex].value;
+  localStorage["popup_style"] = popup_style;
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "Options Saved.";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+  var favorite = localStorage["popup_style"];
+  if (!favorite) {
+    return;
+  }
+  var select = document.getElementById("popup_style");
+  for (var i = 0; i < select.children.length; i++) {
+    var child = select.children[i];
+    if (child.value == favorite) {
+      child.selected = "true";
+      break;
+    }
+  }
+}
+
+</script>
+
+<body onload="restore_options()">
+
+Choose style:
+<select id="popup_style">
+ <option value="minimal">minimal</option>
+ <option value="huge">huge</option>
+</select>
+
+<br>
+<button onclick="save_options()">Save</button>
+<div id="status"></div>
+</body>
+</html>

@@ -8,6 +8,7 @@
     "popup": "popup.html"
   },
   "background_page":"background.html",
+  "options_page": "options.html",
   "content_scripts": [
     {
       "all_frames": true,
