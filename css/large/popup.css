@@ -21,31 +21,31 @@ div#controls a
 
 #control-settings
 {
-	background: url(/imgs/huge/settings.png);
+	background: url(/imgs/large/settings.png);
 	width: 16px;
 }
 
 #control-prev 
 {
-	background: url(/imgs/huge/prev.png);
+	background: url(/imgs/large/prev.png);
 	width: 27px;
 }
 
 #control-pause 
 {
-	background: url(/imgs/huge/pause.png);
+	background: url(/imgs/large/pause.png);
 	width: 16px;
 }
 
 #control-play 
 {
-	background: url(/imgs/huge/play.png) no-repeat;
+	background: url(/imgs/large/play.png) no-repeat;
 	width: 16px;
 }
 
 #control-next 
 {
-	background: url(/imgs/huge/next.png);
+	background: url(/imgs/large/next.png);
 	width: 27px;
 }
 

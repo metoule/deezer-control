@@ -3,7 +3,7 @@
 	<head>
 		<title>Deezer Control Popup</title>
 		<link type="text/css" rel="stylesheet" href="/css/options.css"/>
-		<link type="text/css" rel="stylesheet" href="/css/minimal/popup.css" id="popup_style_css"/>
+		<link type="text/css" rel="stylesheet" href="/css/small/popup.css" id="popup_style_css"/>
 		<script src="/scripts/popup.js"></script>
 		<script type="text/javascript">
 			var $ = function(str, el){ return (el || document).querySelector(str); },
@@ -101,8 +101,8 @@
 				<h1>Popup style</h1>
 				Choose style:
 				<select id="popup_style" onchange="loadStyleFromSelect()">
-		 			<option value="minimal">minimal</option>
-		 			<option value="huge">huge</option>
+		 			<option value="small">small</option>
+		 			<option value="large">large</option>
 				</select>
 				<button onclick="save_options()">Save</button>
 				<span id="status"></span>
