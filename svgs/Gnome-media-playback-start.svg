@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="48"
+   width="42"
    height="48"
    id="svg7854"
    sodipodi:version="0.32"
-   inkscape:version="0.45"
+   inkscape:version="0.48.2 r9819"
    version="1.0"
-   sodipodi:docbase="/home/dobey/Projects/gnome-icon-theme/scalable/actions"
-   sodipodi:docname="media-playback-start.svg"
+   sodipodi:docname="Gnome-media-playback-start.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/lapo/Desktop/media-icons.png"
    inkscape:export-xdpi="90"
@@ -125,11 +125,11 @@
      objecttolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="-137.53856"
-     inkscape:cy="10.827794"
+     inkscape:zoom="11.313708"
+     inkscape:cx="31.741477"
+     inkscape:cy="13.908028"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g7138"
      width="48px"
      height="48px"
      inkscape:showpageshadow="false"
@@ -138,14 +138,12 @@
      inkscape:window-x="117"
      inkscape:window-y="27"
      showgrid="false"
-     gridspacingx="0.5px"
-     gridspacingy="0.5px"
-     gridempspacing="2"
      inkscape:grid-points="true"
      showborder="true"
      showguides="false"
      inkscape:guide-bbox="true"
-     borderlayer="true">
+     borderlayer="true"
+     inkscape:window-maximized="0">
     <sodipodi:guide
        orientation="horizontal"
        position="13.125"
@@ -202,6 +200,21 @@
        orientation="vertical"
        position="-326.06462"
        id="guide7695" />
+    <inkscape:grid
+       id="GridFromPre046Settings"
+       type="xygrid"
+       originx="0px"
+       originy="0px"
+       spacingx="0.5px"
+       spacingy="0.5px"
+       color="#0000ff"
+       empcolor="#0000ff"
+       opacity="0.2"
+       empopacity="0.4"
+       empspacing="2"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
   </sodipodi:namedview>
   <metadata
      id="metadata7859">
@@ -252,11 +265,11 @@
      id="layer1">
     <g
        id="g7138"
-       transform="translate(200,0)">
+       transform="matrix(1.6010424,0,0,1.6010424,300.99597,-14.408638)">
       <path
-         d="M -186.59375,9 C -187.38473,9.0508993 -188.00018,9.7073844 -188,10.5 L -188,37.5 C -187.99205,38.031998 -187.70339,38.520136 -187.24104,38.783419 C -186.77869,39.046702 -186.21158,39.045877 -185.75,38.78125 L -162.75,25.28125 C -162.30425,25.008049 -162.03253,24.522812 -162.03253,24 C -162.03253,23.477188 -162.30425,22.991951 -162.75,22.71875 L -185.75,9.21875 C -186.00346,9.0640763 -186.29707,8.9879569 -186.59375,9 L -186.59375,9 z "
+         d="M -186.59375,9 A 1.5027521,1.5027521 0 0 0 -188,10.5 l 0,27 a 1.5027521,1.5027521 0 0 0 2.25,1.28125 l 23,-13.5 a 1.5027521,1.5027521 0 0 0 0,-2.5625 l -23,-13.5 A 1.5027521,1.5027521 0 0 0 -186.59375,9 z"
          id="path7671"
-         style="opacity:0.4;fill:url(#linearGradient7865);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.99999982;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0.69999992;stroke-opacity:1"
+         style="opacity:0.4;fill:url(#linearGradient7865);fill-opacity:1;fill-rule:evenodd;stroke:none"
          inkscape:original="M -186.5 10.5 L -186.5 37.5 L -163.5 24 L -186.5 10.5 z "
          inkscape:radius="1.5026019"
          sodipodi:type="inkscape:offset" />
@@ -265,20 +278,22 @@
         <path
            sodipodi:nodetypes="cccc"
            id="path7812"
-           d="M -186.5,37.500001 L -186.5,10.500456 L -163.5,24.012458 L -186.5,37.500001 z "
-           style="fill:url(#radialGradient7867);fill-opacity:1;fill-rule:evenodd;stroke:#555753;stroke-width:0.99999982;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0.69999992;stroke-opacity:1" />
+           d="m -186.5,37.500001 0,-26.999545 23,13.512002 -23,13.487543 z"
+           style="fill:url(#radialGradient7867);fill-opacity:1;fill-rule:evenodd;stroke:#555753;stroke-width:0.99999982;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0.69999992"
+           inkscape:connector-curvature="0" />
         <path
            sodipodi:nodetypes="cccc"
            id="path7828"
-           d="M -185.5,35.750028 L -185.5,12.250428 L -165.5,24.010872 L -185.5,35.750028 z "
-           style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.99999982;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0.69999992;stroke-opacity:1" />
+           d="m -185.5,35.750028 0,-23.4996 20,11.760444 -20,11.739156 z"
+           style="fill:none;stroke:#ffffff;stroke-width:0.99999982;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0.69999992"
+           inkscape:connector-curvature="0" />
         <path
            sodipodi:type="inkscape:offset"
            inkscape:radius="-0.5"
            inkscape:original="M 13.5 10.5 C 13.5 19.499848 13.5 28.500152 13.5 37.5 C 21.166667 33.004153 28.833333 28.495847 36.5 24 C 28.833333 19.495999 21.166667 15.004001 13.5 10.5 z "
-           style="opacity:0.15;fill:url(#linearGradient7869);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.99999982;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0.69999992;stroke-opacity:1"
+           style="opacity:0.15;fill:url(#linearGradient7869);fill-opacity:1;fill-rule:evenodd;stroke:none"
            id="path7354"
-           d="M 14,11.375 C 14,19.791551 14,28.208449 14,36.625 C 21.167154,32.421341 28.332238,28.204015 35.5,24 C 28.332835,19.790152 21.16775,15.585191 14,11.375 z "
+           d="m 14,11.375 0,25.25 C 21.167154,32.421341 28.332238,28.204015 35.5,24 28.332835,19.790152 21.16775,15.585191 14,11.375 z"
            transform="matrix(1,0,0,-1,-200,48)" />
       </g>
     </g>
