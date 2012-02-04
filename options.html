@@ -1,49 +1,179 @@
+<!doctype html>
 <html>
-<head><title>My Test Extension Options</title></head>
-<script type="text/javascript">
+	<head>
+		<title>Deezer Control Popup</title>
+		<link type="text/css" rel="stylesheet" href="/css/options.css"/>
+		<link type="text/css" rel="stylesheet" href="/css/minimal/popup.css" id="popup_style_css"/>
+		<script src="/scripts/popup.js"></script>
+		<script type="text/javascript">
+			var $ = function(str, el){ return (el || document).querySelector(str); },
+			   $$ = function(str, el){ return (el || document).querySelectorAll(str); };
+	
+			// Saves options to localStorage.
+			function save_options() 
+			{
+				var select = document.getElementById("popup_style");
+				var popup_style = select.children[select.selectedIndex].value;
+				localStorage["popup_style"] = popup_style;
+			
+				// Update status to let user know options were saved.
+				var status = document.getElementById("status");
+				status.innerHTML = "Options Saved.";
+				setTimeout(function() { status.innerHTML = ""; }, 750);
+			}
+		
+			// Restores select box state to saved value from localStorage.
+			function restore_options() 
+			{
+				var favorite = localStorage["popup_style"];
+				if (!favorite) {
+					return;
+				}
+				var select = document.getElementById("popup_style");
+				for (var i = 0; i < select.children.length; i++) 
+				{
+					var child = select.children[i];
+					if (child.value == favorite) 
+					{
+						child.selected = "true";
+						break;
+					}
+				}
+				loadStyle(); // from popup.js
+			}
+		
+			function loadStyleFromSelect()
+			{
+				var select = $("#popup_style");
+				var aPopupStyle = select.children[select.selectedIndex].value;
+				loadStyle(aPopupStyle); // from popup.js
+			}
+			
+		    function showSection(id)
+		    {
+				var navItems = $$('#tab_chooser > nav > *'), sections = $$('#center_block > section');
+				for(i = 0, l = navItems.length; i < l; i++)
+				{
+					navItems[i].className = navItems[i].className.replace(/\s?selected/, '');
+					sections[i].className = sections[i].className.replace(/\s?selected/, '');
+					if (sections[i].id == id)
+					{
+						navItems[i].className = navItems[i].className + ' selected';
+						sections[i].className = sections[i].className + ' selected';
+						$('#arrow_line > img').style.left = (159 * i + 73) + "px";
+					}
+				}
+			}
+		    
+		    function resetSections()
+		    {
+				var navItems = $$('#tab_chooser > nav > a'), sections = $$('#center_block > section');
+				navItems[0].className = navItems[0].className + ' selected';
+				sections[0].className = sections[0].className + ' selected';
+				if(location.hash)
+				{
+					showSection(location.hash.replace(/^\#/, ''));
+				}
+		    }
+		    
+		    window.addEventListener('hashchange', function(e) { showSection(location.hash.replace(/^\#/,'')); });
+		
+		</script>
+	</head>
 
-// Saves options to localStorage.
-function save_options() {
-  var select = document.getElementById("popup_style");
-  var popup_style = select.children[select.selectedIndex].value;
-  localStorage["popup_style"] = popup_style;
-
-  // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Options Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
-}
-
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-  var favorite = localStorage["popup_style"];
-  if (!favorite) {
-    return;
-  }
-  var select = document.getElementById("popup_style");
-  for (var i = 0; i < select.children.length; i++) {
-    var child = select.children[i];
-    if (child.value == favorite) {
-      child.selected = "true";
-      break;
-    }
-  }
-}
-
-</script>
-
-<body onload="restore_options()">
-
-Choose style:
-<select id="popup_style">
- <option value="minimal">minimal</option>
- <option value="huge">huge</option>
-</select>
-
-<br>
-<button onclick="save_options()">Save</button>
-<div id="status"></div>
-</body>
+	<body onload="restore_options(); refreshPopup(); resetSections();">
+		<div id="tab_chooser">
+			<nav>
+				<a id="welcome_nav" href="#welcome">Welcome</a><a id="options_nav" href="#options">Options</a>
+			</nav>
+			<span id="arrow_line"><img src="imgs/arrow_down.png"/></span>
+		</div>
+			
+		<div id="center_block">
+		
+			<!-- Option tab: welcome -->
+			<section id="welcome">
+				Thanks for choosing Deezer Control!
+			</section>
+		
+			<!-- Option tab: style chooser -->
+			<section id="options">
+				<h1>Popup style</h1>
+				Choose style:
+				<select id="popup_style" onchange="loadStyleFromSelect()">
+		 			<option value="minimal">minimal</option>
+		 			<option value="huge">huge</option>
+				</select>
+				<button onclick="save_options()">Save</button>
+				<span id="status"></span>
+				<br/>			
+		
+				<!-- Preview pane -->
+				<div id="fake_omnibar">
+					<div id="controls-left">
+						&nbsp;<span id="world_icon"></span>
+					</div>
+					<a href="http://www.deezer.com" target="_blank">www.deezer.com</a>
+					<div id="controls-right">
+						&nbsp;<span id="star_icon"></span>
+					</div>
+				</div>
+				<div id="extension_icon"></div>
+				<div id="preview">
+					<span id="arrow_preview"></span>
+					<div id="preview_outer_border">
+						<div id="preview_inner_border">
+							<div id="popup_display" style="display: inline-block;">
+								<div id="controls">
+									<div id="controls-left">
+										&nbsp;
+									</div>
+									<div id="controls-right">
+										&nbsp;<a href="javascript:void(0)" onclick="executePlayerAction('prev'); return false;" id="control-prev"></a><a href="javascript:void(0)" onclick="executePlayerAction('pause'); return false;" id="control-pause"></a><a href="javascript:void(0)" onclick="executePlayerAction('play'); return false;" id="control-play"></a><a href="javascript:void(0)" onclick="executePlayerAction('next'); return false;" id="control-next"></a>
+									</div>
+								</div>
+								<div id="now_playing">
+									<div id="now_playing_info">
+										<span id="now_playing_info_track">Song title</span>
+										<span id="now_playing_info_artist">Artist</span>
+										<!-- span id="now_playing_info_album">Album</span -->
+									</div>
+			 						<img src="imgs/logo_deezer.png" id="cover"/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+			
+		<!-- footer -->
+		<footer>
+			Deezer Control is not endorsed by Deezer
+		</footer>
+	</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

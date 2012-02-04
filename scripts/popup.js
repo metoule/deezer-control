@@ -1,9 +1,11 @@
 
 var COVER_SIZE = "120x120";
 
-function loadStyle()
+function loadStyle(iPopupStyle)
 {
-	var aPopupStyle = localStorage["popup_style"];
+	var aPopupStyle = iPopupStyle;
+	if (aPopupStyle == null)
+		aPopupStyle = localStorage["popup_style"];
 	if (aPopupStyle)
 	{
 		// set the style based on the preference

@@ -15,13 +15,12 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		else
 			chrome.browserAction.setTitle({ title: '' });
 			
-		// check if the popup is currently showing
-		var aPopups = chrome.extension.getViews({ type: 'popup' });
-		if (aPopups.length == 1)
-		{
-			// we have 1 popup: it means it's currently displayed, and needs to be refreshed
-			aPopups[0].refreshPopup();
-		}
+		// refresh all opened popups
+		chrome.extension.getViews({ type: 'popup' }).forEach(function(win) { win.refreshPopup(); });
+		
+		// refresh all opened extension tabs (i.e. option page)
+		chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
+		
 		break;
 	}
 });

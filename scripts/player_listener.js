@@ -16,39 +16,43 @@
  */ 
 document.addEventListener('load', function(e) 
 {
-	// create an invisible fake div
-	var aMyPlayerInfoDom = document.createElement('div');
-	aMyPlayerInfoDom.id = "myPlayerInfo";
-	aMyPlayerInfoDom.style.display = 'none';
-	// create a child to monitor and help force the info update
-	var aLastUpdateDom = document.createElement('div');
-	aLastUpdateDom.id = "lastUpdate";
-	document.getElementsByTagName("body")[0].appendChild(aMyPlayerInfoDom);
-	document.getElementsByTagName("body")[0].appendChild(aLastUpdateDom);
-	
-	// inject a new JS method in the DOM 
-	if (document.getElementById('current-track') != null 
-	  && document.getElementById('h_play') != null
-	  && document.getElementById('h_pause') != null) 
-	{
-		location.href = "javascript:" +
-			"function updateMyPlayerInfo(event) {" +
-			"myPlayerInfo = document.getElementById('myPlayerInfo');" +
-			"myPlayerInfo.setAttribute('dz_playing', dzPlayer.isPlaying());" +
-			"myPlayerInfo.setAttribute('dz_artist',  dzPlayer.getArtistName());" +
-			"myPlayerInfo.setAttribute('dz_track',   dzPlayer.getSongTitle());" +
-			"myPlayerInfo.setAttribute('dz_album',   dzPlayer.getAlbumTitle());" +
-			"myPlayerInfo.setAttribute('dz_cover',   dzPlayer.getCover());" +
-			"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
-		"};" + 
-		"document.getElementById('current-track').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
-		"document.getElementById('h_play').addEventListener('click', updateMyPlayerInfo , false);" +
-		"document.getElementById('h_pause').addEventListener('click', updateMyPlayerInfo , false);"
-		;
+	if (document.getElementById('myPlayerInfo') == null)
+	{		
+		// create an invisible fake div
+		var aMyPlayerInfoDom = document.createElement('div');
+		aMyPlayerInfoDom.id = "myPlayerInfo";
+		aMyPlayerInfoDom.style.display = 'none';
+		// create a child to monitor and help force the info update
+		var aLastUpdateDom = document.createElement('div');
+		aLastUpdateDom.id = "lastUpdate";
+		aMyPlayerInfoDom.appendChild(aLastUpdateDom);
+		document.getElementsByTagName("body")[0].appendChild(aMyPlayerInfoDom);
+		
+		// inject a new JS method in the DOM 
+		if (document.getElementById('current-track') != null 
+		  && document.getElementById('h_play') != null
+		  && document.getElementById('h_pause') != null) 
+		{
+			location.href = "javascript:" +
+				"function updateMyPlayerInfo() {" +
+				"myPlayerInfo = document.getElementById('myPlayerInfo');" +
+				"myPlayerInfo.setAttribute('dz_playing', dzPlayer.isPlaying());" +
+				"myPlayerInfo.setAttribute('dz_artist',  dzPlayer.getArtistName());" +
+				"myPlayerInfo.setAttribute('dz_track',   dzPlayer.getSongTitle());" +
+				"myPlayerInfo.setAttribute('dz_album',   dzPlayer.getAlbumTitle());" +
+				"myPlayerInfo.setAttribute('dz_cover',   dzPlayer.getCover());" +
+				"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
+			"};" + 
+			"document.getElementById('current-track').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
+			"document.getElementById('h_play').addEventListener('click', updateMyPlayerInfo , false);" +
+			"document.getElementById('h_pause').addEventListener('click', updateMyPlayerInfo , false);" + 
+			"updateMyPlayerInfo();"
+			;
+		}
+		
+		// add a listener for events on our new DIV, and post it to our extension
+		document.getElementById('lastUpdate').addEventListener('DOMCharacterDataModified', sendJsonPlayerInfo, false);
 	}
-	
-	// add a listener for events on our new DIV, and post it to our extension
-	document.getElementById('lastUpdate').addEventListener('DOMCharacterDataModified', sendJsonPlayerInfo, false);
 } , true);
 
 function sendJsonPlayerInfo(event)
