@@ -12,8 +12,8 @@ function loadStyle(iPopupStyle)
 		document.getElementById("popup_style_css").href = "css/" + aPopupStyle + "/popup.css";
 
 		// set the size of the cover
-		if (aPopupStyle == 'minimal') COVER_SIZE = "120x120"; 
-		else if (aPopupStyle =='huge') COVER_SIZE = "250x250";
+		if (aPopupStyle == 'small') COVER_SIZE = "120x120"; 
+		else if (aPopupStyle =='large') COVER_SIZE = "250x250";
 	}
 }
 

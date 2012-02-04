@@ -21,31 +21,31 @@ div#controls a
 
 #control-settings
 {
-	background: url(/imgs/minimal/settings.png);
+	background: url(/imgs/small/settings.png);
 	width: 10px;
 }
 
 #control-prev 
 {
-	background: url(/imgs/minimal/prev.png);
+	background: url(/imgs/small/prev.png);
 	width: 17px;
 }
 
 #control-pause 
 {
-	background: url(/imgs/minimal/pause.png);
+	background: url(/imgs/small/pause.png);
 	width: 10px;
 }
 
 #control-play 
 {
-	background: url(/imgs/minimal/play.png) no-repeat;
+	background: url(/imgs/small/play.png) no-repeat;
 	width: 10px;
 }
 
 #control-next 
 {
-	background: url(/imgs/minimal/next.png);
+	background: url(/imgs/small/next.png);
 	width: 17px;
 }
 
