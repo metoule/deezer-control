@@ -20,6 +20,7 @@ h1
 {
 	background-color: white;
 	border: 1px solid #E9E9E9;
+	height: 420px;
 	margin: 20px auto 0 auto;
 	padding: 20px;
 	width: 760px;
@@ -167,7 +168,7 @@ footer
 {
 	display: inline-block;
 	float: right;
-	background: url(/imgs/deezer.ico) no-repeat 4px 4px;
+	background: url(/imgs/icons/deezer_19x19.png) no-repeat 4px 4px;
 	margin-right: 13px;
 	margin-top: 10px;
 	height: 25px;
