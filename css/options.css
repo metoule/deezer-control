@@ -177,9 +177,10 @@ footer
 #preview 
 { 
 	text-align: right;
-	margin-top: 5px; 
+	margin-top: 5px;
 	height: 300px;
 }
+
 #arrow_preview 
 {
 	background: url(/imgs/arrow_preview.png) no-repeat;
@@ -198,6 +199,7 @@ footer
 	border: solid 1px #636363;
 	border-radius: 2px; 
 	display: inline-block;
+	font-size: 0px;
 	position: relative;
 	left: 17px;
 	z-index: 400;
@@ -208,4 +210,5 @@ footer
 	background-color: black;
 	border: solid 1px white; 
 	display: inline-block;
+	font-size: 0px;
 }
