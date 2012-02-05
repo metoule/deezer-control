@@ -1,0 +1,18 @@
+{
+	"extName": { "message": "Deezer Control" }, 
+	"extDesc": { "message": "This extension allows you to control Deezer from your browser." }, 
+	
+	"options_page_tab_title_welcome": { "message": "Welcome" }, 
+	"options_page_tab_title_options": { "message": "Options" }, 
+	
+	"options_page_tab_welcome_content": { "message": "Thanks for choosing Deezer Control!" },
+	
+	"options_page_tab_options_saved": { "message": "Options saved." }, 
+	"options_page_tab_options_h1_popup_style": { "message": "Popup style" },
+	"options_page_tab_options_choose_style": { "message": "Choose style" },
+	"options_page_tab_options_style_small": { "message": "small" },
+	"options_page_tab_options_style_large": { "message": "large" },
+	"options_page_tab_options_button_save": { "message": "Save" },
+	
+	"options_page_footer": { "message": "Deezer Control is not endorsed by Deezer" }
+}

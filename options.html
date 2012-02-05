@@ -5,6 +5,7 @@
 		<link type="text/css" rel="stylesheet" href="/css/options.css"/>
 		<link type="text/css" rel="stylesheet" href="/css/small/popup.css" id="popup_style_css"/>
 		<script src="/scripts/popup.js"></script>
+		<script src="/scripts/i18n.js"></script>
 		<script type="text/javascript">
 			var $ = function(str, el){ return (el || document).querySelector(str); },
 			   $$ = function(str, el){ return (el || document).querySelectorAll(str); };
@@ -18,7 +19,7 @@
 			
 				// Update status to let user know options were saved.
 				var status = document.getElementById("status");
-				status.innerHTML = "Options Saved.";
+				status.innerHTML = chrome.i18n.getMessage("options_page_tab_options_saved");
 				setTimeout(function() { status.innerHTML = ""; }, 750);
 			}
 		
@@ -81,10 +82,10 @@
 		</script>
 	</head>
 
-	<body onload="restore_options(); refreshPopup(); resetSections();">
+	<body onload="restore_options(); refreshPopup(); resetSections(); i18n.process(document);">
 		<div id="tab_chooser">
 			<nav>
-				<a id="welcome_nav" href="#welcome">Welcome</a><a id="options_nav" href="#options">Options</a>
+				<a id="welcome_nav" href="#welcome" i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" i18n-content="options_page_tab_title_options"></a>
 			</nav>
 			<span id="arrow_line"><img src="imgs/arrow_down.png"/></span>
 		</div>
@@ -92,19 +93,18 @@
 		<div id="center_block">
 		
 			<!-- Option tab: welcome -->
-			<section id="welcome">
-				Thanks for choosing Deezer Control!
+			<section id="welcome" i18n-content="options_page_tab_welcome_content">
 			</section>
 		
 			<!-- Option tab: style chooser -->
 			<section id="options">
-				<h1>Popup style</h1>
-				Choose style:
+				<h1 i18n-content="options_page_tab_options_h1_popup_style"></h1>
+				<span i18n-content="options_page_tab_options_choose_style"></span>:
 				<select id="popup_style" onchange="loadStyleFromSelect()">
-		 			<option value="small">small</option>
-		 			<option value="large">large</option>
+		 			<option value="small" i18n-content="options_page_tab_options_style_small"></option>
+		 			<option value="large" i18n-content="options_page_tab_options_style_large"></option>
 				</select>
-				<button onclick="save_options()">Save</button>
+				<button onclick="save_options()" i18n-content="options_page_tab_options_button_save"></button>
 				<span id="status"></span>
 				<br/>			
 		
@@ -134,9 +134,9 @@
 								</div>
 								<div id="now_playing">
 									<div id="now_playing_info">
-										<span id="now_playing_info_track">Song title</span>
-										<span id="now_playing_info_artist">Artist</span>
-										<!-- span id="now_playing_info_album">Album</span -->
+										<span id="now_playing_info_track"></span>
+										<span id="now_playing_info_artist"></span>
+										<!-- span id="now_playing_info_album"></span -->
 									</div>
 			 						<img src="imgs/logo_deezer.png" id="cover"/>
 								</div>
@@ -148,8 +148,7 @@
 		</div>
 			
 		<!-- footer -->
-		<footer>
-			Deezer Control is not endorsed by Deezer
+		<footer i18n-content="options_page_footer">
 		</footer>
 	</body>
 </html>
