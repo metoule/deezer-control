@@ -77,12 +77,21 @@
 				}
 		    }
 		    
+		    function preparePage()
+		    {
+		    	restore_options(); 
+		    	refreshPopup(); 
+		    	resetSections(); 
+		    	i18n.process(document);
+		    	
+		    	$("#rate_button").href = "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id");
+		    }
+		    
 		    window.addEventListener('hashchange', function(e) { showSection(location.hash.replace(/^\#/,'')); });
-		
 		</script>
 	</head>
 
-	<body onload="restore_options(); refreshPopup(); resetSections(); i18n.process(document);">
+	<body onload="preparePage();">
 		<div id="tab_chooser">
 			<nav>
 				<a id="welcome_nav" href="#welcome" i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" i18n-content="options_page_tab_title_options"></a>
@@ -93,7 +102,15 @@
 		<div id="center_block">
 		
 			<!-- Option tab: welcome -->
-			<section id="welcome" i18n-content="options_page_tab_welcome_content">
+			<section id="welcome">
+				<h1 i18n-content="options_page_tab_welcome_h1"></h1>
+				<div i18n-content="options_page_tab_welcome_content"></div>
+				<div id="remember_to">
+					<h2 i18n-content="options_page_tab_welcome_remember_to"></h2>
+					<div><a id="rate_button" i18n-content="options_page_tab_welcome_rate_button" target="_blank"></a><span i18n-content="options_page_tab_welcome_rate_label"></span></div>
+					<div><a i18n-content="options_page_tab_welcome_donate_button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a><span i18n-content="options_page_tab_welcome_donate_label"></span></div>
+				</div>
+				<div><span i18n-content="options_page_tab_welcome_contact_me_at"></span>: <a href="mailto:m520152112e@gmail.com" target="_blank">m520152112e@gmail.com</a></div>
 			</section>
 		
 			<!-- Option tab: style chooser -->
@@ -148,7 +165,9 @@
 		</div>
 			
 		<!-- footer -->
-		<footer i18n-content="options_page_footer">
+		<footer>
+			<div i18n-content="options_page_footer_not_endorsed"></div>
+			<div><a i18n-content="options_page_footer_contact" href="mailto:m520152112e@gmail.com" target="_blank"></a> | <a i18n-content="options_page_footer_donate" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a> <span i18n-content="options_page_footer_via_paypal"></span></div>
 		</footer>
 	</body>
 </html>

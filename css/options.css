@@ -2,8 +2,7 @@ body
 {
 	background-color: #F0F0F0;
 	color: black;
-	font: 12px Arial, Helvetica, Verdana, sans-serif;
-	font-weight: bold;
+	font: 13px Arial, Helvetica, Verdana, sans-serif;
 	margin: 0px;
 }
 
@@ -11,9 +10,16 @@ h1
 {
 	color: #202020;
 	font-size: 24px;
-	margin-top: 0px;
-	margin-bottom: 10px;
+	margin: 0px -15px 10px -15px;
 	text-transform: uppercase;
+}
+
+h2
+{
+	color: #202020;
+	font-size: 14px;
+	margin: 0px 0px 10px 0px;
+	text-shadow: #EFEFEF 0px 1px 0px;
 }
 
 #center_block
@@ -56,6 +62,7 @@ a
 	display: inline-block;
 	height: 29px;
 	text-align: center;
+	font-weight: bold;
 	width: 159px;
 	-webkit-transition: all 0.3s;
 }
@@ -64,11 +71,14 @@ section
 {
 	-webkit-transition: all 0.3s;
 	display: none;
+	margin: 0px 15px;
+	text-align: justify;
 }
 
 section.selected
 {
 	display: block;
+	line-height: 1.5;
 }
 
 #tab_chooser nav a:hover
@@ -106,7 +116,7 @@ section.selected
 	-webkit-transition: all 0.3s;
 }
 
-select, button
+select, button, #remember_to a
 {
 	background: #F0F0F0;
 	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #E6E6E6),color-stop(1, #FEFEFE));
@@ -118,21 +128,26 @@ select, button
 	text-shadow: 0 1px white;	
 }
 
-select:hover, button:hover
+select:hover, button:hover, #remember_to a:hover
 {
 	color: black;
 }
-	
-footer
+
+#remember_to
 {
-	background: #DBDBDB;
-	border-top: 1px solid #C4C4C5;
-	color: #666;
-	font-weight: normal;
-	margin: 20px auto 0 auto;
-	padding: 15px;
-	text-shadow: 0 1px white;
-	width: 770px;
+	border: 1px dashed #BEBEBE;
+	margin: 25px 0px;
+	padding: 10px;
+}
+
+#remember_to div
+{
+	margin: 0px 0px 15px 10px;
+}
+
+#remember_to a
+{
+	margin-right: 8px;	
 }
 
 #fake_omnibar
@@ -147,7 +162,7 @@ footer
 	font-size: 15px;
 	margin-top: 10px;
 	padding: 0;
-	width: 715px;
+	width: 685px;
 }
 
 #world_icon, #star_icon
@@ -212,4 +227,23 @@ footer
 	border: solid 1px white; 
 	display: inline-block;
 	font-size: 0px;
+}
+	
+footer
+{
+	background: #DBDBDB;
+	border-top: 1px solid #C4C4C5;
+	color: #666;
+	font-weight: normal;
+	margin: 20px auto 0 auto;
+	padding: 10px 15px 15px 15px;
+	text-align: center;
+	text-shadow: 0 1px white;
+	width: 770px;
+}
+
+	
+footer a:hover
+{
+	text-decoration: underline;
 }
