@@ -21,6 +21,7 @@
                      "tabs", 
                      "http://*.deezer.com/"
                  ], 
+  "optional_permissions": [ "notifications" ],
   "icons": {  "16": "/imgs/icons/deezer_16x16.png",
               "48": "/imgs/icons/deezer_48x48.png",
              "128": "/imgs/icons/deezer_128x128.png" 

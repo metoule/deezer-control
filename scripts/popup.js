@@ -1,11 +1,28 @@
 
-var COVER_SIZE = "120x120";
+var COVER_SIZE = "250x250";
+
+function gup(iParamName)
+{
+	// taken from http://www.netlobo.com/url_query_string_javascript.html
+	aParamName = iParamName.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
+	var regexS = "[\\?&]" + aParamName + "=([^&#]*)";  
+	var regex = new RegExp(regexS);  
+	var results = regex.exec(window.location.href); 
+	if (results == null)
+		return null;  
+	else
+		return results[1];
+}
 
 function loadStyle(iPopupStyle)
 {
 	var aPopupStyle = iPopupStyle;
 	if (aPopupStyle == null)
+		aPopupStyle = gup('style'); // grep url param (used to force a style for when creating a notification in background.js)
+
+	if (aPopupStyle == null)
 		aPopupStyle = localStorage["popup_style"];
+	
 	if (aPopupStyle)
 	{
 		// set the style based on the preference
@@ -13,7 +30,8 @@ function loadStyle(iPopupStyle)
 
 		// set the size of the cover
 		if (aPopupStyle == 'small') COVER_SIZE = "120x120"; 
-		else if (aPopupStyle =='large') COVER_SIZE = "250x250";
+		else if (aPopupStyle == 'large') COVER_SIZE = "250x250";
+		else if (aPopupStyle == 'sideways') COVER_SIZE = "80x80";
 	}
 }
 
