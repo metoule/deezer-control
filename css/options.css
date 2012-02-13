@@ -75,7 +75,7 @@ section
 	text-align: justify;
 }
 
-section.selected
+section.currentone
 {
 	display: block;
 	line-height: 1.5;
@@ -86,7 +86,7 @@ section.selected
 	color: #666;
 }
 
-#tab_chooser nav a.selected, #tab_chooser nav a.selected:hover
+#tab_chooser nav a.currentone, #tab_chooser nav a.currentone:hover
 {
 	background: #444;
 	color: white;

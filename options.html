@@ -55,12 +55,12 @@
 				var navItems = $$('#tab_chooser > nav > *'), sections = $$('#center_block > section');
 				for(i = 0, l = navItems.length; i < l; i++)
 				{
-					navItems[i].className = navItems[i].className.replace(/\s?selected/, '');
-					sections[i].className = sections[i].className.replace(/\s?selected/, '');
+					navItems[i].className = navItems[i].className.replace(/\s?currentone/, '');
+					sections[i].className = sections[i].className.replace(/\s?currentone/, '');
 					if (sections[i].id == id)
 					{
-						navItems[i].className = navItems[i].className + ' selected';
-						sections[i].className = sections[i].className + ' selected';
+						navItems[i].className = navItems[i].className + ' currentone';
+						sections[i].className = sections[i].className + ' currentone';
 						$('#arrow_line > img').style.left = (159 * i + 73) + "px";
 					}
 				}
@@ -69,8 +69,8 @@
 		    function resetSections()
 		    {
 				var navItems = $$('#tab_chooser > nav > a'), sections = $$('#center_block > section');
-				navItems[0].className = navItems[0].className + ' selected';
-				sections[0].className = sections[0].className + ' selected';
+				navItems[0].className = navItems[0].className + ' currentone';
+				sections[0].className = sections[0].className + ' currentone';
 				if(location.hash)
 				{
 					showSection(location.hash.replace(/^\#/, ''));
@@ -94,7 +94,7 @@
 	<body onload="preparePage();">
 		<div id="tab_chooser">
 			<nav>
-				<a id="welcome_nav" href="#welcome" i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" i18n-content="options_page_tab_title_options"></a>
+				<a id="welcome_nav" href="#welcome" i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" i18n-content="options_page_tab_title_options"></a><a id="notifications_nav" href="#notifications" i18n-content="options_page_tab_title_notifications"></a>
 			</nav>
 			<span id="arrow_line"><img src="imgs/arrow_down.png"/></span>
 		</div>
@@ -120,6 +120,7 @@
 				<select id="popup_style" onchange="loadStyleFromSelect()">
 		 			<option value="large" i18n-content="options_page_tab_options_style_large"></option>
 		 			<option value="small" i18n-content="options_page_tab_options_style_small"></option>
+		 			<option value="sideways" i18n-content="options_page_tab_options_style_sideways"></option>
 				</select>
 				<button onclick="save_options()" i18n-content="options_page_tab_options_button_save"></button>
 				<span id="status"></span>
@@ -161,6 +162,11 @@
 						</div>
 					</div>
 				</div>
+			</section>
+		
+			<!-- Option tab: notifications -->
+			<section id="notifications">
+				<h1 i18n-content="options_page_tab_options_h1_notifications"></h1>
 			</section>
 		</div>
 			

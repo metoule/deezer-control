@@ -8,6 +8,7 @@
 div#controls
 {
 	margin: 0;
+	z-index: 600;
 }
 
 div#controls a 
@@ -40,6 +41,7 @@ div#controls-right
 	background: url(/imgs/black1px.png);
 	bottom: 0px;
 	left: 0px;
+	line-height: 1;
 	position: absolute;
 	font-family: Arial,Helvetica,Verdana,sans-serif;
 	text-align: center;

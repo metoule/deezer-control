@@ -15,11 +15,22 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		else
 			chrome.browserAction.setTitle({ title: '' });
 			
-		// refresh all opened popups
+		// refresh all opened popups, tabs (i.e. option page), and notifications
 		chrome.extension.getViews({ type: 'popup' }).forEach(function(win) { win.refreshPopup(); });
-		
-		// refresh all opened extension tabs (i.e. option page)
 		chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
+		
+		// update or create notification
+		var aAllNotifs = chrome.extension.getViews({ type: "notification" });
+		if (aAllNotifs.length == 0)
+		{
+			var notification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways");
+			notification.show();
+		} 
+		else 
+		{
+			aAllNotifs.forEach(function(win) { win.refreshPopup(); });
+		}
+
 		
 		break;
 	}
