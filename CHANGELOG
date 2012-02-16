@@ -2,6 +2,7 @@
 0.0.4 - 
  * Added text to welcome page
  * Added notifications
+ * Update cover size on popup style change
 
 0.0.3 - 07 Feb 2012
  * Set large popup style as default for new installs
