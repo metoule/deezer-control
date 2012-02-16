@@ -48,6 +48,9 @@ document.addEventListener('load', function(e)
 			"document.getElementById('h_pause').addEventListener('click', updateMyPlayerInfo , false);" + 
 			"updateMyPlayerInfo();"
 			;
+			
+			// we have one more deezer tab opened
+			chrome.extension.sendRequest({ type: "update_deezer_tabs_nb", amount: +1 }, function(response) { return true; });
 		}
 		
 		// add a listener for events on our new DIV, and post it to our extension
@@ -87,7 +90,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 });
 
 window.addEventListener('unload', function(e) 
-{
-	// TODO check that no other deezer tab exists
+{	
+	// we have one less deezer tab opened
+	chrome.extension.sendRequest({ type: "update_deezer_tabs_nb", amount: -1 }, function(response) { return true; });
 	chrome.extension.sendRequest({ type: "now_playing_updated", nowPlayingData: null }, function(response) { return true; });
 });

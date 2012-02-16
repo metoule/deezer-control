@@ -3,8 +3,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDesc__",
   "browser_action": {
-                        "default_icon": "/imgs/icons/deezer_19x19.png",
-                        "default_popup": "popup.html"
+                        "default_icon": "/imgs/icons/deezer_19x19.png"
                     },
   "background_page":"background.html",
   "options_page": "options.html",

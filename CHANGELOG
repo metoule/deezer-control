@@ -3,6 +3,7 @@
  * Added text to welcome page
  * Added notifications
  * Update cover size on popup style change
+ * If no deezer tab is opened, a click on browser action opens one
 
 0.0.3 - 07 Feb 2012
  * Set large popup style as default for new installs
