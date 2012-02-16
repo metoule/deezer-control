@@ -1,6 +1,52 @@
 
 var gNowPlayingData = null;
 
+// if not popup is set, it means that we should open a new Deezer tab
+chrome.browserAction.onClicked.addListener(function(iTab) 
+{
+	chrome.tabs.create({ url: 'http://www.deezer.com' });
+});
+
+
+// this will search for all opened Deezer tabs
+function countDeezerTabs()
+{
+	chrome.windows.getAll(
+		{populate : true},
+		function(windows) 
+		{
+			var aCurrentlyOpenedTabs = 0;
+			var k = -1;
+			
+			for(var i = 0; i < windows.length; i++) 
+			{
+				for(var j = 0; j < windows[i].tabs.length; j++) 
+				{
+					if (windows[i].tabs[j].url.toLowerCase().indexOf('www.deezer.com') > 0)
+					{
+						aCurrentlyOpenedTabs++;
+					}
+				}
+			}
+			
+			// store number of opened Deezer tabs in local storage
+			LOCSTO.nbOpenedDeezerTabs = aCurrentlyOpenedTabs;
+			LOCSTO.saveOptions();
+			
+			// set popup if needed
+			shouldWeShowPopup();
+		});	
+}
+
+// if at least one deezer tab, open a popup
+function shouldWeShowPopup()
+{	
+	if (LOCSTO.nbOpenedDeezerTabs == 0)
+		chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
+	else
+		chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
+}
+
 // this will react to an event fired in player_listener.js
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) 
 {
@@ -45,5 +91,14 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		}
 		
 		break;
+		
+	case "update_deezer_tabs_nb":
+		LOCSTO.nbOpenedDeezerTabs = LOCSTO.nbOpenedDeezerTabs + request.amount;
+		LOCSTO.saveOptions();
+		
+		// set popup if needed
+		shouldWeShowPopup();
+		
+		break;		
 	}
 });

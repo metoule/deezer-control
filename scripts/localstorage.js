@@ -8,15 +8,18 @@ var LOCSTO = LOCSTO || {
 	{
 		this.popupStyle = this.get('popup_style');
 		this.notifications = this.get('notifications') || {};
+		this.nbOpenedDeezerTabs = this.get('nbOpenedDeezerTabs'); // the nb of opened Deezer tabs
 				
 		/*
 		 * set default values here
 		 */
 		this.popupStyle = this.popupStyle || 'large';
 		
-		this.notifications.visible = this.notifications.visible == null ? true : this.notifications.visible;
+		this.notifications.visible = this.notifications.visible == null ? false : this.notifications.visible;
 		this.notifications.alwaysOn = this.notifications.alwaysOn == null ? false : this.notifications.alwaysOn;
-		this.notifications.fadeAwayDelay = this.notifications.fadeAwayDelay || 3000;		
+		this.notifications.fadeAwayDelay = this.notifications.fadeAwayDelay || 3000;
+
+		this.nbOpenedDeezerTabs = this.get('nbOpenedDeezerTabs') || 0;
 	}, 
 	
 	/*
@@ -26,6 +29,7 @@ var LOCSTO = LOCSTO || {
 	{
 		this.set('popup_style', this.popupStyle);
 		this.set('notifications', this.notifications);
+		this.set('nbOpenedDeezerTabs', this.nbOpenedDeezerTabs);
 	}, 
 	
 	/*
