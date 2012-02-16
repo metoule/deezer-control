@@ -24,7 +24,10 @@
 	"options_page_tab_options_button_save": { "message": "Save" },
 	
 	"options_page_tab_options_h1_notifications": { "message": "Notifications" }, 
-	
+	"options_page_tab_notifs_activate_permission": { "message": "Activate notifications" }, 
+	"options_page_tab_notifs_always_visible": { "message": "Never hide notification" }, 
+	"options_page_tab_notifs_fade_away_delay": { "message": "Hide notification after..." }, 
+		
 	"options_page_footer_not_endorsed": { "message": "Deezer Control is not endorsed by Deezer" },
 	"options_page_footer_contact": { "message": "Contact" }, 
 	"options_page_footer_donate": { "message": "Donate" }, 

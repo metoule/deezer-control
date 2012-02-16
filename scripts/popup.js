@@ -4,7 +4,7 @@ var COVER_SIZE = "250x250";
 function gup(iParamName)
 {
 	// taken from http://www.netlobo.com/url_query_string_javascript.html
-	aParamName = iParamName.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
+	var aParamName = iParamName.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
 	var regexS = "[\\?&]" + aParamName + "=([^&#]*)";  
 	var regex = new RegExp(regexS);  
 	var results = regex.exec(window.location.href); 
@@ -21,17 +21,24 @@ function loadStyle(iPopupStyle)
 		aPopupStyle = gup('style'); // grep url param (used to force a style for when creating a notification in background.js)
 
 	if (aPopupStyle == null)
-		aPopupStyle = localStorage["popup_style"];
+		aPopupStyle = LOCSTO.popupStyle;
 	
 	if (aPopupStyle)
 	{
 		// set the style based on the preference
 		document.getElementById("popup_style_css").href = "css/" + aPopupStyle + "/popup.css";
 
+		// on resize, we want to fetch the new cover to avoid pixelisation 
+		// on size change from small to large
+		var aOldSize = COVER_SIZE;
+		
 		// set the size of the cover
 		if (aPopupStyle == 'small') COVER_SIZE = "120x120"; 
 		else if (aPopupStyle == 'large') COVER_SIZE = "250x250";
 		else if (aPopupStyle == 'sideways') COVER_SIZE = "80x80";
+		
+		// replace img src to show new size
+		document.getElementById('cover').src = document.getElementById('cover').src.replace(aOldSize, COVER_SIZE);
 	}
 }
 

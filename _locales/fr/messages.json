@@ -7,10 +7,10 @@
 	"options_page_tab_title_notifications": { "message": "Notifications" }, 
 	
 	"options_page_tab_welcome_h1": { "message": "Merci d'avoir choisi Deezer Control!" },
-	"options_page_tab_welcome_content": { "message": "With it, you can quickly pause, resume or navigate through the music currently playing on Deezer. You'll no longer have to go back to the Deezer tab to watch that lolcat video! In its popup, it displays the album cover along with the the track's title and the artist's name. Several different styles can be chosen for the popup, to match everybody's needs. Want more? Drop me a line!" },
+	"options_page_tab_welcome_content": { "message": "Avec cette extension, vous pouvez rapidement arrêter, reprendre ou encore naviguer la musique en cours d'écoute sur Deezer. Plus besoin de retourner sur l'onglet Deezer pour arrêter la musique avant de lancer une vidéo sur Youtube ! La popup affiche la pochette de l'album, ainsi que le titre de la chanson et le nom de l'artiste. Plusieurs styles de popup sont disponibles, afin de répondre aux besoins de chacun. Vous en voulez plus ? Envoyez moi un mail !" },
 	"options_page_tab_welcome_remember_to": { "message": "Souvenez-vous..." }, 
 	"options_page_tab_welcome_rate_button": { "message": "Votez 5 étoiles" }, 
-	"options_page_tab_welcome_rate_label": { "message": "sur le Webstore Google Chrome" }, 
+	"options_page_tab_welcome_rate_label": { "message": "sur le Google Chrome Web Store" }, 
 	"options_page_tab_welcome_donate_button": { "message": "Faites un don" }, 
 	"options_page_tab_welcome_donate_label": { "message": "à Deezer Control via Paypal" }, 
 	"options_page_tab_welcome_contact_me_at": { "message": "Vous pouvez aussi me contacter par mail" }, 
@@ -24,6 +24,9 @@
 	"options_page_tab_options_button_save": { "message": "Enregistrer" },
 	
 	"options_page_tab_options_h1_notifications": { "message": "Notifications" }, 
+	"options_page_tab_notifs_activate_permission": { "message": "Activer les notifications" }, 
+	"options_page_tab_notifs_always_visible": { "message": "Ne jamais masquer les notifications" }, 
+	"options_page_tab_notifs_fade_away_delay": { "message": "Masquer les notifications après..." }, 
 	
 	"options_page_footer_not_endorsed": { "message": "Deezer Control n'a aucun lien avec Deezer" },
 	"options_page_footer_contact": { "message": "Contact" }, 

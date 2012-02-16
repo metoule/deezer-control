@@ -20,17 +20,29 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
 		
 		// update or create notification
-		var aAllNotifs = chrome.extension.getViews({ type: "notification" });
-		if (aAllNotifs.length == 0)
+		LOCSTO.loadOptions(); // otherwise options might not be up to date
+		if (LOCSTO.notifications.visible)
 		{
-			var notification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways");
-			notification.show();
-		} 
-		else 
-		{
-			aAllNotifs.forEach(function(win) { win.refreshPopup(); });
-		}
+			var aAllNotifs = chrome.extension.getViews({ type: "notification" });
+			if (aAllNotifs.length == 0)
+			{
+				var notification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways");
+				notification.show();
 
+				// hide notification after the wanted delay
+				if (!LOCSTO.notifications.alwaysOn)
+				{
+					// TODO stop timeout on mouse over
+					// TODO restart time out on mouse out 
+					// TODO restart time out on player change
+					setTimeout(function() { notification.cancel(); }, LOCSTO.notifications.fadeAwayDelay);
+				}
+			} 
+			else 
+			{
+				aAllNotifs.forEach(function(win) { win.refreshPopup(); });
+			}
+		}
 		
 		break;
 	}

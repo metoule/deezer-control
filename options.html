@@ -6,41 +6,63 @@
 		<link type="text/css" rel="stylesheet" href="/css/large/popup.css" id="popup_style_css"/>
 		<script src="/scripts/popup.js"></script>
 		<script src="/scripts/i18n.js"></script>
+		<script src="/scripts/localstorage.js"></script>
 		<script type="text/javascript">
 			var $ = function(str, el){ return (el || document).querySelector(str); },
 			   $$ = function(str, el){ return (el || document).querySelectorAll(str); };
 	
 			// Saves options to localStorage.
-			function save_options() 
+			function saveStyle() 
 			{
 				var select = document.getElementById("popup_style");
-				var popup_style = select.children[select.selectedIndex].value;
-				localStorage["popup_style"] = popup_style;
+				LOCSTO.popupStyle = select.children[select.selectedIndex].value;
+				LOCSTO.saveOptions();
 			
 				// Update status to let user know options were saved.
-				var status = document.getElementById("status");
-				status.innerHTML = chrome.i18n.getMessage("options_page_tab_options_saved");
-				setTimeout(function() { status.innerHTML = ""; }, 750);
+				var status_style = document.getElementById("status_style");
+				status_style.innerHTML = chrome.i18n.getMessage("options_page_tab_options_saved");
+				setTimeout(function() { status_style.innerHTML = ""; }, 750);
+			}
+			
+			function saveNotifications() 
+			{
+				LOCSTO.notifications.visible = $('#notifs_activate').checked;
+				LOCSTO.notifications.alwaysOn = $('#notifs_always_visible').checked;
+				LOCSTO.notifications.fadeAwayDelay = $('#notifs_fade_away_delay').value * 1000;
+				LOCSTO.saveOptions();
+			
+				// Update status_style to let user know options were saved.
+				var status_notifs = document.getElementById("status_notifs");
+				status_notifs.innerHTML = chrome.i18n.getMessage("options_page_tab_options_saved");
+				setTimeout(function() { status_notifs.innerHTML = ""; }, 750);
 			}
 		
 			// Restores select box state to saved value from localStorage.
 			function restore_options() 
 			{
-				var favorite = localStorage["popup_style"];
-				if (!favorite) {
-					return;
-				}
+				//           Popup style
+				//--------------------------------
+				var aPopupStyle = LOCSTO.popupStyle;
 				var select = document.getElementById("popup_style");
 				for (var i = 0; i < select.children.length; i++) 
 				{
 					var child = select.children[i];
-					if (child.value == favorite) 
+					if (child.value == aPopupStyle) 
 					{
 						child.selected = "true";
 						break;
 					}
 				}
 				loadStyle(); // from popup.js
+				
+				
+				//        Notifications
+				//--------------------------------
+				$('#notifs_activate').checked = LOCSTO.notifications.visible;
+				$('#notifs_always_visible').checked = LOCSTO.notifications.alwaysOn;
+				$('#notifs_fade_away_delay').value = LOCSTO.notifications.fadeAwayDelay / 1000;
+				
+				showHideNotifsOptions(); // ensure options are correctly shown  
 			}
 		
 			function loadStyleFromSelect()
@@ -87,6 +109,40 @@
 		    	$("#rate_button").href = "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id");
 		    }
 		    
+		    function checkNotifsPermission()
+		    {
+		    	if ($('#notifs_activate').checked == true)
+	    		{
+		    		chrome.permissions.request({ permissions: ['notifications'] }, function(granted) 
+    				{
+    		    		$('#notifs_activate').checked = granted;
+	    		  	});	    		
+	    		}
+		    	
+		    	showHideNotifsOptions();
+		    }
+		    
+		    function showHideNotifsOptions()
+		    {
+		    	if ($('#notifs_activate').checked == true)
+	    		{
+		    		$('#notifs_always_visible').parentNode.style.display = 'block';
+		    		$('#notifs_fade_away_delay').parentNode.style.display = 'block';
+			    	
+			    	if ($('#notifs_always_visible').checked == true)
+			    		$('#notifs_fade_away_delay').parentNode.style.display = 'none';
+			    	else 
+			    		$('#notifs_fade_away_delay').parentNode.style.display = 'block';
+	    		}
+		    	else
+		    	{
+		    		$('#notifs_always_visible').parentNode.style.display = 'none';
+		    		$('#notifs_fade_away_delay').parentNode.style.display = 'none';
+		    	}
+		    	
+		    	$('#notifs_fade_away_delay_display').innerHTML = $('#notifs_fade_away_delay').value;
+		    }
+		    
 		    window.addEventListener('hashchange', function(e) { showSection(location.hash.replace(/^\#/,'')); });
 		</script>
 	</head>
@@ -122,8 +178,8 @@
 		 			<option value="small" i18n-content="options_page_tab_options_style_small"></option>
 		 			<option value="sideways" i18n-content="options_page_tab_options_style_sideways"></option>
 				</select>
-				<button onclick="save_options()" i18n-content="options_page_tab_options_button_save"></button>
-				<span id="status"></span>
+				<button onclick="saveStyle()" i18n-content="options_page_tab_options_button_save"></button>
+				<span id="status_style"></span>
 				<br/>			
 		
 				<!-- Preview pane -->
@@ -167,6 +223,28 @@
 			<!-- Option tab: notifications -->
 			<section id="notifications">
 				<h1 i18n-content="options_page_tab_options_h1_notifications"></h1>
+				<fieldset>
+					<div>
+						<label for="notifs_activate" i18n-content="options_page_tab_notifs_activate_permission"></label>
+						<input type="checkbox" onchange="checkNotifsPermission()" id="notifs_activate"></input>
+					</div>
+					
+					<div>					
+						<label for="notifs_always_visible" i18n-content="options_page_tab_notifs_always_visible"></label>
+						<input type="checkbox" onchange="showHideNotifsOptions()" id="notifs_always_visible"></input>
+					</div>
+					
+					<div>
+						<label for="notifs_fade_away_delay" i18n-content="options_page_tab_notifs_fade_away_delay"></label>
+						<input onchange="showHideNotifsOptions()" type="range" id="notifs_fade_away_delay" min="1" max="10" step="0.5" value="3"></input>
+						<span id="notifs_fade_away_delay_display"></span>
+					</div>
+					
+					<div style="margin: 15px 0px 0px -5px;">
+						<button onclick="saveNotifications()" i18n-content="options_page_tab_options_button_save"></button>
+						<span id="status_notifs"></span>
+					</div>
+				</fieldset>
 			</section>
 		</div>
 			

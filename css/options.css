@@ -116,7 +116,7 @@ section.currentone
 	-webkit-transition: all 0.3s;
 }
 
-select, button, #remember_to a
+select, #remember_to a
 {
 	background: #F0F0F0;
 	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #E6E6E6),color-stop(1, #FEFEFE));
@@ -128,9 +128,39 @@ select, button, #remember_to a
 	text-shadow: 0 1px white;	
 }
 
-select:hover, button:hover, #remember_to a:hover
+button, #remember_to a
+{
+	border-radius: 3px;
+}
+
+button
+{
+	background: #62A3D5;
+	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #3B739E),color-stop(1, #63A4D6));
+	border: 1px solid #447ABE;
+	color: white;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 5px 10px 5px 10px;
+	text-shadow: 0 1px #386B92;
+}
+
+button:hover
+{
+	background:#5387ac;
+	background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0, rgb(46,91,123)),color-stop(1, rgb(84,136,173)));
+}
+	
+
+select:hover, #remember_to a:hover
 {
 	color: black;
+}
+
+#remember_to a:hover
+{
+	background:#404040;
+	background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0, rgb(205,205,205)),color-stop(1, rgb(255,255,255)));
 }
 
 #remember_to
@@ -246,4 +276,27 @@ footer
 footer a:hover
 {
 	text-decoration: underline;
+}
+
+fieldset
+{
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+fieldset div
+{
+	height: 30px;
+	line-height: 30px;
+}
+
+fieldset *
+{
+	vertical-align: middle;	
+}
+
+#notifs_fade_away_delay_display:after
+{
+	content: "s";
 }
