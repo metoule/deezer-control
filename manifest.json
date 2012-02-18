@@ -9,7 +9,7 @@
   "options_page": "options.html",
   "content_scripts": [
                          {
-                             "all_frames": true,
+                             "all_frames": false,
                              "matches": [ "http://*.deezer.com/*" ],
                              "js": [ "/scripts/player_listener.js" ],
                              "run_at": "document_end"
