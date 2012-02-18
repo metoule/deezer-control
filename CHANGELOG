@@ -1,5 +1,9 @@
 
-0.0.4 - 
+0.0.5 - 
+ * Solve issue with erroneous opened tabs count on page refresh
+ * Hide next / prev buttons if inactive on Deezer 
+
+0.0.4 - 16 Feb 2012 
  * Added text to welcome page
  * Added notifications
  * Update cover size on popup style change

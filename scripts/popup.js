@@ -88,6 +88,7 @@ function refreshPopup()
 	{
 		document.getElementById('now_playing_info').style.visibility = "visible";
 		
+		// show pause or play button 
 		if (aNowPlayingData.dz_playing == 'true')
 		{
 			document.getElementById('control-pause').style.display = "inline-block";
@@ -102,7 +103,11 @@ function refreshPopup()
 		document.getElementById('now_playing_info_artist').innerHTML = aNowPlayingData.dz_artist;
 		//document.getElementById('now_playing_info_album').innerHTML = aNowPlayingData.dz_album;
 		
-		// get the cover (can be ANY SIZE YOU WANT :))
+		// show or hide prev / next buttons if needed
+		document.getElementById('control-prev').style.visibility = (aNowPlayingData.dz_is_prev_active == 'true' ? "visible" : "hidden");
+		document.getElementById('control-next').style.visibility = (aNowPlayingData.dz_is_next_active == 'true' ? "visible" : "hidden");
+		
+		// get the cover (can be ANY SIZE WE WANT :))
 		document.getElementById('cover').src = "http://cdn-images.deezer.com/images/cover/" + aNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
 	} else {
 		document.getElementById('control-pause').style.display = "none";

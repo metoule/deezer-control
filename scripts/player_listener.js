@@ -41,6 +41,8 @@ document.addEventListener('load', function(e)
 				"myPlayerInfo.setAttribute('dz_track',   dzPlayer.getSongTitle());" +
 				"myPlayerInfo.setAttribute('dz_album',   dzPlayer.getAlbumTitle());" +
 				"myPlayerInfo.setAttribute('dz_cover',   dzPlayer.getCover());" +
+				"myPlayerInfo.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());" +
+				"myPlayerInfo.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());" +
 				"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
 			"};" + 
 			"document.getElementById('current-track').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
