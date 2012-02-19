@@ -1,5 +1,7 @@
 
 var gNowPlayingData = null;
+var gNotification = null;
+var gNotificationTimeoutId = null;
 
 // if not popup is set, it means that we should open a new Deezer tab
 chrome.browserAction.onClicked.addListener(function(iTab) 
@@ -8,7 +10,8 @@ chrome.browserAction.onClicked.addListener(function(iTab)
 });
 
 
-// this will search for all opened Deezer tabs
+// all opened Deezer tabs, and store the number found 
+// this will be used to prevent popup from showing if no tab's opened
 function countDeezerTabs()
 {
 	chrome.windows.getAll(
@@ -33,7 +36,7 @@ function countDeezerTabs()
 			LOCSTO.nbOpenedDeezerTabs = aCurrentlyOpenedTabs;
 			LOCSTO.saveOptions();
 			
-			// set popup if needed
+			// set popup to show up if at least one tab
 			shouldWeShowPopup();
 		});	
 }
@@ -65,28 +68,39 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		chrome.extension.getViews({ type: 'popup' }).forEach(function(win) { win.refreshPopup(); });
 		chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
 		
-		// update or create notification
-		LOCSTO.loadOptions(); // otherwise options might not be up to date
-		if (LOCSTO.notifications.visible)
+		// if no deezer data, close notif, otherwise show it
+		if (gNowPlayingData == null)
 		{
-			var aAllNotifs = chrome.extension.getViews({ type: "notification" });
-			if (aAllNotifs.length == 0)
+			resetNotifTimeout(); // remove existing timeout
+			closeNotif();
+		}
+		// we have data to show
+		else
+		{
+			// update or create notification
+			LOCSTO.loadOptions(); // otherwise options might not be up to date
+			if (LOCSTO.notifications.visible)
 			{
-				var notification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways");
-				notification.show();
-
+				// if notif not already visible, create it
+				if (gNotification == null)
+				{
+					gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways");
+					gNotification.show();
+				} 
+				// else, we already have a notif opened
+				else 
+				{
+					resetNotifTimeout(); // remove existing timeout
+					chrome.extension.getViews({ type: "notification" }).forEach(function(win) { win.refreshPopup(); });
+				}
+	
 				// hide notification after the wanted delay
 				if (!LOCSTO.notifications.alwaysOn)
 				{
 					// TODO stop timeout on mouse over
-					// TODO restart time out on mouse out 
-					// TODO restart time out on player change
-					setTimeout(function() { notification.cancel(); }, LOCSTO.notifications.fadeAwayDelay);
+					// TODO restart time out on mouse out
+					gNotificationTimeoutId = setTimeout("closeNotif()", LOCSTO.notifications.fadeAwayDelay);
 				}
-			} 
-			else 
-			{
-				aAllNotifs.forEach(function(win) { win.refreshPopup(); });
 			}
 		}
 		
@@ -102,3 +116,23 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		break;		
 	}
 });
+
+// reset time out
+function resetNotifTimeout()
+{
+	if (gNotificationTimeoutId != null)
+	{
+		window.clearTimeout(gNotificationTimeoutId);
+		gNotificationTimeoutId = null;
+	}
+}
+
+// close notif and reset everything
+function closeNotif()
+{
+	if (gNotification != null) 
+		gNotification.cancel(); 
+	
+	gNotification = null; 
+	gNotificationTimeoutId = null;
+}

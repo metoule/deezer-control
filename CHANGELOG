@@ -1,4 +1,7 @@
 
+0.0.6 - 19 Feb 2012
+ * Improved notifications mechanism
+
 0.0.5 - 18 Feb 2012
  * Solve issue with erroneous opened tabs count on page refresh
  * Hide next / prev buttons if inactive on Deezer 
