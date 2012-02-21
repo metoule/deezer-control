@@ -150,7 +150,7 @@
 	<body onload="preparePage();">
 		<div id="tab_chooser">
 			<nav>
-				<a id="welcome_nav" href="#welcome" i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" i18n-content="options_page_tab_title_options"></a><a id="notifications_nav" href="#notifications" i18n-content="options_page_tab_title_notifications"></a>
+				<a id="welcome_nav" href="#welcome" data-i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" data-i18n-content="options_page_tab_title_options"></a><a id="notifications_nav" href="#notifications" data-i18n-content="options_page_tab_title_notifications"></a>
 			</nav>
 			<span id="arrow_line"><img src="imgs/arrow_down.png"/></span>
 		</div>
@@ -159,26 +159,26 @@
 		
 			<!-- Option tab: welcome -->
 			<section id="welcome">
-				<h1 i18n-content="options_page_tab_welcome_h1"></h1>
-				<div i18n-content="options_page_tab_welcome_content"></div>
+				<h1 data-i18n-content="options_page_tab_welcome_h1"></h1>
+				<div data-i18n-content="options_page_tab_welcome_content"></div>
 				<div id="remember_to">
-					<h2 i18n-content="options_page_tab_welcome_remember_to"></h2>
-					<div><a id="rate_button" i18n-content="options_page_tab_welcome_rate_button" target="_blank"></a><span i18n-content="options_page_tab_welcome_rate_label"></span></div>
-					<div><a i18n-content="options_page_tab_welcome_donate_button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a><span i18n-content="options_page_tab_welcome_donate_label"></span></div>
+					<h2 data-i18n-content="options_page_tab_welcome_remember_to"></h2>
+					<div><a id="rate_button" data-i18n-content="options_page_tab_welcome_rate_button" target="_blank"></a><span data-i18n-content="options_page_tab_welcome_rate_label"></span></div>
+					<div><a data-i18n-content="options_page_tab_welcome_donate_button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a><span data-i18n-content="options_page_tab_welcome_donate_label"></span></div>
 				</div>
-				<div><span i18n-content="options_page_tab_welcome_contact_me_at"></span>: <a href="mailto:m520152112e@gmail.com" target="_blank">m520152112e@gmail.com</a></div>
+				<div><span data-i18n-content="options_page_tab_welcome_contact_me_at"></span>: <a href="mailto:m520152112e@gmail.com" target="_blank">m520152112e@gmail.com</a></div>
 			</section>
 		
 			<!-- Option tab: style chooser -->
 			<section id="options">
-				<h1 i18n-content="options_page_tab_options_h1_popup_style"></h1>
-				<span i18n-content="options_page_tab_options_choose_style"></span>:
+				<h1 data-i18n-content="options_page_tab_options_h1_popup_style"></h1>
+				<span data-i18n-content="options_page_tab_options_choose_style"></span>:
 				<select id="popup_style" onchange="loadStyleFromSelect()">
-		 			<option value="large" i18n-content="options_page_tab_options_style_large"></option>
-		 			<option value="small" i18n-content="options_page_tab_options_style_small"></option>
-		 			<option value="sideways" i18n-content="options_page_tab_options_style_sideways"></option>
+		 			<option value="large" data-i18n-content="options_page_tab_options_style_large"></option>
+		 			<option value="small" data-i18n-content="options_page_tab_options_style_small"></option>
+		 			<option value="sideways" data-i18n-content="options_page_tab_options_style_sideways"></option>
 				</select>
-				<button onclick="saveStyle()" i18n-content="options_page_tab_options_button_save"></button>
+				<button onclick="saveStyle()" data-i18n-content="options_page_tab_options_button_save"></button>
 				<span id="status_style"></span>
 				<br/>			
 		
@@ -222,26 +222,26 @@
 		
 			<!-- Option tab: notifications -->
 			<section id="notifications">
-				<h1 i18n-content="options_page_tab_options_h1_notifications"></h1>
+				<h1 data-i18n-content="options_page_tab_options_h1_notifications"></h1>
 				<fieldset>
 					<div>
-						<label for="notifs_activate" i18n-content="options_page_tab_notifs_activate_permission"></label>
+						<label for="notifs_activate" data-i18n-content="options_page_tab_notifs_activate_permission"></label>
 						<input type="checkbox" onchange="checkNotifsPermission()" id="notifs_activate"></input>
 					</div>
 					
 					<div>					
-						<label for="notifs_always_visible" i18n-content="options_page_tab_notifs_always_visible"></label>
+						<label for="notifs_always_visible" data-i18n-content="options_page_tab_notifs_always_visible"></label>
 						<input type="checkbox" onchange="showHideNotifsOptions()" id="notifs_always_visible"></input>
 					</div>
 					
 					<div>
-						<label for="notifs_fade_away_delay" i18n-content="options_page_tab_notifs_fade_away_delay"></label>
+						<label for="notifs_fade_away_delay" data-i18n-content="options_page_tab_notifs_fade_away_delay"></label>
 						<input onchange="showHideNotifsOptions()" type="range" id="notifs_fade_away_delay" min="1" max="10" step="0.5" value="3"></input>
 						<span id="notifs_fade_away_delay_display"></span>
 					</div>
 					
 					<div style="margin: 15px 0px 0px -5px;">
-						<button onclick="saveNotifications()" i18n-content="options_page_tab_options_button_save"></button>
+						<button onclick="saveNotifications()" data-i18n-content="options_page_tab_options_button_save"></button>
 						<span id="status_notifs"></span>
 					</div>
 				</fieldset>
@@ -250,8 +250,8 @@
 			
 		<!-- footer -->
 		<footer>
-			<div i18n-content="options_page_footer_not_endorsed"></div>
-			<div><a i18n-content="options_page_footer_contact" href="mailto:m520152112e@gmail.com" target="_blank"></a> | <a i18n-content="options_page_footer_donate" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a> <span i18n-content="options_page_footer_via_paypal"></span></div>
+			<div data-i18n-content="options_page_footer_not_endorsed"></div>
+			<div><a data-i18n-content="options_page_footer_contact" href="mailto:m520152112e@gmail.com" target="_blank"></a> | <a data-i18n-content="options_page_footer_donate" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a> <span data-i18n-content="options_page_footer_via_paypal"></span></div>
 		</footer>
 	</body>
 </html>
