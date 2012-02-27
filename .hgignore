@@ -1,1 +1,3 @@
 packaged_ext
+syntax:glob
+*.zip
