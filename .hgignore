@@ -1,3 +1,5 @@
 packaged_ext
 syntax:glob
 *.zip
+.project
+.settings
