@@ -44,8 +44,12 @@ function countDeezerTabs()
 // if at least one deezer tab, open a popup
 function shouldWeShowPopup()
 {	
-	if (LOCSTO.nbOpenedDeezerTabs == 0)
+	if (LOCSTO.nbOpenedDeezerTabs <= 0)
+	{
+		LOCSTO.nbOpenedDeezerTabs = 0; // ensure we're always at 0 to avoid unwanted situations
+		LOCSTO.saveOptions();
 		chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
+	}
 	else
 		chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
 }
@@ -115,6 +119,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		
 		break;		
 	}
+	
+	// call the callback method
+	sendResponse();
 });
 
 // reset time out

@@ -52,7 +52,7 @@ document.addEventListener('load', function(e)
 			;
 			
 			// we have one more deezer tab opened
-			chrome.extension.sendRequest({ type: "update_deezer_tabs_nb", amount: +1 }, function(response) { return true; });
+			chrome.extension.sendRequest({ type: "update_deezer_tabs_nb", amount: +1 });
 		}
 		
 		// add a listener for events on our new DIV, and post it to our extension
@@ -74,7 +74,7 @@ function sendJsonPlayerInfo(event)
     }
 	
 	// send the results to background.html
-	chrome.extension.sendRequest({ type: "now_playing_updated", nowPlayingData: aDzAttributes }, function(response) { return true; });
+	chrome.extension.sendRequest({ type: "now_playing_updated", nowPlayingData: aDzAttributes });
 }
 
 // this will perform actions on the deezer page - sent by popup.html
@@ -91,9 +91,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 	sendResponse();
 });
 
-window.addEventListener('unload', function(e) 
+window.addEventListener('beforeunload', function(e) 
 {	
 	// we have one less deezer tab opened
-	chrome.extension.sendRequest({ type: "update_deezer_tabs_nb", amount: -1 }, function(response) { return true; });
-	chrome.extension.sendRequest({ type: "now_playing_updated", nowPlayingData: null }, function(response) { return true; });
+	chrome.extension.sendRequest({ type: "update_deezer_tabs_nb", amount: -1 });
+	chrome.extension.sendRequest({ type: "now_playing_updated", nowPlayingData: null });
 });
