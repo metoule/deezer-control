@@ -1,5 +1,8 @@
 0.0.7 - 
  * Use data-i18n-content in HTML tags to be HTML5 compliant
+ * Improved popup display time by using a workaround for bug http://crbug.com/24467
+ * Changed default image to an empty CD
+ * Change event to listen to in player_listener, from unload to beforeunload, so that we're guaranteed to be called
 
 0.0.6 - 19 Feb 2012
  * Improved notifications mechanism

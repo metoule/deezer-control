@@ -1,6 +1,12 @@
 
 var COVER_SIZE = "250x250";
 
+function init()
+{
+	loadStyle();
+	refreshPopup();
+}
+
 function gup(iParamName)
 {
 	// taken from http://www.netlobo.com/url_query_string_javascript.html
@@ -112,6 +118,6 @@ function refreshPopup()
 	} else {
 		document.getElementById('control-pause').style.display = "none";
 		document.getElementById('now_playing_info').style.visibility = "hidden";
-		document.getElementById('cover').src = "imgs/logo_deezer.png";
+		document.getElementById('cover').src = "imgs/unknown_cd.png";
 	}
 }

@@ -6,7 +6,7 @@
 		<script src="/scripts/popup.js"></script>
 		<script src="/scripts/localstorage.js"></script>
 	</head>
-	<body onload="loadStyle(); refreshPopup();" id="popup_display">
+	<body onload="setTimeout(init, 0);" id="popup_display">
 		<div id="controls">
 			<div id="controls-left">
 				&nbsp;<a href="options.html" id="control-settings" target="_blank"></a>
@@ -21,7 +21,7 @@
 				<span id="now_playing_info_artist"></span>
 				<!-- span id="now_playing_info_album"></span -->
 			</div>
- 			<img src="imgs/logo_deezer.png" id="cover"/>
+ 			<img src="imgs/unknown_cd.png" id="cover"/>
 		</div>
 	</body>
 </html>
