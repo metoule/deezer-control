@@ -1,5 +1,4 @@
 
-
 /**
  * Content script can't use JS object of the page, but they can access the DOM.
  * Use our own DIV to store info.
@@ -41,6 +40,8 @@ document.addEventListener('load', function(e)
 				"myPlayerInfo.setAttribute('dz_track',   dzPlayer.getSongTitle());" +
 				"myPlayerInfo.setAttribute('dz_album',   dzPlayer.getAlbumTitle());" +
 				"myPlayerInfo.setAttribute('dz_cover',   dzPlayer.getCover());" +
+				"myPlayerInfo.setAttribute('dz_prev_cover',   (dzPlayer.getPrevSongInfo() != null ? dzPlayer.getPrevSongInfo().ALB_PICTURE : ''));" +
+				"myPlayerInfo.setAttribute('dz_next_cover',   (dzPlayer.getNextSongInfo() != null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));" +
 				"myPlayerInfo.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());" +
 				"myPlayerInfo.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());" +
 				"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
