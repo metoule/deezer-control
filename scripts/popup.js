@@ -1,12 +1,6 @@
 
 var COVER_SIZE = "250x250";
 
-function init()
-{
-	loadStyle();
-	refreshPopup();
-}
-
 function gup(iParamName)
 {
 	// taken from http://www.netlobo.com/url_query_string_javascript.html
@@ -32,7 +26,8 @@ function loadStyle(iPopupStyle)
 	if (aPopupStyle)
 	{
 		// set the style based on the preference
-		document.getElementById("popup_style_css").href = "css/" + aPopupStyle + "/popup.css";
+		if (document.getElementById("popup_style_css") != null)
+			document.getElementById("popup_style_css").href = "css/" + aPopupStyle + "/popup.css";
 
 		// on resize, we want to fetch the new cover to avoid pixelisation 
 		// on size change from small to large

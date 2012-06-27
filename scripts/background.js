@@ -81,6 +81,13 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		// we have data to show
 		else
 		{
+			// set images in background page to cache album covers for faster display
+			loadStyle(); // load COVER_SIZE variable
+			document.getElementById('prev_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+			document.getElementById('cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+			document.getElementById('next_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+			
+			
 			// update or create notification
 			LOCSTO.loadOptions(); // otherwise options might not be up to date
 			if (LOCSTO.notifications.visible)

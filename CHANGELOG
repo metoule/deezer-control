@@ -1,3 +1,7 @@
+0.0.9 -
+ * Pre cache album covers for faster display
+ * Fixed flickering on popup load if change of CSS needed
+
 0.0.8 - 03 Mar 2012 
  * Added script to ease delivery
 
