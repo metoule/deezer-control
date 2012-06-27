@@ -1,4 +1,7 @@
-0.0.7 - 
+0.0.8 - 03 Mar 2012 
+ * Added script to ease delivery
+
+0.0.7 - 03 Mar 2012
  * Use data-i18n-content in HTML tags to be HTML5 compliant
  * Improved popup display time by using a workaround for bug http://crbug.com/24467
  * Changed default image to an empty CD
