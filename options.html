@@ -1,102 +1,290 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Deezer Control Popup</title>
+		<title>Deezer Control</title>
 		<link type="text/css" rel="stylesheet" href="/css/options.css"/>
 		<link type="text/css" rel="stylesheet" href="/css/large/popup.css" id="popup_style_css"/>
 		<script src="/scripts/popup.js"></script>
 		<script src="/scripts/i18n.js"></script>
 		<script src="/scripts/localstorage.js"></script>
+		<script src="/scripts/hotkeys.js"></script>
+		<script src="/scripts/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript">
-			var $ = function(str, el){ return (el || document).querySelector(str); },
-			   $$ = function(str, el){ return (el || document).querySelectorAll(str); };
-	
+		 <!--
+		 function convertKeyCode(iKeyCode, iPrintedValue)
+		 {
+			 var aMapKeyToText = {
+					   8: "keycode_text_backspace", 
+					   9: "keycode_text_tab",  
+					  13: "keycode_text_enter",  
+					  16: "keycode_text_shift",  
+					  17: "keycode_text_ctrl",  
+					  18: "keycode_text_alt",  
+					  19: "keycode_text_pause_break",  
+					  20: "keycode_text_caps_lock",  
+					  27: "keycode_text_escape",  
+					  32: "keycode_text_space",  
+					  33: "keycode_text_page_up",  
+					  34: "keycode_text_page_down",  
+					  35: "keycode_text_end",  
+					  36: "keycode_text_home",  
+					  37: "keycode_text_left_arrow",  
+					  38: "keycode_text_up_arrow",  
+					  39: "keycode_text_right_arrow",   
+					  40: "keycode_text_down_arrow",   
+					  42: "keycode_text_print_screen",   
+					  45: "keycode_text_insert",   
+					  46: "keycode_text_delete",   
+					  91: "keycode_text_left_window_key",   
+					  92: "keycode_text_right_window_key",   
+					  93: "keycode_text_select_key",   
+					  96: "keycode_text_numpad_0",   
+					  97: "keycode_text_numpad_1",    
+					  98: "keycode_text_numpad_2",    
+					  99: "keycode_text_numpad_3",   
+					 100: "keycode_text_numpad_4",    
+					 101: "keycode_text_numpad_5",   
+					 102: "keycode_text_numpad_6",     
+					 103: "keycode_text_numpad_7",     
+					 104: "keycode_text_numpad_8",     
+					 105: "keycode_text_numpad_9",     
+					 106: "keycode_text_numpad_multiply",     
+					 107: "keycode_text_numpad_plus",     
+					 109: "keycode_text_numpad_minus",     
+					 110: "keycode_text_numpad_dot",     
+					 111: "keycode_text_numpad_slash",     
+					 112: "keycode_text_F1",     
+					 113: "keycode_text_F2",          
+					 114: "keycode_text_F3",          
+					 115: "keycode_text_F4",          
+					 116: "keycode_text_F5",          
+					 117: "keycode_text_F6",          
+					 118: "keycode_text_F7",          
+					 119: "keycode_text_F8",          
+					 120: "keycode_text_F9",          
+					 121: "keycode_text_F10",          
+					 122: "keycode_text_F11",          
+					 123: "keycode_text_F12",          
+					 144: "keycode_text_num_lock",       
+					 145: "keycode_text_scroll_lock",  
+					 176: "keycode_text_media_key_next",  
+					 177: "keycode_text_media_key_prev",  
+					 178: "keycode_text_media_key_stop",  
+					 179: "keycode_text_media_key_play",  
+					 186: "keycode_text_semi_column",  
+					 187: "keycode_text_equal",  
+					 188: "keycode_text_coma",  
+					 189: "keycode_text_minus", 
+					 190: "keycode_text_dot",  
+					 191: "keycode_text_slash",  
+					 192: "keycode_text_grave",  
+					 219: "keycode_text_left_bracket",  
+					 220: "keycode_text_back_slash",  
+					 221: "keycode_text_right_bracket",  
+					 222: "keycode_text_quote"
+			 }
+			 
+			 if (aMapKeyToText.hasOwnProperty(iKeyCode)) 
+				 return chrome.i18n.getMessage(aMapKeyToText[iKeyCode]);
+			 
+			return String.fromCharCode(iKeyCode);
+		 }
+		 //-->
+		</script>
+		<script type="text/javascript">	
 			// Saves options to localStorage.
 			function saveStyle() 
 			{
-				var select = document.getElementById("popup_style");
-				LOCSTO.popupStyle = select.children[select.selectedIndex].value;
+				LOCSTO.popupStyle = $("#popup_style").val();
 				LOCSTO.saveOptions();
 			
 				// Update status to let user know options were saved.
-				var status_style = document.getElementById("status_style");
-				status_style.innerHTML = chrome.i18n.getMessage("options_page_tab_options_saved");
-				setTimeout(function() { status_style.innerHTML = ""; }, 750);
+				$("#status_style").text(chrome.i18n.getMessage("options_page_options_saved"));
+				setTimeout(function() { $("#status_style").text(""); }, 750);
 			}
 			
 			function saveNotifications() 
 			{
-				LOCSTO.notifications.visible = $('#notifs_activate').checked;
-				LOCSTO.notifications.alwaysOn = $('#notifs_always_visible').checked;
-				LOCSTO.notifications.fadeAwayDelay = $('#notifs_fade_away_delay').value * 1000;
-				LOCSTO.saveOptions();
+		    	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
+		    	var aNotifsDelay = $('#notifs_fade_away_delay').val() * 1000;
+		    	
+		    	// the key names are due to the old notifications system
+		    	if (aNotifsShowWhen == 'never')
+		    		LOCSTO.notifications = { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
+		    	
+		    	else if (aNotifsShowWhen == 'never_hides')
+		    		LOCSTO.notifications = { never: false, alwaysOn: true, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
+		    	
+		    	else if (aNotifsShowWhen == 'on_song_change')
+		    		LOCSTO.notifications = { never: false, alwaysOn: false, visible: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
+		    	
+		    	else if (aNotifsShowWhen == 'on_hotkey_only')
+		    		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay }; 
+
+		    	LOCSTO.saveOptions();
 			
 				// Update status_style to let user know options were saved.
-				var status_notifs = document.getElementById("status_notifs");
-				status_notifs.innerHTML = chrome.i18n.getMessage("options_page_tab_options_saved");
-				setTimeout(function() { status_notifs.innerHTML = ""; }, 750);
+				$("#status_notifs").text(chrome.i18n.getMessage("options_page_options_saved"));
+				setTimeout(function() { $("#status_notifs").text(""); }, 750);
+				
+				// reshow notifs so that the user sees the change straight away
+				chrome.extension.sendRequest({ type: "showNotif", source: "options" });
 			}
+			
+			function saveHotKeys()
+			{
+		    	storeHotKey('prevHotKey');
+		    	storeHotKey('playPauseHotKey');
+		    	storeHotKey('nextHotKey');
+		    	storeHotKey('whatZatSongHotKey');
+				
+				LOCSTO.saveOptions();
+			
+				// Update status to let user know options were saved.
+				$("#status_hotkeys").text(chrome.i18n.getMessage("options_page_options_saved"));
+				setTimeout(function() { $("#status_hotkeys").text(""); }, 750);
+			}
+		    
+		    function storeHotKey(iHotKeyName)
+		    {
+				var aHotKeySelect = $("#" + iHotKeyName);
+				
+				LOCSTO[iHotKeyName].shiftKey = aHotKeySelect.children('button:eq(0)').hasClass('two_state_selected');
+				LOCSTO[iHotKeyName].ctrlKey  = aHotKeySelect.children('button:eq(1)').hasClass('two_state_selected');
+				LOCSTO[iHotKeyName].altKey   = aHotKeySelect.children('button:eq(2)').hasClass('two_state_selected');
+				LOCSTO[iHotKeyName].keyCode  = aHotKeySelect.children('input:eq(1)').val();
+		    }
 		
 			// Restores select box state to saved value from localStorage.
 			function restore_options() 
 			{
 				//           Popup style
 				//--------------------------------
-				var aPopupStyle = LOCSTO.popupStyle;
-				var select = document.getElementById("popup_style");
-				for (var i = 0; i < select.children.length; i++) 
-				{
-					var child = select.children[i];
-					if (child.value == aPopupStyle) 
-					{
-						child.selected = "true";
-						break;
-					}
-				}
+				$("#popup_style").val(LOCSTO.popupStyle);
 				loadStyle(); // from popup.js
 				
 				
 				//        Notifications
 				//--------------------------------
-				$('#notifs_activate').checked = LOCSTO.notifications.visible;
-				$('#notifs_always_visible').checked = LOCSTO.notifications.alwaysOn;
-				$('#notifs_fade_away_delay').value = LOCSTO.notifications.fadeAwayDelay / 1000;
+				if (LOCSTO.notifications.alwaysOn)
+					$('input:radio[name="notifs_show_when"]').filter('[value="never_hides"]').prop('checked', true);
+				else if (LOCSTO.notifications.visible)
+					$('input:radio[name="notifs_show_when"]').filter('[value="on_song_change"]').prop('checked', true);
+				else if (LOCSTO.notifications.onHotKeyOnly)
+					$('input:radio[name="notifs_show_when"]').filter('[value="on_hotkey_only"]').prop('checked', true);
+				else
+					$('input:radio[name="notifs_show_when"]').filter('[value="never"]').prop('checked', true);
+					
+				$('#notifs_fade_away_delay').val(LOCSTO.notifications.fadeAwayDelay / 1000);
 				
-				showHideNotifsOptions(); // ensure options are correctly shown  
+				updateNotifsOptions(); // ensure options are correctly shown
+				
+				
+				//        Hot keys
+				//--------------------------------
+				// hot keys are activated only if we have permission on all tabs
+				// if we don't permission, show an explanation
+				showHotKeys();
+			}
+			
+			function showHotKeys()
+			{
+				chrome.permissions.contains(
+				{ origins: ['<all_urls>'] }, 
+				function(result) 
+				{
+				    if (result)
+				    {
+				    	$("#hotkey_permission_ko").css('display', 'none');
+				    	$("#hotkey_permission_ok").css('display', 'block');
+				    	
+						restore_hot_key('prevHotKey');
+						restore_hot_key('playPauseHotKey');
+						restore_hot_key('nextHotKey');
+						restore_hot_key('whatZatSongHotKey');
+				    }
+				    else
+			    	{
+				    	$("#hotkey_permission_ko").css('display', 'block');
+				    	$("#hotkey_permission_ok").css('display', 'none');
+			    	}
+				});
 			}
 		
+			function restore_hot_key(iHotKeyName)
+			{
+				var aHotKeySelect = $("#" + iHotKeyName);
+				
+				// on click, all button are selected 
+				aHotKeySelect.children('button').click(function() { $(this).toggleClass('two_state_selected two_state_unselected') });
+				aHotKeySelect.children('span').css('visibility', 'visible');
+				
+				// last button: click reveals the textbox to enter new key
+				aHotKeySelect.children('button:eq(3)').unbind('click').click(function() 
+				{
+					$(this).parent().children('span').text("");
+					$(this).css('display', 'none');
+					$(this).parent().children('input:eq(0)').css('display', 'inline').focus();
+				});
+
+				// on key up in the input box, update last button with the new key code
+				aHotKeySelect.children('input:eq(0)').keydown(function() 
+				{ 
+					// if ctrl, shift or alt, prevent update and warn user
+					if (event.keyCode >= 16 && event.keyCode <= 18)
+					{
+						$(this).parent().children('span').text(chrome.i18n.getMessage("options_page_tab_hotkeys_warning_illegal_hotkey"));
+					}
+					else
+					{
+						$(this).parent().children('button:eq(3)').text(convertKeyCode(event.keyCode, $(this).val())); 
+						$(this).next().val(event.keyCode);
+					}
+
+					// redisplay
+					$(this).parent().children('button:eq(3)').css('display', 'inline').focus().blur();
+					$(this).css('display', 'none').val("");
+				});
+				
+				aHotKeySelect.children('input:eq(0)').blur(function() 
+				{ 
+					$(this).css('display', 'none').val("");
+					$(this).parent().children('button:eq(3)').css('display', 'inline').focus().blur();
+				});
+				
+								
+				// create display
+				aHotKeySelect.children('button:eq(0)').toggleClass('two_state_unselected', !LOCSTO[iHotKeyName].shiftKey).toggleClass('two_state_selected', LOCSTO[iHotKeyName].shiftKey);
+				aHotKeySelect.children('button:eq(1)').toggleClass('two_state_unselected', !LOCSTO[iHotKeyName].ctrlKey).toggleClass('two_state_selected', LOCSTO[iHotKeyName].ctrlKey);
+				aHotKeySelect.children('button:eq(2)').toggleClass('two_state_unselected', !LOCSTO[iHotKeyName].altKey).toggleClass('two_state_selected', LOCSTO[iHotKeyName].altKey);
+				aHotKeySelect.children('button:eq(3)').text(convertKeyCode(LOCSTO[iHotKeyName].keyCode));
+				
+				aHotKeySelect.children('input').attr('size', '3').css('display', 'none');
+				aHotKeySelect.children('input:eq(1)').val(LOCSTO[iHotKeyName].keyCode);
+			}
+			
 			function loadStyleFromSelect()
 			{
-				var select = $("#popup_style");
-				var aPopupStyle = select.children[select.selectedIndex].value;
-				loadStyle(aPopupStyle); // from popup.js
+				loadStyle($("#popup_style").val()); // from popup.js
 			}
 			
 		    function showSection(id)
 		    {
-				var navItems = $$('#tab_chooser > nav > *'), sections = $$('#center_block > section');
-				for(i = 0, l = navItems.length; i < l; i++)
-				{
-					navItems[i].className = navItems[i].className.replace(/\s?currentone/, '');
-					sections[i].className = sections[i].className.replace(/\s?currentone/, '');
-					if (sections[i].id == id)
-					{
-						navItems[i].className = navItems[i].className + ' currentone';
-						sections[i].className = sections[i].className + ' currentone';
-						$('#arrow_line > img').style.left = (159 * i + 73) + "px";
-					}
-				}
+		    	$('#tab_chooser > nav > a').removeClass('currentone');
+		    	$('#center_block > section').removeClass('currentone');
+		    	$('#' + id).addClass('currentone');
+		    	$('#' + id + '_nav').addClass('currentone');
+
+				var aNewLeft = $('#' + id + '_nav').position().left - $('#tab_chooser > nav > a:first').position().left + 73;
+				$('#arrow_line > img').css('left', aNewLeft + 'px');
 			}
 		    
 		    function resetSections()
 		    {
-				var navItems = $$('#tab_chooser > nav > a'), sections = $$('#center_block > section');
-				navItems[0].className = navItems[0].className + ' currentone';
-				sections[0].className = sections[0].className + ' currentone';
+		    	$('#tab_chooser > nav > a:first').addClass('currentone');
+		    	$('#center_block > section:first').addClass('currentone');
 				if(location.hash)
-				{
 					showSection(location.hash.replace(/^\#/, ''));
-				}
 		    }
 		    
 		    function preparePage()
@@ -106,41 +294,45 @@
 		    	resetSections(); 
 		    	i18n.process(document);
 		    	
-		    	$("#rate_button").href = "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id");
+		    	$("#rate_button").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
 		    }
 		    
-		    function checkNotifsPermission()
+		    function checkNotifsPermissions()
 		    {
-		    	if ($('#notifs_activate').checked == true)
+		    	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
+		    	if (aNotifsShowWhen != "never")
 	    		{
 		    		chrome.permissions.request({ permissions: ['notifications'] }, function(granted) 
     				{
-    		    		$('#notifs_activate').checked = granted;
-	    		  	});	    		
+		    			if (!granted)
+	    				{
+		    				$('#chrome_permission_not_granted').css("visibility", "visible");  
+							$('input:radio[name="notifs_show_when"]').filter('[value="never"]').prop('checked', true);
+	    				}
+	    		  	});
 	    		}
-		    	
-		    	showHideNotifsOptions();
+
+				updateNotifsOptions();
 		    }
 		    
-		    function showHideNotifsOptions()
+		    function updateNotifsOptions()
 		    {
-		    	if ($('#notifs_activate').checked == true)
-	    		{
-		    		$('#notifs_always_visible').parentNode.style.display = 'block';
-		    		$('#notifs_fade_away_delay').parentNode.style.display = 'block';
-			    	
-			    	if ($('#notifs_always_visible').checked == true)
-			    		$('#notifs_fade_away_delay').parentNode.style.display = 'none';
-			    	else 
-			    		$('#notifs_fade_away_delay').parentNode.style.display = 'block';
-	    		}
-		    	else
-		    	{
-		    		$('#notifs_always_visible').parentNode.style.display = 'none';
-		    		$('#notifs_fade_away_delay').parentNode.style.display = 'none';
-		    	}
+		    	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 		    	
-		    	$('#notifs_fade_away_delay_display').innerHTML = $('#notifs_fade_away_delay').value;
+		    	if (aNotifsShowWhen == 'on_hotkey_only' || aNotifsShowWhen == 'on_song_change')
+		    		$('#notifs_fade_away_delay').parent().css('display', 'block');
+		    	else
+		    		$('#notifs_fade_away_delay').parent().css('display', 'none');
+		    	
+		    	$('#notifs_fade_away_delay_display').text($('#notifs_fade_away_delay').val());
+		    }
+		    
+		    function activateHotKeys(e)
+		    {
+		    	chrome.permissions.request({ origins: [ '<all_urls>' ] }, function(granted) 
+    			{
+		    		showHotKeys();
+		    	});
 		    }
 		    
 		    window.addEventListener('hashchange', function(e) { showSection(location.hash.replace(/^\#/,'')); });
@@ -150,7 +342,7 @@
 	<body onload="preparePage();">
 		<div id="tab_chooser">
 			<nav>
-				<a id="welcome_nav" href="#welcome" data-i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" data-i18n-content="options_page_tab_title_options"></a><a id="notifications_nav" href="#notifications" data-i18n-content="options_page_tab_title_notifications"></a>
+				<a id="welcome_nav" href="#welcome" data-i18n-content="options_page_tab_title_welcome"></a><a id="options_nav" href="#options" data-i18n-content="options_page_tab_title_options"></a><a id="hotkeys_nav" href="#hotkeys" data-i18n-content="options_page_tab_title_hotkeys"></a><a id="notifications_nav" href="#notifications" data-i18n-content="options_page_tab_title_notifications"></a>
 			</nav>
 			<span id="arrow_line"><img src="imgs/arrow_down.png"/></span>
 		</div>
@@ -171,14 +363,14 @@
 		
 			<!-- Option tab: style chooser -->
 			<section id="options">
-				<h1 data-i18n-content="options_page_tab_options_h1_popup_style"></h1>
-				<span data-i18n-content="options_page_tab_options_choose_style"></span>:
+				<h1 data-i18n-content="options_page_tab_popup_style_h1"></h1>
+				<span data-i18n-content="options_page_tab_popup_style_choose_style"></span>:
 				<select id="popup_style" onchange="loadStyleFromSelect()">
-		 			<option value="large" data-i18n-content="options_page_tab_options_style_large"></option>
-		 			<option value="small" data-i18n-content="options_page_tab_options_style_small"></option>
-		 			<option value="sideways" data-i18n-content="options_page_tab_options_style_sideways"></option>
+		 			<option value="large" data-i18n-content="options_page_tab_popup_style_style_large"></option>
+		 			<option value="small" data-i18n-content="options_page_tab_popup_style_style_small"></option>
+		 			<option value="sideways" data-i18n-content="options_page_tab_popup_style_style_sideways"></option>
 				</select>
-				<button onclick="saveStyle()" data-i18n-content="options_page_tab_options_button_save"></button>
+				<button onclick="saveStyle()" data-i18n-content="options_page_button_save"></button>
 				<span id="status_style"></span>
 				<br/>			
 		
@@ -220,28 +412,88 @@
 				</div>
 			</section>
 		
-			<!-- Option tab: notifications -->
-			<section id="notifications">
-				<h1 data-i18n-content="options_page_tab_options_h1_notifications"></h1>
-				<fieldset>
-					<div>
-						<label for="notifs_activate" data-i18n-content="options_page_tab_notifs_activate_permission"></label>
-						<input type="checkbox" onchange="checkNotifsPermission()" id="notifs_activate"></input>
+			<!-- Option tab: hot keys -->
+			<section id="hotkeys">
+				<h1 data-i18n-content="options_page_tab_hotkeys_h1"></h1>
+				<div data-i18n-content="options_page_tab_hotkeys_what_are_hotkeys"></div>
+				<div id="hotkey_permission_ko">
+					<div data-i18n-content="options_page_tab_hotkeys_activation_hot_keys"></div>
+					<button onclick="activateHotKeys();" data-i18n-content="options_page_tab_hotkeys_button_activate"></button>
+				</div>
+				
+				<fieldset id="hotkey_permission_ok">
+					<h2 data-i18n-content="options_page_tab_hotkeys_prevHotKey_h2"></h2>
+					<div id="prevHotKey">
+						<button class="two_state_unselected">SHIFT</button>
+						<button class="two_state_unselected">CTRL</button>
+						<button class="two_state_unselected">ALT</button>
+						<button class="two_state_selected"></button>
+						<input type="text"></input>
+						<input type="text"></input>
+						<span class="warning"></span>
 					</div>
 					
-					<div>					
-						<label for="notifs_always_visible" data-i18n-content="options_page_tab_notifs_always_visible"></label>
-						<input type="checkbox" onchange="showHideNotifsOptions()" id="notifs_always_visible"></input>
+					<h2 data-i18n-content="options_page_tab_hotkeys_playPauseHotKey_h2"></h2>
+					<div id="playPauseHotKey">
+						<button class="two_state_unselected">SHIFT</button>
+						<button class="two_state_unselected">CTRL</button>
+						<button class="two_state_unselected">ALT</button>
+						<button class="two_state_selected"></button>
+						<input type="text"></input>
+						<input type="text"></input>
+						<span class="warning"></span>
 					</div>
+										
+					<h2 data-i18n-content="options_page_tab_hotkeys_nextHotKey_h2"></h2>
+					<div id="nextHotKey">
+						<button class="two_state_unselected">SHIFT</button>
+						<button class="two_state_unselected">CTRL</button>
+						<button class="two_state_unselected">ALT</button>
+						<button class="two_state_selected"></button>
+						<input type="text"></input>
+						<input type="text"></input>
+						<span class="warning"></span>
+					</div>
+										
+					<h2 data-i18n-content="options_page_tab_hotkeys_whatZatSongHotKey_h2"></h2>
+					<div style="margin-top: -10px; font-style: italic;" data-i18n-content="options_page_tab_hotkeys_warning_whatZatSongHotKey"></div>
+					<div id="whatZatSongHotKey">
+						<button class="two_state_unselected">SHIFT</button>
+						<button class="two_state_unselected">CTRL</button>
+						<button class="two_state_unselected">ALT</button>
+						<button class="two_state_selected"></button>
+						<input type="text"></input>
+						<input type="text"></input>
+						<span class="warning"></span>
+					</div>
+
+					<div class="save_cancel_bar">
+						<button id="save_hot_keys" onclick="saveHotKeys();" data-i18n-content="options_page_button_save"></button>
+						<span id="status_hotkeys"></span>
+					</div>
+				</fieldset>
+			</section>
+		
+			<!-- Option tab: notifications -->
+			<section id="notifications">
+				<h1 data-i18n-content="options_page_tab_notifs_h1"></h1>
+				<div data-i18n-content="options_page_tab_notifs_what_are_notifications"></div>
+				
+				<fieldset>
+					<h2 data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
+					<input type="radio" name="notifs_show_when" value="never" onclick="checkNotifsPermissions();"/><span data-i18n-content="options_page_tab_notifs_show_never"></span><span class="warning" id='chrome_permission_not_granted' data-i18n-content="options_page_tab_notifs_chrome_permission_not_granted"></span><br/>
+					<input type="radio" name="notifs_show_when" value="never_hides" onclick="checkNotifsPermissions();"/><span data-i18n-content="options_page_tab_notifs_show_never_hides"></span><br/>
+					<input type="radio" name="notifs_show_when" value="on_song_change" onclick="checkNotifsPermissions();"/><span data-i18n-content="options_page_tab_notifs_show_on_song_change"></span><br/>
+					<input type="radio" name="notifs_show_when" value="on_hotkey_only" onclick="checkNotifsPermissions();"/><span data-i18n-content="options_page_tab_notifs_show_on_hotkey_only"></span><br/>
 					
 					<div>
 						<label for="notifs_fade_away_delay" data-i18n-content="options_page_tab_notifs_fade_away_delay"></label>
-						<input onchange="showHideNotifsOptions()" type="range" id="notifs_fade_away_delay" min="1" max="10" step="0.5" value="3"></input>
+						<input onchange="updateNotifsOptions()" type="range" id="notifs_fade_away_delay" min="1" max="10" step="0.5" value="3"></input>
 						<span id="notifs_fade_away_delay_display"></span>
 					</div>
 					
-					<div style="margin: 15px 0px 0px -5px;">
-						<button onclick="saveNotifications()" data-i18n-content="options_page_tab_options_button_save"></button>
+					<div class="save_cancel_bar">
+						<button onclick="saveNotifications();" data-i18n-content="options_page_button_save"></button>
 						<span id="status_notifs"></span>
 					</div>
 				</fieldset>
