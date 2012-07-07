@@ -1,4 +1,30 @@
 
+function FillDictWithDefaults(ioObjectToFill, iDictWithDefaultValues)
+{
+	if (ioObjectToFill == null)
+		return iDictWithDefaultValues;
+
+	// loop on all keys of iDictWithDefaultValues, and assign value to ioObjectToFill if key not found in ioObjectToFill
+    for(var key in iDictWithDefaultValues)
+    {
+        if(iDictWithDefaultValues.hasOwnProperty(key) && !ioObjectToFill.hasOwnProperty(key))
+        {
+        	ioObjectToFill[key] = iDictWithDefaultValues[key];
+        }
+    }
+    
+    // loop on all keys in ioObjectToFill, and remove those not found in iDictWithDefaultValues
+    for(var key in ioObjectToFill)
+    {
+        if(ioObjectToFill.hasOwnProperty(key) && !iDictWithDefaultValues.hasOwnProperty(key))
+        {
+        	delete ioObjectToFill[key];
+        }
+    }
+	
+	return ioObjectToFill;
+}
+
 var LOCSTO = LOCSTO || {
 	
 	/*
@@ -6,20 +32,20 @@ var LOCSTO = LOCSTO || {
 	 */
 	loadOptions: function()
 	{
-		this.popupStyle = this.get('popup_style');
-		this.notifications = this.get('notifications') || {};
-		this.nbOpenedDeezerTabs = this.get('nbOpenedDeezerTabs'); // the nb of opened Deezer tabs
-				
-		/*
-		 * set default values here
-		 */
-		this.popupStyle = this.popupStyle || 'large';
-		
-		this.notifications.visible = this.notifications.visible == null ? false : this.notifications.visible;
-		this.notifications.alwaysOn = this.notifications.alwaysOn == null ? false : this.notifications.alwaysOn;
-		this.notifications.fadeAwayDelay = this.notifications.fadeAwayDelay || 3000;
-
+		this.popupStyle = this.get('popup_style') || 'large';
 		this.nbOpenedDeezerTabs = this.get('nbOpenedDeezerTabs') || 0;
+		
+		// notifications
+		// they changed from the beginning, so: 
+		//   - visible = on_song_change
+		//   - alwaysOn = never_hides
+		this.notifications = FillDictWithDefaults(this.get('notifications'), { never: false, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000 });
+		
+		// hot keys
+		       this.prevHotKey =        FillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
+		  this.playPauseHotKey =   FillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
+		       this.nextHotKey =        FillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
+		this.whatZatSongHotKey = FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true, shiftKey: false, keyCode: 87 });
 	}, 
 	
 	/*
@@ -30,6 +56,10 @@ var LOCSTO = LOCSTO || {
 		this.set('popup_style', this.popupStyle);
 		this.set('notifications', this.notifications);
 		this.set('nbOpenedDeezerTabs', this.nbOpenedDeezerTabs);
+		this.set('prevHotKey', this.prevHotKey);
+		this.set('playPauseHotKey', this.playPauseHotKey);
+		this.set('nextHotKey', this.nextHotKey);
+		this.set('whatZatSongHotKey', this.whatZatSongHotKey);
 	}, 
 	
 	/*
@@ -58,3 +88,4 @@ var LOCSTO = LOCSTO || {
 	}
 };
 LOCSTO.loadOptions();
+

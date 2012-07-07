@@ -18,7 +18,7 @@ h2
 {
 	color: #202020;
 	font-size: 14px;
-	margin: 0px 0px 10px 0px;
+	margin: 15px 0px 5px 0px;
 	text-shadow: #EFEFEF 0px 1px 0px;
 }
 
@@ -26,7 +26,7 @@ h2
 {
 	background-color: white;
 	border: 1px solid #E9E9E9;
-	height: 420px;
+	height: 435px;
 	margin: 20px auto 0 auto;
 	padding: 20px;
 	width: 760px;
@@ -116,6 +116,11 @@ section.currentone
 	-webkit-transition: all 0.3s;
 }
 
+input
+{
+	border: 1px solid #D0D0D0;
+}
+
 select, #remember_to a
 {
 	background: #F0F0F0;
@@ -145,12 +150,29 @@ button
 	text-shadow: 0 1px #386B92;
 }
 
+button.two_state_unselected, button.two_state_unselected:hover
+{
+	background: #F0F0F0;
+	border: 1px solid #D0D0D0;
+	color: gray;
+	text-shadow: 0 1px white;
+} 
+
+button.two_state_selected, button.two_state_selected:hover
+{
+	background: #F0F0F0;
+	border: 1px solid black;
+	color: black;
+	text-shadow: 0 1px white;
+}
+
 button:hover
 {
 	background:#5387ac;
 	background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0, rgb(46,91,123)),color-stop(1, rgb(84,136,173)));
 }
-	
+
+
 
 select:hover, #remember_to a:hover
 {
@@ -168,6 +190,11 @@ select:hover, #remember_to a:hover
 	border: 1px dashed #BEBEBE;
 	margin: 25px 0px;
 	padding: 10px;
+}
+
+#remember_to h2
+{
+	margin: 0px 0px 10px 0px;
 }
 
 #remember_to div
@@ -282,7 +309,7 @@ fieldset
 {
 	border: 0;
 	padding: 0;
-	margin: 0;
+	margin: 10px 0px 0px 0px;
 }
 
 fieldset div
@@ -299,4 +326,30 @@ fieldset *
 #notifs_fade_away_delay_display:after
 {
 	content: "s";
+}
+
+.warning
+{
+	margin-left: 20px;
+	color: red;
+	font-style: italic;
+	font-weight: bold;	
+	visibility: hidden;
+}
+
+div.save_cancel_bar
+{
+	border-top: 1px solid lightgray;
+	padding: 5px; 
+	margin: 15px 0px 0px -5px; 
+}
+
+#hotkey_permission_ko, #hotkey_permission_ok
+{
+	display: none;
+}
+
+#hotkey_permission_ko > *
+{
+	margin-top: 10px;
 }

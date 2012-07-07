@@ -1,4 +1,8 @@
 0.0.9 -
+ * Added hot keys support
+ * Improved local storage for easier default values
+ * Improved notification system to be displayable on hot keys only 
+ * Options.html migrated to jQuery
  * Pre cache album covers for faster display
  * Fixed flickering on popup load if change of CSS needed
 

@@ -1,5 +1,9 @@
 
-var COVER_SIZE = "250x250";
+var COVER_SIZE_LARGE = "250x250";
+var COVER_SIZE_SMALL = "120x120";
+var COVER_SIZE_SIDEWAYS = "80x80";
+
+var COVER_SIZE = COVER_SIZE_LARGE;
 
 function gup(iParamName)
 {
@@ -33,10 +37,10 @@ function loadStyle(iPopupStyle)
 		// on size change from small to large
 		var aOldSize = COVER_SIZE;
 		
-		// set the size of the cover
-		if (aPopupStyle == 'small') COVER_SIZE = "120x120"; 
-		else if (aPopupStyle == 'large') COVER_SIZE = "250x250";
-		else if (aPopupStyle == 'sideways') COVER_SIZE = "80x80";
+		// set the size of the cover 
+		if (aPopupStyle == 'large') COVER_SIZE = COVER_SIZE_LARGE;
+		else if (aPopupStyle == 'small') COVER_SIZE = COVER_SIZE_SMALL;
+		else if (aPopupStyle == 'sideways') COVER_SIZE = COVER_SIZE_SIDEWAYS;
 		
 		// replace img src to show new size
 		document.getElementById('cover').src = document.getElementById('cover').src.replace(aOldSize, COVER_SIZE);
@@ -46,7 +50,7 @@ function loadStyle(iPopupStyle)
 
 function executePlayerAction(iCommand)
 {
-	executeActionOnDeezerTab("controlPlayer", iCommand, function() 
+	chrome.extension.sendRequest({ type: "controlPlayer", command: iCommand, source: "popup" }, function() 
 	{
 		// this trick is used to display the correct play / pause button 
 		// when the user press it in the popup
@@ -56,29 +60,15 @@ function executePlayerAction(iCommand)
 			aNowPlayingData.dz_playing = 'true';
 		else if (iCommand == 'pause')
 			aNowPlayingData.dz_playing = 'false';
+		else if (iCommand == 'playpause')
+		{
+			if (aNowPlayingData.dz_playing == 'true')
+				aNowPlayingData.dz_playing = 'false';
+			else 
+				aNowPlayingData.dz_playing = 'true';
+		}
 		refreshPopup();
 	});
-}
-
-function executeActionOnDeezerTab(iName, iAction, iCallback)
-{
-	// find all deezer tabs on all the windows, and send the wanted request to each one
-	chrome.windows.getAll(
-		{populate : true},
-		function(windows) 
-		{				
-			for(var i = 0; i < windows.length; i++) 
-			{
-				for(var j = 0; j < windows[i].tabs.length; j++) 
-				{
-					if (windows[i].tabs[j].url.toLowerCase().indexOf('www.deezer.com') > 0)
-					{
-						var aDeezerTabId =  windows[i].tabs[j].id;
-						chrome.tabs.sendRequest(aDeezerTabId, {name: iName, action: iAction}, function(response) { if (iCallback) iCallback(); });
-					}
-				}
-			}
-		});	
 }
 
 function refreshPopup()
