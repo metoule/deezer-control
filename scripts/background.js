@@ -25,7 +25,6 @@ chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab)
 		{
 		    if (result)
 		    {
-		    	chrome.tabs.executeScript(iTabId, { file: "/scripts/localstorage.js" });
 		    	chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" });
 		    }
 		});
@@ -172,7 +171,12 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		// reset the fact that action is on media key event
 		gActionOnHotKey = false;
 		
-		break;		
+		break;
+		
+	case "getLOCSTO":
+		LOCSTO.loadOptions(); // otherwise options might not be up to date
+		sendResponse(LOCSTO);
+		break;
 	}
 });
 
