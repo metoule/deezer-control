@@ -224,7 +224,7 @@ function showNotif()
 						{
 							// TODO stop timeout on mouse over
 							// TODO restart time out on mouse out
-							gNotificationTimeoutId = setTimeout("closeNotif()", LOCSTO.notifications.fadeAwayDelay);
+							gNotificationTimeoutId = setTimeout(closeNotif, LOCSTO.notifications.fadeAwayDelay);
 						}
 				    }
 				    // not authorized, remove notif
