@@ -1,4 +1,5 @@
 {
+  "manifest_version": 2,
   "version": "0.0.8",
   "name": "__MSG_extName__",
   "description": "__MSG_extDesc__",
@@ -6,7 +7,7 @@
                         "default_icon": "/imgs/icons/deezer_19x19.png", 
                         "default_title": "__MSG_defaultTitle__"
                     },
-  "background_page":"background.html",
+  "background": { "page": "background.html" },
   "options_page": "options.html",
   "content_scripts": [
                          {

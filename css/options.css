@@ -121,7 +121,7 @@ input
 	border: 1px solid #D0D0D0;
 }
 
-select, #remember_to a
+select, #remember_to a, .button_cancel
 {
 	background: #F0F0F0;
 	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #E6E6E6),color-stop(1, #FEFEFE));
@@ -132,6 +132,9 @@ select, #remember_to a
 	padding: 5px 10px 5px 10px;
 	text-shadow: 0 1px white;	
 }
+
+/* TODO implement cancel buttons correctly */
+.button_cancel { display: none; }
 
 button, #remember_to a
 {
@@ -174,12 +177,12 @@ button:hover
 
 
 
-select:hover, #remember_to a:hover
+select:hover, #remember_to a:hover, .button_cancel:hover
 {
 	color: black;
 }
 
-#remember_to a:hover
+#remember_to a:hover, .button_cancel:hover
 {
 	background:#404040;
 	background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0, rgb(205,205,205)),color-stop(1, rgb(255,255,255)));

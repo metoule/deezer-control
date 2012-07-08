@@ -5,6 +5,8 @@ var COVER_SIZE_SIDEWAYS = "80x80";
 
 var COVER_SIZE = COVER_SIZE_LARGE;
 
+window.addEventListener('load', function(e) { preparePopup(); });
+
 function gup(iParamName)
 {
 	// taken from http://www.netlobo.com/url_query_string_javascript.html
@@ -16,6 +18,19 @@ function gup(iParamName)
 		return null;  
 	else
 		return results[1];
+}
+
+function preparePopup()
+{
+	loadStyle();
+
+	// add interactivity
+	$("#control-prev").click(function () { executePlayerAction('prev'); return false; });
+	$("#control-pause").click(function () { executePlayerAction('pause'); return false; });
+	$("#control-play").click(function () { executePlayerAction('play'); return false; });
+	$("#control-next").click(function () { executePlayerAction('next'); return false; });
+	
+	setTimeout(refreshPopup, 0);
 }
 
 function loadStyle(iPopupStyle)
