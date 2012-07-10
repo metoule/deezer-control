@@ -89,26 +89,14 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 			var aAction = request.action;
 			if (aAction == 'playpause')
 			{
-				var aAllAttributes = document.getElementById('myPlayerInfo').attributes; 
-				var aDzAttributes = {}; 
-				for (i = 0 ; i < aAllAttributes.length; i++) 
-				{
-					if (aAllAttributes[i].name == "dz_playing")
-					{
-						if (aAllAttributes[i].value == "true")
-						{
-							aAction = "pause";
-							aAllAttributes[i].value = false;
-						}
-						else 
-						{
-							aAction = "play";
-							aAllAttributes[i].value = true;
-						}
-					}
-			    }
+				var aDzPlaying = document.getElementById('myPlayerInfo').getAttribute('dz_playing');
+				aAction = aDzPlaying == "true" ? "pause" : "play";
 			}
 			
+			// update dz_playing if needed
+			if (aAction == "play" || aAction == "pause")
+				document.getElementById('myPlayerInfo').setAttribute('dz_playing', aAction == "play" ? "true" : "false"); 
+						
 			sendJsonPlayerInfo(null); // thanks to this, changes on play / pause are tracked
 			location.href = "javascript: if (typeof(playercontrol) != 'undefined') playercontrol.doAction('" + aAction + "');";
 			break;
