@@ -1,4 +1,6 @@
 
+
+window.removeEventListener('keydown', keyboardNavigation, false);
 window.addEventListener('keydown', keyboardNavigation, false);
 
 function keyboardNavigation(e) 
