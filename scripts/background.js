@@ -24,9 +24,7 @@ chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab)
 		function(result) 
 		{
 		    if (result)
-		    {
-		    	chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" });
-		    }
+    			chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" }); 
 		});
 });
 
