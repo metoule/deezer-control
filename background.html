@@ -1,6 +1,7 @@
 <html>
 	<head>
 	    <script type="text/javascript" src="/scripts/localstorage.js"></script>
+		<script type="text/javascript" src="/scripts/jquery-1.7.2.min.js"></script>
 	    <script type="text/javascript" src="/scripts/popup.js"></script>
 	    <script type="text/javascript" src="/scripts/background.js"></script>
 	</head>
@@ -14,6 +15,26 @@
 		<img src="imgs/unknown_cd.png" id="prev_cover"/>
 		<img src="imgs/unknown_cd.png" id="cover"/>
 		<img src="imgs/unknown_cd.png" id="next_cover"/>
+		
+		<!-- to avoid issues with popup.js -->
+		<div id="popup_display">
+			<div id="controls">
+				<div id="controls-left">
+					&nbsp;
+				</div>
+				<div id="controls-right">
+					&nbsp;<a id="control-prev"></a><a id="control-pause"></a><a id="control-play"></a><a id="control-next"></a>
+				</div>
+			</div>
+			<div id="now_playing">
+				<div id="now_playing_info">
+					<span id="now_playing_info_track"></span>
+					<span id="now_playing_info_artist"></span>
+					<!-- span id="now_playing_info_album"></span -->
+				</div>
+					<img src="imgs/unknown_cd.png" id="cover"/>
+			</div>
+		</div>
  			
 	</body>
 </html>

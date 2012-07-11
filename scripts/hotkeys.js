@@ -1,7 +1,17 @@
 
-
-window.removeEventListener('keydown', keyboardNavigation, false);
-window.addEventListener('keydown', keyboardNavigation, false);
+var HOTKEYS_LISTENER = HOTKEYS_LISTENER || {
+	
+	register: function()
+	{
+		if (!this.isRegistered)
+		{
+			window.addEventListener('keydown', keyboardNavigation, false);
+			this.isRegistered = true;
+		}
+	}
+	
+};
+HOTKEYS_LISTENER.register();
 
 function keyboardNavigation(e) 
 {
