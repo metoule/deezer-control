@@ -2,6 +2,7 @@
 	"extName": { "message": "Deezer Control" }, 
 	"extDesc": { "message": "Cette extension vous permet de contrôler Deezer à partir de votre navigateur." },
 	"defaultTitle": { "message": "Ouvrir Deezer dans un nouvel onglet" }, 
+	"showNewItemsTitle": { "message": "Ouvrir la page d'options pour voir les nouveautés" }, 
 	
 	"options_page_tab_title_welcome": { "message": "Bienvenue" }, 
 	"options_page_tab_title_options": { "message": "Style de la popup" }, 

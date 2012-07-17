@@ -67,6 +67,13 @@ a
 	-webkit-transition: all 0.3s;
 }
 
+a.new_item
+{
+	background: url(/imgs/new.png) no-repeat 5px 9px;
+	padding-left: 5px;
+	padding-right: -5px;
+}
+
 section
 {
 	-webkit-transition: all 0.3s;
@@ -88,7 +95,7 @@ section.currentone
 
 #tab_chooser nav a.currentone, #tab_chooser nav a.currentone:hover
 {
-	background: #444;
+	background-color: #444;
 	color: white;
 	text-shadow: 0 -1px black;
 	-webkit-gradient(linear,left top,right top,color-stop(0, #262626),color-stop(0.02, #444),color-stop(0.98, #444),color-stop(1, #262626));

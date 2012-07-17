@@ -9,7 +9,24 @@ window.addEventListener('load', countDeezerTabs(), false);
 // if not popup is set, it means that we should open a new Deezer tab
 chrome.browserAction.onClicked.addListener(function(iTab) 
 {
-	chrome.tabs.create({ url: 'http://www.deezer.com' });
+	// extension has just been updated, a click will open the option page
+	if (LOCSTO.shouldWeShowNewItems())
+	{
+		chrome.tabs.create({ url: '/options.html' });
+		
+		// user has seen what's new, restore normal use case
+		chrome.browserAction.setBadgeText({ text: "" });
+		LOCSTO.saveInstalledVersion();
+		countDeezerTabs();
+		
+		updateButtonTooltip();
+		propagatePlayingDataToAllTabs();
+	}
+	// else: normal use case
+	else 
+	{
+		chrome.tabs.create({ url: 'http://www.deezer.com' });
+	}
 });
 
 // inject hotkeys.js on any page if user allowed it
@@ -60,17 +77,28 @@ function countDeezerTabs()
 
 // if at least one deezer tab, open a popup
 function shouldWeShowPopup()
-{	
-	if (LOCSTO.nbOpenedDeezerTabs <= 0)
+{
+	// extension has just been updated, show new items
+	if (LOCSTO.shouldWeShowNewItems())
 	{
-		LOCSTO.nbOpenedDeezerTabs = 0; // ensure we're always at 0 to avoid unwanted situations
-		LOCSTO.saveNbOpenedDeezerTabs();
-		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
-		chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
-	}
+		chrome.browserAction.setBadgeText({ text: "NEW" });
+		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('showNewItemsTitle') });
+		chrome.browserAction.setPopup({ popup: '' }); // don't create a popup, we want to open the options page
+	} 
+	// else: normal use case
 	else
 	{
-		chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
+		if (LOCSTO.nbOpenedDeezerTabs <= 0)
+		{
+			LOCSTO.nbOpenedDeezerTabs = 0; // ensure we're always at 0 to avoid unwanted situations
+			LOCSTO.saveNbOpenedDeezerTabs();
+			chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
+			chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
+		}
+		else
+		{
+			chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
+		}
 	}
 }
 
@@ -82,32 +110,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 	case "now_playing_updated":
 		gNowPlayingData = request.nowPlayingData;
 
-		// update the button's tooltip
-		if (gNowPlayingData != null)
-			chrome.browserAction.setTitle({ title: gNowPlayingData.dz_track + ' - ' + gNowPlayingData.dz_artist });
-		else
-			chrome.browserAction.setTitle({ title: '' });
-			
-		// refresh all opened popups, tabs (i.e. option page), and notifications
-		chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
-		chrome.extension.getViews({ type: 'popup' }).forEach(function(win) { win.refreshPopup(); });
-		chrome.extension.getViews({ type: "notification" }).forEach(function(win) { win.refreshPopup(); });
+		// update the button's tooltip only if no update should be shown
+		if (!LOCSTO.shouldWeShowNewItems())
+			updateButtonTooltip();
 		
-		if (gNowPlayingData != null)
-		{
-			// set images in background page to cache album covers for faster display
-			loadStyle(); // load COVER_SIZE variable
-			
-			// load notification size image
-			document.getElementById('prev_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
-			document.getElementById('cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
-			document.getElementById('next_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
-						
-			// load full image (might be the same size)
-			document.getElementById('prev_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
-			document.getElementById('cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
-			document.getElementById('next_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
-		}
+		propagatePlayingDataToAllTabs();
 		
 		// show / hide notif if needed
 		showNotif();
@@ -233,6 +240,38 @@ function showNotif()
 				    }
 				});
 		}
+	}
+}
+
+function updateButtonTooltip()
+{
+	if (gNowPlayingData != null)
+		chrome.browserAction.setTitle({ title: gNowPlayingData.dz_track + ' - ' + gNowPlayingData.dz_artist });
+	else
+		chrome.browserAction.setTitle({ title: '' });
+}
+
+function propagatePlayingDataToAllTabs()
+{	
+	// refresh all opened popups, tabs (i.e. option page), and notifications
+	chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
+	chrome.extension.getViews({ type: 'popup' }).forEach(function(win) { win.refreshPopup(); });
+	chrome.extension.getViews({ type: "notification" }).forEach(function(win) { win.refreshPopup(); });
+	
+	if (gNowPlayingData != null)
+	{
+		// set images in background page to cache album covers for faster display
+		loadStyle(); // load COVER_SIZE variable
+		
+		// load notification size image
+		document.getElementById('prev_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
+		document.getElementById('cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
+		document.getElementById('next_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
+					
+		// load full image (might be the same size)
+		document.getElementById('prev_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+		document.getElementById('cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+		document.getElementById('next_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
 	}
 }
 

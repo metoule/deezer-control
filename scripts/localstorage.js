@@ -46,6 +46,15 @@ var LOCSTO = LOCSTO || {
 	},
 	
 	/*
+	 * are we in an update scenario?
+	 */
+	shouldWeShowNewItems: function()
+	{
+		this.installedVersion = this.get('installedVersion') || "0.0.0";
+		return this.installedVersion < chrome.app.getDetails().version;
+	},
+	
+	/*
 	 * store values will save values to local storage
 	 */
 	
@@ -70,6 +79,11 @@ var LOCSTO = LOCSTO || {
 	saveNotifications: function()
 	{
 		this.set('notifications', this.notifications);
+	}, 
+	
+	saveInstalledVersion: function()
+	{
+		this.set('installedVersion', chrome.app.getDetails().version);
 	}, 
 	
 	/*
