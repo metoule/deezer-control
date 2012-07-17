@@ -51,7 +51,7 @@ function countDeezerTabs()
 			
 			// store number of opened Deezer tabs in local storage
 			LOCSTO.nbOpenedDeezerTabs = aCurrentlyOpenedTabs;
-			LOCSTO.saveOptions();
+			LOCSTO.saveNbOpenedDeezerTabs();
 			
 			// set popup to show up if at least one tab
 			shouldWeShowPopup();
@@ -64,7 +64,7 @@ function shouldWeShowPopup()
 	if (LOCSTO.nbOpenedDeezerTabs <= 0)
 	{
 		LOCSTO.nbOpenedDeezerTabs = 0; // ensure we're always at 0 to avoid unwanted situations
-		LOCSTO.saveOptions();
+		LOCSTO.saveNbOpenedDeezerTabs();
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
 		chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
 	}
@@ -124,7 +124,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 	case "update_deezer_tabs_nb":
 		countDeezerTabs();
 		LOCSTO.nbOpenedDeezerTabs = LOCSTO.nbOpenedDeezerTabs + request.amount;
-		LOCSTO.saveOptions();
+		LOCSTO.saveNbOpenedDeezerTabs();
 		
 		// set popup if needed
 		shouldWeShowPopup();

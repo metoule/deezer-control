@@ -1,28 +1,25 @@
 
-function FillDictWithDefaults(ioObjectToFill, iDictWithDefaultValues)
+function FillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues)
 {
-	if (ioObjectToFill == null)
-		return iDictWithDefaultValues;
+	var aMyNewObject = {};
+	
+	if (iDictWithRealValues == null)
+		iDictWithRealValues = {};
 
-	// loop on all keys of iDictWithDefaultValues, and assign value to ioObjectToFill if key not found in ioObjectToFill
+	// loop on all keys of iDictWithDefaultValues, and assign value to aMyNewObject if key not found in iDictWithRealValues
+	// note: this will also remove any key in iDictWithRealValues not present in iDictWithDefaultValues
     for(var key in iDictWithDefaultValues)
     {
-        if(iDictWithDefaultValues.hasOwnProperty(key) && !ioObjectToFill.hasOwnProperty(key))
+        if(iDictWithDefaultValues.hasOwnProperty(key))
         {
-        	ioObjectToFill[key] = iDictWithDefaultValues[key];
-        }
-    }
-    
-    // loop on all keys in ioObjectToFill, and remove those not found in iDictWithDefaultValues
-    for(var key in ioObjectToFill)
-    {
-        if(ioObjectToFill.hasOwnProperty(key) && !iDictWithDefaultValues.hasOwnProperty(key))
-        {
-        	delete ioObjectToFill[key];
+        	if (iDictWithRealValues.hasOwnProperty(key))
+        		aMyNewObject[key] = iDictWithRealValues[key];
+        	else        		
+        		aMyNewObject[key] = iDictWithDefaultValues[key];
         }
     }
 	
-	return ioObjectToFill;
+	return aMyNewObject;
 }
 
 var LOCSTO = LOCSTO || {
@@ -45,26 +42,40 @@ var LOCSTO = LOCSTO || {
 		       this.prevHotKey =        FillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
 		  this.playPauseHotKey =   FillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
 		       this.nextHotKey =        FillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
-		this.whatZatSongHotKey = FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true, shiftKey: false, keyCode: 87 });
-	}, 
+		this.whatZatSongHotKey = FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87 });
+	},
 	
 	/*
 	 * store values will save values to local storage
 	 */
-	saveOptions: function()
+	
+	saveNbOpenedDeezerTabs: function()
+	{
+		this.set('nbOpenedDeezerTabs', this.nbOpenedDeezerTabs);
+	},
+	
+	savePopupStyle: function()
 	{
 		this.set('popup_style', this.popupStyle);
-		this.set('notifications', this.notifications);
-		this.set('nbOpenedDeezerTabs', this.nbOpenedDeezerTabs);
+	},
+	
+	saveHotKeys: function()
+	{
 		this.set('prevHotKey', this.prevHotKey);
 		this.set('playPauseHotKey', this.playPauseHotKey);
 		this.set('nextHotKey', this.nextHotKey);
 		this.set('whatZatSongHotKey', this.whatZatSongHotKey);
+	},
+	
+	saveNotifications: function()
+	{
+		this.set('notifications', this.notifications);
 	}, 
 	
 	/*
 	 * generic methods
 	 */
+	
 	set : function(iKey, iValue) {
 		try 
 		{
@@ -72,6 +83,7 @@ var LOCSTO = LOCSTO || {
 			window.localStorage.setItem(iKey, JSON.stringify(iValue));
 		} catch (e) {}
 	},
+	
 	get : function(iKey) {
 		var aLocalValue = window.localStorage.getItem(iKey);
 		try {
@@ -80,9 +92,11 @@ var LOCSTO = LOCSTO || {
 			return aLocalValue;
 		}
 	},
+	
 	remove : function(iKey) {
 		return window.localStorage.removeItem(iKey);
 	},
+	
 	clear : function() {
 		window.localStorage.clear();
 	}
