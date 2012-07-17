@@ -10,7 +10,7 @@ function preparePage()
 	
 	// create interactivity
 	$("#popup_style_chooser").change(function () { loadStyle($("#popup_style_chooser").val()); });
-	$("#button_save_style").click(function () { saveStyle(); });
+	$("#button_save_style").click(function () { savePopupStyle(); });
 	
 	$("#button_activate_hotkeys").click(function () { activateHotKeys(); });
 	$("#button_save_hotkeys").click(function () { saveHotKeys(); });
@@ -143,10 +143,10 @@ function restoreHotkey(iHotKeyName)
 
 
 // Saves options to localStorage.
-function saveStyle() 
+function savePopupStyle() 
 {
 	LOCSTO.popupStyle = $("#popup_style_chooser").val();
-	LOCSTO.saveOptions();
+	LOCSTO.savePopupStyle();
 
 	// Update status to let user know options were saved.
 	$("#status_style").text(chrome.i18n.getMessage("options_page_options_saved"));
@@ -159,7 +159,7 @@ function saveHotKeys()
 	storeHotKey('playPauseHotKey');
 	storeHotKey('nextHotKey');
 	storeHotKey('whatZatSongHotKey');	
-	LOCSTO.saveOptions();
+	LOCSTO.saveHotKeys();
 
 	// Update status to let user know options were saved.
 	$("#status_hotkeys").text(chrome.i18n.getMessage("options_page_options_saved"));
@@ -194,7 +194,7 @@ function saveNotifications()
 	else if (aNotifsShowWhen == 'on_hotkey_only')
 		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay }; 
 
-	LOCSTO.saveOptions();
+	LOCSTO.saveNotifications();
 
 	// Update status_style to let user know options were saved.
 	$("#status_notifs").text(chrome.i18n.getMessage("options_page_options_saved"));

@@ -25,10 +25,10 @@ function preparePopup()
 	loadStyle();
 
 	// add interactivity
-	$("#control-prev").click(function () { executePlayerAction('prev'); return false; });
+	$("#control-prev").click(function ()  { executePlayerAction('prev');  return false; });
 	$("#control-pause").click(function () { executePlayerAction('pause'); return false; });
-	$("#control-play").click(function () { executePlayerAction('play'); return false; });
-	$("#control-next").click(function () { executePlayerAction('next'); return false; });
+	$("#control-play").click(function ()  { executePlayerAction('play');  return false; });
+	$("#control-next").click(function ()  { executePlayerAction('next');  return false; });
 	
 	setTimeout(refreshPopup, 0);
 }
