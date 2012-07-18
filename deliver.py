@@ -70,7 +70,7 @@ if __name__ == '__main__':
     # write new version
     with open('manifest.json', 'w') as aManifestFile:
         for line in aOldContent:
-            if 'version' in line:
+            if 'manifest_version' not in line and 'version' in line:
                 aOldVersion = re.search('\"version\"[\s]*:[\s]*\"(.*)\"', line).group(1)
                 print bcolors.YELLOW + "   Replacing old version %s by new one %s" % (aOldVersion, aNewVersion) + bcolors.ENDC                    
                 line = line.replace(aOldVersion, aNewVersion)
