@@ -1,4 +1,4 @@
-0.0.9 -
+0.1.0 - 19 Jul 2012
  * Added hot keys support
  * Improved local storage for easier default values
  * Improved notification system to be displayable on hot keys only 
