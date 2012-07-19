@@ -1,4 +1,7 @@
-0.1.0 - 19 Jul 2012
+0.1.2 - 19 Jul 2012 
+ * Stop notification timer on mouse over
+
+0.1.1 - 19 Jul 2012
  * Added hot keys support
  * Improved local storage for easier default values
  * Improved notification system to be displayable on hot keys only 

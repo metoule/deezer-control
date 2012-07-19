@@ -31,6 +31,13 @@ function preparePopup()
 	$("#control-next").click(function ()  { executePlayerAction('next');  return false; });
 	
 	setTimeout(refreshPopup, 0);
+	
+	// we're in a notif scenario, add mouse over and mouse out
+	if (gup('notif') == 'on')
+	{		
+		window.addEventListener('mouseover', function(e) { chrome.extension.getBackgroundPage().gMouseOverNotif = true;  chrome.extension.getBackgroundPage().resetNotifTimeout(); });
+		window.addEventListener('mouseout',  function(e) { chrome.extension.getBackgroundPage().gMouseOverNotif = false; chrome.extension.getBackgroundPage().startNotifTimeout(); });
+	}
 }
 
 function loadStyle(iPopupStyle)
