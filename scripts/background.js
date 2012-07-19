@@ -3,6 +3,8 @@ var gNowPlayingData = null;
 var gNotification = null;
 var gNotificationTimeoutId = null;
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
+var gMouseOverNotif = false; // this boolean is used so that we don't restart the notif timer if mouse over notifs
+
 
 window.addEventListener('load', countDeezerTabs(), false);
 
@@ -182,6 +184,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		sendResponse(LOCSTO);
 		break;
+
 	}
 });
 
@@ -215,7 +218,7 @@ function showNotif()
 						// if notif not already visible, create it
 						if (gNotification == null)
 						{
-							gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways");
+							gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways&notif=on");
 							gNotification.show();
 						} 
 						// else, we already have a notif opened
@@ -225,12 +228,7 @@ function showNotif()
 						}
 			
 						// hide notification after the wanted delay
-						if (!LOCSTO.notifications.alwaysOn)
-						{
-							// TODO stop timeout on mouse over
-							// TODO restart time out on mouse out
-							gNotificationTimeoutId = setTimeout(closeNotif, LOCSTO.notifications.fadeAwayDelay);
-						}
+						startNotifTimeout();
 				    }
 				    // not authorized, remove notif
 				    else
@@ -272,6 +270,16 @@ function propagatePlayingDataToAllTabs()
 		document.getElementById('prev_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
 		document.getElementById('cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
 		document.getElementById('next_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+	}
+}
+
+// start time out
+function startNotifTimeout()
+{	
+	// hide notification after the wanted delay
+	if (gMouseOverNotif == false && !LOCSTO.notifications.alwaysOn)
+	{
+		gNotificationTimeoutId = setTimeout(closeNotif, LOCSTO.notifications.fadeAwayDelay);
 	}
 }
 

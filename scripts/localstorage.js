@@ -51,7 +51,16 @@ var LOCSTO = LOCSTO || {
 	shouldWeShowNewItems: function()
 	{
 		this.installedVersion = this.get('installedVersion') || "0.0.0";
-		return this.installedVersion < chrome.app.getDetails().version;
+		var aExtensionVersion = chrome.app.getDetails().version;
+		
+		// show nothing between version 0.1.1 and 0.1.2
+		if (this.installedVersion >= "0.1.1" && aExtensionVersion <= "0.1.2")
+		{
+			this.saveInstalledVersion();
+			return false;
+		}
+		
+		return this.installedVersion < aExtensionVersion;
 	},
 	
 	/*
