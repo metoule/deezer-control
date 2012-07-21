@@ -1,3 +1,6 @@
+0.1.3 - 21 Jul 2012
+ * Bubble mouse event on notif mouse over to correctly show cursor on buttons
+
 0.1.2 - 19 Jul 2012 
  * Stop notification timer on mouse over
 
