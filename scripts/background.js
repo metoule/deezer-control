@@ -5,6 +5,8 @@ var gNotificationTimeoutId = null;
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
 var gMouseOverNotif = false; // this boolean is used so that we don't restart the notif timer if mouse over notifs
 
+// store the number of opened deezer tabs
+var gNbOpenedTabs = 0;
 
 window.addEventListener('load', countDeezerTabs(), false);
 
@@ -45,7 +47,14 @@ chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab)
 		    if (result)
     			chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" }); 
 		});
+	
+	// recount number of opened deezer tabs
+	countDeezerTabs();
 });
+
+// count deezer tabs on create and remove 
+chrome.tabs.onCreated.addListener(function(iTab) { countDeezerTabs(); });
+chrome.tabs.onRemoved.addListener(function(iTabId, iRemoveInfo) { countDeezerTabs(); });
 
 // all opened Deezer tabs, and store the number found 
 // this will be used to prevent popup from showing if no tab's opened
@@ -55,24 +64,20 @@ function countDeezerTabs()
 		{ populate : true },
 		function(windows) 
 		{
-			var aCurrentlyOpenedTabs = 0;
-			
+			gNbOpenedTabs = 0;
 			for(var i = 0; i < windows.length; i++) 
 			{
 				for(var j = 0; j < windows[i].tabs.length; j++) 
 				{
 					if (windows[i].tabs[j].url.toLowerCase().indexOf('www.deezer.com') > 0)
 					{
-						aCurrentlyOpenedTabs++;
+						gNbOpenedTabs++;
 					}
 				}
 			}
 			
-			// store number of opened Deezer tabs in local storage
-			LOCSTO.nbOpenedDeezerTabs = aCurrentlyOpenedTabs;
-			LOCSTO.saveNbOpenedDeezerTabs();
-			
 			// set popup to show up if at least one tab
+			console.log("We now have " + gNbOpenedTabs + " deezer tabs");
 			shouldWeShowPopup();
 		});	
 }
@@ -90,10 +95,9 @@ function shouldWeShowPopup()
 	// else: normal use case
 	else
 	{
-		if (LOCSTO.nbOpenedDeezerTabs <= 0)
+		if (gNbOpenedTabs == 0)
 		{
-			LOCSTO.nbOpenedDeezerTabs = 0; // ensure we're always at 0 to avoid unwanted situations
-			LOCSTO.saveNbOpenedDeezerTabs();
+			gNowPlayingData = null; // reset playing data
 			chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
 			chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
 		}
@@ -127,20 +131,6 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		
 		// reset the fact that action is on media key event
 		gActionOnHotKey = false;
-		
-		break;
-		
-	case "update_deezer_tabs_nb":
-		countDeezerTabs();
-		LOCSTO.nbOpenedDeezerTabs = LOCSTO.nbOpenedDeezerTabs + request.amount;
-		LOCSTO.saveNbOpenedDeezerTabs();
-		
-		// set popup if needed
-		shouldWeShowPopup();
-		
-		// call the callback method
-		if (sendResponse)
-			sendResponse();
 		
 		break;
 

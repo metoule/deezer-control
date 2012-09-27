@@ -30,7 +30,6 @@ var LOCSTO = LOCSTO || {
 	loadOptions: function()
 	{
 		this.popupStyle = this.get('popup_style') || 'large';
-		this.nbOpenedDeezerTabs = this.get('nbOpenedDeezerTabs') || 0;
 		
 		// notifications
 		// they changed from the beginning, so: 
@@ -65,11 +64,6 @@ var LOCSTO = LOCSTO || {
 	/*
 	 * store values will save values to local storage
 	 */
-	
-	saveNbOpenedDeezerTabs: function()
-	{
-		this.set('nbOpenedDeezerTabs', this.nbOpenedDeezerTabs);
-	},
 	
 	savePopupStyle: function()
 	{
