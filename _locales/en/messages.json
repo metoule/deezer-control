@@ -16,7 +16,7 @@
 	"options_page_tab_welcome_content": { "message": "With it, you can quickly pause, resume or navigate through the music currently playing on Deezer. You'll no longer have to go back to the Deezer tab to watch that lolcat video! In its popup, it displays the album cover along with the the track's title and the artist's name. Several different styles can be chosen for the popup, to match everybody's needs. Want more? Drop me a line!" },
 	"options_page_tab_welcome_remember_to": { "message": "Remember to..." }, 
 	"options_page_tab_welcome_button_rate_extension": { "message": "Rate 5 stars" }, 
-	"options_page_tab_welcome_rate_label": { "message": "on Google Chrome Extensions" }, 
+	"options_page_tab_welcome_rate_label": { "message": "on Chrome Web Store" }, 
 	"options_page_tab_welcome_donate_button": { "message": "Donate" }, 
 	"options_page_tab_welcome_donate_label": { "message": "to Deezer Control via Paypal" }, 
 	"options_page_tab_welcome_contact_me_at": { "message": "You can also contact me by mail" }, 
