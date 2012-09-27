@@ -1,5 +1,9 @@
-0.1.3 - 
+0.1.4 - 28 Sep 2012 
  * Updated style to latest Deezer one
+ * Improved the way deezer tabs are counted to avoid the empty popup symptom
+
+0.1.3 - 21 Jul 2012
+ * Bubble mouse event on notif mouse over to correctly show cursor on buttons
 
 0.1.2 - 19 Jul 2012 
  * Stop notification timer on mouse over
