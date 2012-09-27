@@ -57,17 +57,17 @@ div#controls a
 
 #now_playing_info
 {
-	padding-top: 8px;
+	padding: 11px 9px 0px 9px;
 	height: 45px;
-	width: 250px;
+	width: 232px;
 }
 
 #now_playing_info_track
 {
-	font-size: 15px;
+	font-size: 16px;
 	margin-bottom: 2px;
 }
-#now_playing_info_artist { font-size: 12px; }
+#now_playing_info_artist { font-size: 16px; }
 
 img#cover 
 {

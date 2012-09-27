@@ -16,7 +16,7 @@
 	"options_page_tab_welcome_content": { "message": "Avec cette extension, vous pouvez rapidement arrêter, reprendre ou encore naviguer la musique en cours d'écoute sur Deezer. Plus besoin de retourner sur l'onglet Deezer pour arrêter la musique avant de lancer une vidéo sur Youtube ! La popup affiche la pochette de l'album, ainsi que le titre de la chanson et le nom de l'artiste. Plusieurs styles de popup sont disponibles, afin de répondre aux besoins de chacun. Vous en voulez plus ? Envoyez moi un mail !" },
 	"options_page_tab_welcome_remember_to": { "message": "Souvenez-vous..." }, 
 	"options_page_tab_welcome_button_rate_extension": { "message": "Votez 5 étoiles" }, 
-	"options_page_tab_welcome_rate_label": { "message": "sur le Google Chrome Web Store" }, 
+	"options_page_tab_welcome_rate_label": { "message": "sur le Chrome Web Store" }, 
 	"options_page_tab_welcome_donate_button": { "message": "Faites un don" }, 
 	"options_page_tab_welcome_donate_label": { "message": "à Deezer Control via Paypal" }, 
 	"options_page_tab_welcome_contact_me_at": { "message": "Vous pouvez aussi me contacter par mail" }, 

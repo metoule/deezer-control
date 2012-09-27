@@ -48,6 +48,22 @@ div#controls-right
 	text-align: center;
 }
 
-#now_playing_info span { display: block; }
+#now_playing_info span 
+{ 
+	display: block; 
+	overflow: hidden;
+	text-overflow: ellipsis; 
+	white-space: nowrap;
+}
+
+#now_playing_info_track
+{
+}
+	
+#now_playing_info_artist 
+{ 
+	color:#3995cd;
+	font-weight: normal;
+}
 
 img#cover { display: block; }

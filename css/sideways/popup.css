@@ -61,7 +61,7 @@ div#controls a
 
 #now_playing_info
 {
-	margin-left: 90px;
+	margin-left: 95px;
 	height: 50px;
 	width: 190px;
 	text-align: left;
@@ -69,10 +69,14 @@ div#controls a
 
 #now_playing_info_track
 {
-	font-size: 15px;
+	font-size: 16px;
 	margin-bottom: 2px;
 }
-#now_playing_info_artist { font-size: 12px; }
+
+#now_playing_info_artist 
+{ 
+	font-size: 16px;
+}
 
 img#cover 
 {
