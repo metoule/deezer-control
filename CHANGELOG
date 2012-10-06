@@ -1,3 +1,6 @@
+0.1.5 - 05 Oct 2012
+ * Fixed typo in french locale
+
 0.1.4 - 28 Sep 2012 
  * Updated style to latest Deezer one
  * Improved the way deezer tabs are counted to avoid the empty popup symptom
