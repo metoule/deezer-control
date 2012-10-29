@@ -8,9 +8,13 @@ var gMouseOverNotif = false; // this boolean is used so that we don't restart th
 // store the number of opened deezer tabs
 var gNbOpenedTabs = 0;
 
+// remember active tab on which jump to Deezer was called
+var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 };
+
+
 window.addEventListener('load', countDeezerTabs(), false);
 
-// if not popup is set, it means that we should open a new Deezer tab
+// if no popup is set, it means that we should open a new Deezer tab
 chrome.browserAction.onClicked.addListener(function(iTab) 
 {
 	// extension has just been updated, a click will open the option page
@@ -77,7 +81,6 @@ function countDeezerTabs()
 			}
 			
 			// set popup to show up if at least one tab
-			console.log("We now have " + gNbOpenedTabs + " deezer tabs");
 			shouldWeShowPopup();
 		});	
 }
@@ -108,9 +111,23 @@ function shouldWeShowPopup()
 	}
 }
 
+// save active tab any time it changes to be able to go back to it 
+chrome.tabs.onActivated.addListener(function(iActiveTabInfo) 
+{	
+	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
+	{		
+		// ignore active tab if deezer: we don't want to go back to deezer tab!
+		if (aActiveTab.url.toLowerCase().indexOf('www.deezer.com') < 0)
+		{
+			gJumpBackToActiveTab.windowsId = aActiveTab.windowId;
+			gJumpBackToActiveTab.tabId = aActiveTab.id;
+		}
+	});
+});
+
 // this will react to an event fired in player_listener.js
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) 
-{
+{	
 	switch (request.type)
 	{
 	case "now_playing_updated":
@@ -168,6 +185,57 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		// reset the fact that action is on media key event
 		gActionOnHotKey = false;
 		
+		break;
+		
+	case "jumpToDeezer":
+		chrome.windows.getAll(
+		{ populate : true },
+		function(windows) 
+		{				
+			for(var i = 0; i < windows.length; i++) 
+			{
+				// find window with focus
+				if (!windows[i].focused)
+					continue;
+				
+				// find the active tab
+				for(var j = 0; j < windows[i].tabs.length; j++) 
+				{
+					if (windows[i].tabs[j].active)
+					{
+						// we're on the Deezer tab, go back to previous tab
+						if (windows[i].tabs[j].url.toLowerCase().indexOf('www.deezer.com') > 0)
+						{
+							chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true })
+							chrome.tabs.update(gJumpBackToActiveTab.tabId, { selected: true });
+						}
+		
+						// not on the Deezer tab, find it and set it to active
+						else
+						{							
+							chrome.windows.getAll(
+							{ populate : true },
+							function(windows) 
+							{				
+								for(var k = 0; k < windows.length; k++) 
+								{
+									for(var l = 0; l < windows[k].tabs.length; l++) 
+									{
+										if (windows[k].tabs[l].url.toLowerCase().indexOf('www.deezer.com') > 0)
+										{
+											// we found a Deezer tab, switch to it
+											chrome.windows.update(windows[k].id, { focused: true })
+											chrome.tabs.update(windows[k].tabs[l].id, { selected: true });
+											return; // stop process
+										}
+									}
+								}
+							});	
+						}
+					}
+				}
+			}
+		});	
 		break;
 		
 	case "getLOCSTO":

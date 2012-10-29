@@ -42,6 +42,7 @@ var LOCSTO = LOCSTO || {
 		  this.playPauseHotKey =   FillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
 		       this.nextHotKey =        FillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
 		this.whatZatSongHotKey = FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87 });
+	   this.jumpToDeezerHotKey = FillDictWithDefaults(this.get('jumpToDeezerHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 74 });
 	},
 	
 	/*
@@ -76,6 +77,7 @@ var LOCSTO = LOCSTO || {
 		this.set('playPauseHotKey', this.playPauseHotKey);
 		this.set('nextHotKey', this.nextHotKey);
 		this.set('whatZatSongHotKey', this.whatZatSongHotKey);
+		this.set('jumpToDeezerHotKey', this.jumpToDeezerHotKey);
 	},
 	
 	saveNotifications: function()

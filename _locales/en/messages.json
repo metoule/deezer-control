@@ -46,6 +46,7 @@
 	"options_page_tab_hotkeys_nextHotKey_h2": { "message": "Hot key for 'next song'" }, 
 	"options_page_tab_hotkeys_whatZatSongHotKey_h2": { "message": "Hot key for 'show me current song'" }, 
 	"options_page_tab_hotkeys_warning_whatZatSongHotKey": { "message": "Only works if notifications are active." }, 
+   "options_page_tab_hotkeys_jumpToDeezerHotKey_h2": { "message": "Hot key for 'jump to Deezer tab'" }, 
 	"options_page_tab_hotkeys_warning_illegal_hotkey": { "message": "Please use the provided buttons to set the modifiers keys" }, 
 		
 	"options_page_footer_not_endorsed": { "message": "Deezer Control is not endorsed by Deezer" },

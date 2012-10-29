@@ -33,6 +33,10 @@ function keyboardNavigation(e)
 		{
 			chrome.extension.sendRequest({ type: "showNotif", source: "hotkey" });
 		}
+		else if (eventMatchHotKey(e, LOCSTO.jumpToDeezerHotKey))
+		{
+			chrome.extension.sendRequest({ type: "jumpToDeezer", source: "hotkey" });
+		}
 	}); 
 }
 
