@@ -80,6 +80,7 @@ function refreshHotKeysOptions()
 			restoreHotkey('playPauseHotKey');
 			restoreHotkey('nextHotKey');
 			restoreHotkey('whatZatSongHotKey');
+			restoreHotkey('jumpToDeezerHotKey');
 	    }
 	    else
 	    {
@@ -158,7 +159,8 @@ function saveHotKeys()
 	storeHotKey('prevHotKey');
 	storeHotKey('playPauseHotKey');
 	storeHotKey('nextHotKey');
-	storeHotKey('whatZatSongHotKey');	
+	storeHotKey('whatZatSongHotKey');
+	storeHotKey('jumpToDeezerHotKey');
 	LOCSTO.saveHotKeys();
 
 	// Update status to let user know options were saved.

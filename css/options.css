@@ -322,12 +322,6 @@ fieldset
 	margin: 10px 0px 0px 0px;
 }
 
-fieldset div
-{
-	height: 30px;
-	line-height: 30px;
-}
-
 fieldset *
 {
 	vertical-align: middle;	
@@ -350,6 +344,7 @@ fieldset *
 div.save_cancel_bar
 {
 	border-top: 1px solid lightgray;
+	clear: left;
 	padding: 5px; 
 	margin: 15px 0px 0px -5px; 
 }
@@ -362,4 +357,19 @@ div.save_cancel_bar
 #hotkey_permission_ko > *
 {
 	margin-top: 10px;
+}
+
+#hotkeys_left  { float: left;  }
+#hotkeys_right { float: right; }
+
+#hotkeys_left, #hotkeys_right
+{
+   margin: -10px 0px 15px 0px;
+   width: 49%;
+}
+
+#hotkeys_left div, #hotkeys_right div
+{
+	height: 30px;
+	line-height: 30px;
 }
