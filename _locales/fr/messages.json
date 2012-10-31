@@ -3,11 +3,15 @@
 	"extDesc": { "message": "Cette extension vous permet de contrôler Deezer à partir de votre navigateur: raccourcis clavier, popup, notifications... tout est là !" },
 	"defaultTitle": { "message": "Ouvrir Deezer dans un nouvel onglet" }, 
 	"showNewItemsTitle": { "message": "Ouvrir la page d'options pour voir les nouveautés" }, 
+   
+   "yes": { "message": "Oui" },
+   "no":  { "message": "Non" }, 
 	
 	"options_page_tab_title_welcome": { "message": "Bienvenue" }, 
 	"options_page_tab_title_options": { "message": "Style de la popup" }, 
 	"options_page_tab_title_notifications": { "message": "Notifications" }, 
 	"options_page_tab_title_hotkeys": { "message": "Raccourcis" }, 
+   "options_page_tab_title_misc": { "message": "Divers" }, 
 	"options_page_button_save": { "message": "Enregistrer" },
 	"options_page_button_cancel": { "message": "Restorer" },
 	"options_page_options_saved": { "message": "Options enregistrées." }, 
@@ -46,7 +50,12 @@
 	"options_page_tab_hotkeys_nextHotKey_h2": { "message": "Raccourci clavier pour 'chanson suivante'" }, 
 	"options_page_tab_hotkeys_whatZatSongHotKey_h2": { "message": "Raccourci clavier pour 'montre moi la chanson en cours'" }, 
 	"options_page_tab_hotkeys_warning_whatZatSongHotKey": { "message": "Fonctionne uniquement si les notifications sont activées." },
+   "options_page_tab_hotkeys_jumpToDeezerHotKey_h2": { "message": "Raccourci clavier pour 'affiche l'onglet Deezer'" }, 
+   "options_page_tab_hotkeys_warning_jumpToDeezerHotKey": { "message": "Une fois: affiche Deezer. Deux fois: retour à l'onglet d'origine." }, 
 	"options_page_tab_hotkeys_warning_illegal_hotkey": { "message": "Veuillez utiliser les boutons pour choisir les modificateurs" }, 
+      
+   "options_page_tab_misc_h1": { "message": "Divers" }, 
+   "options_page_tab_misc_limit_deezer_to_one_tab_h2": { "message": "Limiter Deezer à un onglet" }, 
 	
 	"options_page_footer_not_endorsed": { "message": "Deezer Control n'a aucun lien avec Deezer" },
 	"options_page_footer_contact": { "message": "Contact" }, 

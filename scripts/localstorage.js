@@ -43,6 +43,9 @@ var LOCSTO = LOCSTO || {
 		       this.nextHotKey =        FillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
 		this.whatZatSongHotKey = FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87 });
 	   this.jumpToDeezerHotKey = FillDictWithDefaults(this.get('jumpToDeezerHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 74 });
+	   
+	   // misc options
+	   this.miscOptions = FillDictWithDefaults(this.get('miscOptions'), { limitDeezerToOneTab: true });
 	},
 	
 	/*
@@ -83,6 +86,11 @@ var LOCSTO = LOCSTO || {
 	saveNotifications: function()
 	{
 		this.set('notifications', this.notifications);
+	}, 
+	
+	saveMiscOptions: function()
+	{
+		this.set('miscOptions', this.miscOptions);
 	}, 
 	
 	saveInstalledVersion: function()

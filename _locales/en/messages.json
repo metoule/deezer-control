@@ -4,10 +4,14 @@
 	"defaultTitle": { "message": "Open a new Deezer tab" }, 
 	"showNewItemsTitle": { "message": "Open the options page to see what's new" }, 
 	
+   "yes": { "message": "Yes" },
+   "no":  { "message": "No" }, 
+   
 	"options_page_tab_title_welcome": { "message": "Welcome" }, 
 	"options_page_tab_title_options": { "message": "Popup style" }, 
 	"options_page_tab_title_notifications": { "message": "Notifications" }, 
 	"options_page_tab_title_hotkeys": { "message": "Hot keys" }, 
+   "options_page_tab_title_misc": { "message": "Misc" }, 
 	"options_page_button_save": { "message": "Save" },
 	"options_page_button_cancel": { "message": "Restore" },
 	"options_page_options_saved": { "message": "Options saved." }, 
@@ -34,11 +38,11 @@
 	"options_page_tab_notifs_show_never": { "message": "Never show notifications" },  
 	"options_page_tab_notifs_show_never_hides": { "message": "Show notifications as long as a Deezer tab is opened. Doesn't auto hide." },  
 	"options_page_tab_notifs_show_on_song_change": { "message": "Show notifications any time an event occur (previous, next, play/pause). Auto hides after a while." },  
-	"options_page_tab_notifs_show_on_hotkey_only": { "message": "Show notifications only when I press a hot key (i.e. not when I click a button in the popup or on Deezer). Auto hides after a while." }, 
+	"options_page_tab_notifs_show_on_hotkey_only": { "message": "Show notifications on hot key events only (i.e. not on button click in the popup or on Deezer). Auto hides after a while." }, 
 	"options_page_tab_notifs_fade_away_delay": { "message": "Auto hide notifications after..." }, 
 	
 	"options_page_tab_hotkeys_h1": { "message": "Hot keys" }, 
-	"options_page_tab_hotkeys_what_are_hotkeys": { "message": "Control Deezer straight from you keyboard with hot keys! You can choose any key combination to match your preference: the default are the media keys, but don't let that stop you!" },
+	"options_page_tab_hotkeys_what_are_hotkeys": { "message": "Control Deezer straight from you keyboard with hot keys! You can choose any combination of keys to match your preference: the default are the media keys, but don't let that stop you!" },
 	"options_page_tab_hotkeys_activation_hot_keys":  { "message": "To activate this feature, Deezer Control needs to be able to listen to key combination on any web site you visit, thus the warning given by Chrome. Deezer Control doesn't read any of your data." }, 
 	"options_page_tab_hotkeys_button_activate":  { "message": "Activate hot keys" }, 
 	"options_page_tab_hotkeys_prevHotKey_h2": { "message": "Hot key for 'previous song'" }, 
@@ -47,7 +51,11 @@
 	"options_page_tab_hotkeys_whatZatSongHotKey_h2": { "message": "Hot key for 'show me current song'" }, 
 	"options_page_tab_hotkeys_warning_whatZatSongHotKey": { "message": "Only works if notifications are active." }, 
    "options_page_tab_hotkeys_jumpToDeezerHotKey_h2": { "message": "Hot key for 'jump to Deezer tab'" }, 
+   "options_page_tab_hotkeys_warning_jumpToDeezerHotKey": { "message": "Press once, go to Deezer tab. Press twice, go back to active tab." }, 
 	"options_page_tab_hotkeys_warning_illegal_hotkey": { "message": "Please use the provided buttons to set the modifiers keys" }, 
+		
+   "options_page_tab_misc_h1": { "message": "Misc" }, 
+   "options_page_tab_misc_limit_deezer_to_one_tab_h2": { "message": "Limit Deezer to one tab" }, 
 		
 	"options_page_footer_not_endorsed": { "message": "Deezer Control is not endorsed by Deezer" },
 	"options_page_footer_contact": { "message": "Contact" }, 

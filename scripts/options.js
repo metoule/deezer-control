@@ -18,6 +18,9 @@ function preparePage()
 	$('input:radio[name="notifs_show_when"]').change(function () { activateNotifications(); });
 	$("#notifs_fade_away_delay").change(function () { refreshNotifsOptions(); });
 	$("#button_save_notifications").click(function () { saveNotifications(); });
+
+	$('#miscLimitDeezerToOneTab').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
+	$("#button_save_misc").click(function () { saveMiscOptions(); });
 	
 	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
 }
@@ -51,6 +54,11 @@ function restoreOptions()
 	// hot keys are activated only if we have permission on all tabs
 	// if we don't permission, show an explanation
 	refreshHotKeysOptions();
+	
+	
+	//         Misc options
+	//--------------------------------
+	refreshMiscOptions();
 }
 
 function refreshNotifsOptions()
@@ -142,6 +150,13 @@ function restoreHotkey(iHotKeyName)
 	aHotKeySelect.children('input:eq(1)').val(LOCSTO[iHotKeyName].keyCode);
 }
 
+function refreshMiscOptions()
+{
+	// limit deezer to one tab
+	$("#miscLimitDeezerToOneTab").children('button:eq(0)').toggleClass('two_state_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
+	$("#miscLimitDeezerToOneTab").children('button:eq(1)').toggleClass('two_state_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
+}
+
 
 // Saves options to localStorage.
 function savePopupStyle() 
@@ -206,6 +221,19 @@ function saveNotifications()
 	chrome.extension.sendRequest({ type: "showNotif", source: "options" });
 }
 
+
+function saveMiscOptions() 
+{
+	// limit deezer to one tab
+	LOCSTO.miscOptions.limitDeezerToOneTab = $("#miscLimitDeezerToOneTab").children('button:eq(0)').hasClass('two_state_selected');
+	
+	LOCSTO.saveMiscOptions();
+	
+	// Update status to let user know options were saved.
+	$("#status_misc").text(chrome.i18n.getMessage("options_page_options_saved"));
+	setTimeout(function() { $("#status_misc").text(""); }, 750);
+}
+
 // deal with chrome permissions
 function activateHotKeys()
 {
@@ -237,7 +265,7 @@ function activateNotifications()
 function resetSections()
 {
 	$('#tab_chooser > nav > a:first').addClass('currentone');
-	$('#center_block > section:first').addClass('currentone');
+	$('#center_block > section:first').css('display', 'block');
 	if(location.hash)
 		showSection(location.hash.replace(/^\#/, ''));
 }
@@ -245,8 +273,8 @@ function resetSections()
 function showSection(id)
 {
 	$('#tab_chooser > nav > a').removeClass('currentone');
-	$('#center_block > section').removeClass('currentone');
-	$('#' + id).addClass('currentone');
+	$('#center_block > section:not(#' + id + ')').css('display', 'none');
+	$('#' + id).css('display', 'block');
 	$('#' + id + '_nav').addClass('currentone');
 
 	var aNewLeft = $('#' + id + '_nav').position().left - $('#tab_chooser > nav > a:first').position().left + 73;
