@@ -40,6 +40,9 @@ chrome.browserAction.onClicked.addListener(function(iTab)
 // inject hotkeys.js on any page if user allowed it
 chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab) 
 {
+//	if (iTab.url.toLowerCase().indexOf('www.deezer.com') > 0)
+//		chrome.tabs.remove(iTabId);
+	
 	// wait until loading is complete
 	if (iChangeInfo.status != "complete")
 		return;
