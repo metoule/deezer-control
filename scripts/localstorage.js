@@ -8,16 +8,16 @@ function FillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues)
 
 	// loop on all keys of iDictWithDefaultValues, and assign value to aMyNewObject if key not found in iDictWithRealValues
 	// note: this will also remove any key in iDictWithRealValues not present in iDictWithDefaultValues
-    for(var key in iDictWithDefaultValues)
-    {
-        if(iDictWithDefaultValues.hasOwnProperty(key))
-        {
-        	if (iDictWithRealValues.hasOwnProperty(key))
-        		aMyNewObject[key] = iDictWithRealValues[key];
-        	else        		
-        		aMyNewObject[key] = iDictWithDefaultValues[key];
-        }
-    }
+	for(var key in iDictWithDefaultValues)
+	{
+		if(iDictWithDefaultValues.hasOwnProperty(key))
+		{
+			if (iDictWithRealValues.hasOwnProperty(key))
+				aMyNewObject[key] = iDictWithRealValues[key];
+			else				
+				aMyNewObject[key] = iDictWithDefaultValues[key];
+		}
+	}
 	
 	return aMyNewObject;
 }
@@ -38,10 +38,10 @@ var LOCSTO = LOCSTO || {
 		this.notifications = FillDictWithDefaults(this.get('notifications'), { never: false, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000 });
 		
 		// hot keys
-		       this.prevHotKey =        FillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
-		  this.playPauseHotKey =   FillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
-		       this.nextHotKey =        FillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
-		this.whatZatSongHotKey = FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87 });
+			   this.prevHotKey =         FillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
+		  this.playPauseHotKey =    FillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
+			   this.nextHotKey =         FillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
+		this.whatZatSongHotKey =  FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87 });
 	   this.jumpToDeezerHotKey = FillDictWithDefaults(this.get('jumpToDeezerHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 74 });
 	   
 	   // misc options

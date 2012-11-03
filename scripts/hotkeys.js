@@ -42,5 +42,5 @@ function keyboardNavigation(e)
 
 function eventMatchHotKey(e, iHotKey)
 {
-	return e.shiftKey == iHotKey.shiftKey && e.altKey == iHotKey.altKey && e.ctrlKey == iHotKey.ctrlKey && e.keyCode == iHotKey.keyCode;		
+	return e.shiftKey === iHotKey.shiftKey && e.altKey === iHotKey.altKey && e.ctrlKey === iHotKey.ctrlKey && e.keyCode === iHotKey.keyCode;
 }
