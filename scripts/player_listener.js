@@ -65,7 +65,7 @@ function sendJsonPlayerInfo(event)
 	var aDzAttributes = {}; 
 	for (i = 0 ; i < aAllAttributes.length; i++) 
 	{
-		if (aAllAttributes[i].name.substring(0, 3) == "dz_")
+		if (aAllAttributes[i].name.substring(0, 3) === "dz_")
 		{
 			aDzAttributes[aAllAttributes[i].name] = aAllAttributes[i].value;
 		}
@@ -84,18 +84,18 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 			// in case of media keys, we don't know if it's pause or play
 			// compute !
 			var aAction = request.action;
-			if (aAction == 'playpause')
+			if (aAction === 'playpause')
 			{
 				var aDzPlaying = document.getElementById('myPlayerInfo').getAttribute('dz_playing');
-				aAction = aDzPlaying == "true" ? "pause" : "play";
+				aAction = aDzPlaying === "true" ? "pause" : "play";
 			}
 			
 			// update dz_playing if needed
-			if (aAction == "play" || aAction == "pause")
-				document.getElementById('myPlayerInfo').setAttribute('dz_playing', aAction == "play" ? "true" : "false"); 
+			if (aAction === "play" || aAction === "pause")
+				document.getElementById('myPlayerInfo').setAttribute('dz_playing', aAction === "play" ? "true" : "false"); 
 						
 			sendJsonPlayerInfo(null); // thanks to this, changes on play / pause are tracked
-			location.href = "javascript: if (typeof(playercontrol) != 'undefined') playercontrol.doAction('" + aAction + "');";
+			location.href = "javascript: if (typeof(playercontrol) !== 'undefined') playercontrol.doAction('" + aAction + "');";
 			break;
     }
 	

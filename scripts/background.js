@@ -101,7 +101,7 @@ function checkLimitToOneDeezerTab(iTabId, iNewUrl)
 			// find any Deezer tab that's not this one
 			findDeezerTab(function(iDeezerTabId, iDeezerWindowId)
 			{
-				if (iDeezerTabId === null)
+				if (iDeezerTabId == null)
 					return;
 
 				// close opening tab
@@ -166,7 +166,7 @@ function setUpPopup()
 
 function onFindDeezerTabForPopupSetup(iDeezerTabId)
 {
-	if (iDeezerTabId === null)
+	if (iDeezerTabId == null)
 	{
 		gNowPlayingData = null; // reset playing data
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
@@ -285,7 +285,7 @@ function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId)
 function showNotif()
 {
 	// if no deezer data, close notif, otherwise show it
-	if (gNowPlayingData === null)
+	if (gNowPlayingData == null)
 	{
 		resetNotifTimeout(); // remove existing timeout
 		closeNotif();
@@ -313,7 +313,7 @@ function onCheckNotifPermission(iPermissionGranted)
     if (iPermissionGranted)
     {
 		// if notif not already visible, create it
-		if (gNotification === null)
+		if (gNotification == null)
 		{
 			gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways&notif=on");
 			gNotification.show();
@@ -337,7 +337,7 @@ function onCheckNotifPermission(iPermissionGranted)
 
 function updateButtonTooltip()
 {
-	if (gNowPlayingData !== null)
+	if (gNowPlayingData != null)
 		chrome.browserAction.setTitle({ title: gNowPlayingData.dz_track + ' - ' + gNowPlayingData.dz_artist });
 	else
 		chrome.browserAction.setTitle({ title: '' });
@@ -350,7 +350,7 @@ function propagatePlayingDataToAllTabs()
 	chrome.extension.getViews({ type: 'popup' }).forEach(refreshPopupOnWindow);
 	chrome.extension.getViews({ type: "notification" }).forEach(refreshPopupOnWindow);
 	
-	if (gNowPlayingData !== null)
+	if (gNowPlayingData != null)
 	{
 		// set images in background page to cache album covers for faster display
 		loadStyle(); // load COVER_SIZE variable
@@ -381,7 +381,7 @@ function startNotifTimeout()
 // reset time out
 function resetNotifTimeout()
 {
-	if (gNotificationTimeoutId !== null)
+	if (gNotificationTimeoutId != null)
 	{
 		window.clearTimeout(gNotificationTimeoutId);
 		gNotificationTimeoutId = null;
@@ -391,7 +391,7 @@ function resetNotifTimeout()
 // close notif and reset everything
 function closeNotif()
 {
-	if (gNotification !== null) 
+	if (gNotification != null) 
 		gNotification.cancel(); 
 	
 	gNotification = null; 
