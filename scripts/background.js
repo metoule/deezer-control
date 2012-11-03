@@ -45,14 +45,14 @@ function tabsOnUpdatedListener(iTabId, iChangeInfo, iTab)
 	checkLimitToOneDeezerTab(iTabId, iChangeInfo.url);
 	
 	// wait until loading is complete
-	if (iChangeInfo.status != "complete")
+	if (iChangeInfo.status !== "complete")
 		return;
 	
 	chrome.permissions.contains(
 		{ origins: ['<all_urls>'] }, 
 		function(result) 
 		{
-		    if (result)
+			if (result)
 				chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" }); 
 		});
 	
@@ -94,14 +94,14 @@ function tabsOnActivatedListener(iActiveTabInfo)
 function checkLimitToOneDeezerTab(iTabId, iNewUrl)
 {
 	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
-	if (LOCSTO.miscOptions.limitDeezerToOneTab == true)
+	if (LOCSTO.miscOptions.limitDeezerToOneTab === true)
 	{
 		if (iNewUrl && matchDeezerUrl(iNewUrl))
 		{
 			// find any Deezer tab that's not this one
 			findDeezerTab(function(iDeezerTabId, iDeezerWindowId)
 			{
-				if (iDeezerTabId == null)
+				if (iDeezerTabId === null)
 					return;
 
 				// close opening tab
@@ -130,7 +130,7 @@ function findDeezerTab(iCallback, iIgnoreTabId)
 				var aTab = aWindow.tabs[j];
 				if (matchDeezerUrl(aTab.url))
 				{
-					if (aTab.id != iIgnoreTabId)
+					if (aTab.id !== iIgnoreTabId)
 					{
 						iCallback(aTab.id, aWindow.id);
 						return;
@@ -166,7 +166,7 @@ function setUpPopup()
 
 function onFindDeezerTabForPopupSetup(iDeezerTabId)
 {
-	if (iDeezerTabId == null)
+	if (iDeezerTabId === null)
 	{
 		gNowPlayingData = null; // reset playing data
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
@@ -207,7 +207,7 @@ function extensionOnRequestListener(request, sender, sendResponse)
 		break;
 
 	case "controlPlayer":
-		gActionOnHotKey = request.source == 'hotkey';
+		gActionOnHotKey = request.source === 'hotkey';
 		
 		// find all deezer tabs on all the windows, and send the wanted request to each one
 		findDeezerTab(function(iDeezerTabId) 
@@ -218,7 +218,7 @@ function extensionOnRequestListener(request, sender, sendResponse)
 		break;
 		
 	case "showNotif":
-		gActionOnHotKey = request.source == 'hotkey' || request.source == 'options';
+		gActionOnHotKey = request.source === 'hotkey' || request.source === 'options';
 		showNotif();
 		
 		// call the callback method
@@ -252,19 +252,14 @@ function extensionOnRequestListener(request, sender, sendResponse)
 						// we're on the Deezer tab, go back to previous tab
 						if (matchDeezerUrl(windows[i].tabs[j].url))
 						{
-							chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true })
+							chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true });
 							chrome.tabs.update(gJumpBackToActiveTab.tabId, { selected: true });
 						}
 		
 						// not on the Deezer tab, find it and set it to active
 						else
 						{
-							findDeezerTab(function(iDeezerTabId, iDeezerWindowId) 
-							{
-								// we found a Deezer tab, switch to it
-								chrome.windows.update(iDeezerWindowId, { focused: true })
-								chrome.tabs.update(iDeezerTabId, { selected: true });
-							});
+							findDeezerTab(onFindDeezerTabForJumpToDeezer);
 						}
 					}
 				}
@@ -280,10 +275,17 @@ function extensionOnRequestListener(request, sender, sendResponse)
 	}
 }
 
+function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId) 
+{
+	// we found a Deezer tab, switch to it
+	chrome.windows.update(iDeezerWindowId, { focused: true });
+	chrome.tabs.update(iDeezerTabId, { selected: true });
+}
+
 function showNotif()
 {
 	// if no deezer data, close notif, otherwise show it
-	if (gNowPlayingData == null)
+	if (gNowPlayingData === null)
 	{
 		resetNotifTimeout(); // remove existing timeout
 		closeNotif();
@@ -295,10 +297,10 @@ function showNotif()
 		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		if (   !LOCSTO.notifications.never
 			&& (   LOCSTO.notifications.alwaysOn 
-			    || LOCSTO.notifications.visible /* on_song_change*/
-			    || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey)
-			   )
-		   )
+				|| LOCSTO.notifications.visible /* on_song_change*/
+				|| (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey)
+				)
+			)
 		{
 			// if we don't have permission to display notifications, close notif if present
 			chrome.permissions.contains({ permissions: ['notifications'] }, onCheckNotifPermission);
@@ -311,7 +313,7 @@ function onCheckNotifPermission(iPermissionGranted)
     if (iPermissionGranted)
     {
 		// if notif not already visible, create it
-		if (gNotification == null)
+		if (gNotification === null)
 		{
 			gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways&notif=on");
 			gNotification.show();
@@ -335,7 +337,7 @@ function onCheckNotifPermission(iPermissionGranted)
 
 function updateButtonTooltip()
 {
-	if (gNowPlayingData != null)
+	if (gNowPlayingData !== null)
 		chrome.browserAction.setTitle({ title: gNowPlayingData.dz_track + ' - ' + gNowPlayingData.dz_artist });
 	else
 		chrome.browserAction.setTitle({ title: '' });
@@ -348,7 +350,7 @@ function propagatePlayingDataToAllTabs()
 	chrome.extension.getViews({ type: 'popup' }).forEach(refreshPopupOnWindow);
 	chrome.extension.getViews({ type: "notification" }).forEach(refreshPopupOnWindow);
 	
-	if (gNowPlayingData != null)
+	if (gNowPlayingData !== null)
 	{
 		// set images in background page to cache album covers for faster display
 		loadStyle(); // load COVER_SIZE variable
@@ -370,7 +372,7 @@ function refreshPopupOnWindow(win) { win.refreshPopup(); }
 function startNotifTimeout()
 {
 	// hide notification after the wanted delay
-	if (gMouseOverNotif == false && !LOCSTO.notifications.alwaysOn)
+	if (gMouseOverNotif === false && !LOCSTO.notifications.alwaysOn)
 	{
 		gNotificationTimeoutId = setTimeout(closeNotif, LOCSTO.notifications.fadeAwayDelay);
 	}
@@ -379,7 +381,7 @@ function startNotifTimeout()
 // reset time out
 function resetNotifTimeout()
 {
-	if (gNotificationTimeoutId != null)
+	if (gNotificationTimeoutId !== null)
 	{
 		window.clearTimeout(gNotificationTimeoutId);
 		gNotificationTimeoutId = null;
@@ -389,7 +391,7 @@ function resetNotifTimeout()
 // close notif and reset everything
 function closeNotif()
 {
-	if (gNotification != null) 
+	if (gNotification !== null) 
 		gNotification.cancel(); 
 	
 	gNotification = null; 
@@ -398,5 +400,5 @@ function closeNotif()
 
 function matchDeezerUrl(iUrl)
 {
-	return RegExp("^http(s)?://(www\.)?deezer\.com","gi").test(iUrl);
+	return RegExp("^http(s)?://(www.)?deezer.com","gi").test(iUrl);
 }
