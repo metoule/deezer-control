@@ -45,7 +45,7 @@ function tabsOnUpdatedListener(iTabId, iChangeInfo, iTab)
 	checkLimitToOneDeezerTab(iTabId, iChangeInfo.url);
 	
 	// wait until loading is complete
-	if (iChangeInfo.status !== "complete")
+	if (iChangeInfo.status != "complete")
 		return;
 	
 	chrome.permissions.contains(
@@ -94,7 +94,7 @@ function tabsOnActivatedListener(iActiveTabInfo)
 function checkLimitToOneDeezerTab(iTabId, iNewUrl)
 {
 	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
-	if (LOCSTO.miscOptions.limitDeezerToOneTab === true)
+	if (LOCSTO.miscOptions.limitDeezerToOneTab == true)
 	{
 		if (iNewUrl && matchDeezerUrl(iNewUrl))
 		{
@@ -130,7 +130,7 @@ function findDeezerTab(iCallback, iIgnoreTabId)
 				var aTab = aWindow.tabs[j];
 				if (matchDeezerUrl(aTab.url))
 				{
-					if (aTab.id !== iIgnoreTabId)
+					if (aTab.id != iIgnoreTabId)
 					{
 						iCallback(aTab.id, aWindow.id);
 						return;
@@ -207,7 +207,7 @@ function extensionOnRequestListener(request, sender, sendResponse)
 		break;
 
 	case "controlPlayer":
-		gActionOnHotKey = request.source === 'hotkey';
+		gActionOnHotKey = request.source == 'hotkey';
 		
 		// find all deezer tabs on all the windows, and send the wanted request to each one
 		findDeezerTab(function(iDeezerTabId) 
@@ -218,7 +218,7 @@ function extensionOnRequestListener(request, sender, sendResponse)
 		break;
 		
 	case "showNotif":
-		gActionOnHotKey = request.source === 'hotkey' || request.source === 'options';
+		gActionOnHotKey = request.source == 'hotkey' || request.source == 'options';
 		showNotif();
 		
 		// call the callback method
@@ -372,7 +372,7 @@ function refreshPopupOnWindow(win) { win.refreshPopup(); }
 function startNotifTimeout()
 {
 	// hide notification after the wanted delay
-	if (gMouseOverNotif === false && !LOCSTO.notifications.alwaysOn)
+	if (gMouseOverNotif == false && !LOCSTO.notifications.alwaysOn)
 	{
 		gNotificationTimeoutId = setTimeout(closeNotif, LOCSTO.notifications.fadeAwayDelay);
 	}

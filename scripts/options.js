@@ -65,7 +65,7 @@ function refreshNotifsOptions()
 {
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 
-	if (aNotifsShowWhen === 'on_hotkey_only' || aNotifsShowWhen === 'on_song_change')
+	if (aNotifsShowWhen == 'on_hotkey_only' || aNotifsShowWhen == 'on_song_change')
 		$('#notifs_fade_away_delay').parent().css('display', 'block');
 	else
 		$('#notifs_fade_away_delay').parent().css('display', 'none');
@@ -199,16 +199,16 @@ function saveNotifications()
 	var aNotifsDelay = $('#notifs_fade_away_delay').val() * 1000;
 
 	// the key names are due to the old notifications system
-	if (aNotifsShowWhen === 'never')
+	if (aNotifsShowWhen == 'never')
 		LOCSTO.notifications = { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
 
-	else if (aNotifsShowWhen === 'never_hides')
+	else if (aNotifsShowWhen == 'never_hides')
 		LOCSTO.notifications = { never: false, alwaysOn: true, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
 
-	else if (aNotifsShowWhen === 'on_song_change')
+	else if (aNotifsShowWhen == 'on_song_change')
 		LOCSTO.notifications = { never: false, alwaysOn: false, visible: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
 
-	else if (aNotifsShowWhen === 'on_hotkey_only')
+	else if (aNotifsShowWhen == 'on_hotkey_only')
 		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay };
 
 	LOCSTO.saveNotifications();
@@ -246,7 +246,7 @@ function activateHotKeys()
 function activateNotifications()
 {
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
-	if (aNotifsShowWhen !== "never")
+	if (aNotifsShowWhen != "never")
 	{
 		chrome.permissions.request({ permissions: ['notifications'] }, function(granted)
 		{
