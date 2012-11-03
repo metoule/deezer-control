@@ -6,6 +6,7 @@ var COVER_SIZE_SIDEWAYS = "80x80";
 var COVER_SIZE = COVER_SIZE_LARGE;
 
 window.addEventListener('load', function(e) { preparePopup(); });
+window.addEventListener('unload', function(e) { if (gup('notif') == 'on') chrome.extension.getBackgroundPage().closeNotif(); });
 
 function gup(iParamName)
 {

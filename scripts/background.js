@@ -5,14 +5,10 @@ var gNotificationTimeoutId = null;
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
 var gMouseOverNotif = false; // this boolean is used so that we don't restart the notif timer if mouse over notifs
 
-// store the number of opened deezer tabs
-var gNbOpenedTabs = 0;
-
 // remember active tab on which jump to Deezer was called
 var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 };
 
-
-window.addEventListener('load', countDeezerTabs(), false);
+window.addEventListener('load', setUpPopup(), false);
 
 // if no popup is set, it means that we should open a new Deezer tab
 chrome.browserAction.onClicked.addListener(function(iTab) 
@@ -25,7 +21,7 @@ chrome.browserAction.onClicked.addListener(function(iTab)
 		// user has seen what's new, restore normal use case
 		chrome.browserAction.setBadgeText({ text: "" });
 		LOCSTO.saveInstalledVersion();
-		countDeezerTabs();
+		setUpPopup();
 		
 		updateButtonTooltip();
 		propagatePlayingDataToAllTabs();
@@ -40,8 +36,8 @@ chrome.browserAction.onClicked.addListener(function(iTab)
 // inject hotkeys.js on any page if user allowed it
 chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab) 
 {
-//	if (iTab.url.toLowerCase().indexOf('www.deezer.com') > 0)
-//		chrome.tabs.remove(iTabId);
+	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
+	checkLimitToOneDeezerTab(iTabId, iChangeInfo.url);
 	
 	// wait until loading is complete
 	if (iChangeInfo.status != "complete")
@@ -56,40 +52,72 @@ chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab)
 		});
 	
 	// recount number of opened deezer tabs
-	countDeezerTabs();
+	setUpPopup();
 });
 
 // count deezer tabs on create and remove 
-chrome.tabs.onCreated.addListener(function(iTab) { countDeezerTabs(); });
-chrome.tabs.onRemoved.addListener(function(iTabId, iRemoveInfo) { countDeezerTabs(); });
+chrome.tabs.onCreated.addListener(function(iTab) { setUpPopup(); checkLimitToOneDeezerTab(iTab.id, iTab.url); });
+chrome.tabs.onRemoved.addListener(function(iTabId, iRemoveInfo) { setUpPopup(); });
 
-// all opened Deezer tabs, and store the number found 
-// this will be used to prevent popup from showing if no tab's opened
-function countDeezerTabs()
+// check whether we want to limit deezer to one tab
+function checkLimitToOneDeezerTab(iTabId, iNewUrl)
+{
+	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
+	if (LOCSTO.miscOptions.limitDeezerToOneTab == true)
+	{
+		if (iNewUrl && matchDeezerUrl(iNewUrl))
+		{
+			// find any Deezer tab that's not this one
+			findDeezerTab(function(iDeezerTabId, iDeezerWindowId)
+			{
+				if (iDeezerTabId == null)
+					return;
+
+				// close opening tab
+				chrome.tabs.remove(iTabId);
+				
+				// switch to Deezer tab and update url to wanted url
+				chrome.windows.update(iDeezerWindowId, { focused: true });
+				chrome.tabs.update(iDeezerTabId, { selected: true });
+			}, iTabId);
+		}
+	}
+}
+
+// find any Deezer tab not matching iIgnoreTabId, and call the callback with its tab and window id
+function findDeezerTab(iCallback, iIgnoreTabId)
 {
 	chrome.windows.getAll(
-		{ populate : true },
-		function(windows) 
+	{ populate : true },
+	function(windows) 
+	{
+		for(var i = 0; i < windows.length; i++) 
 		{
-			gNbOpenedTabs = 0;
-			for(var i = 0; i < windows.length; i++) 
+			var aWindow = windows[i];
+			for(var j = 0; j < windows[i].tabs.length; j++) 
 			{
-				for(var j = 0; j < windows[i].tabs.length; j++) 
+				var aTab = aWindow.tabs[j];
+				if (matchDeezerUrl(aTab.url))
 				{
-					if (windows[i].tabs[j].url.toLowerCase().indexOf('www.deezer.com') > 0)
+					if (aTab.id != iIgnoreTabId)
 					{
-						gNbOpenedTabs++;
+						iCallback(aTab.id, aWindow.id);
+						return;
 					}
 				}
 			}
-			
-			// set popup to show up if at least one tab
-			shouldWeShowPopup();
-		});	
+		}
+		
+		// no deezer tab found, pass null as arguments of the callback
+		if (iCallback)
+			iCallback(null, null);
+	});
 }
 
-// if at least one deezer tab, open a popup
-function shouldWeShowPopup()
+
+// set up the popup: if at least one deezer tab is opened, we'll show the popup
+// otherwise, open a new deezer tab
+function setUpPopup()
 {
 	// extension has just been updated, show new items
 	if (LOCSTO.shouldWeShowNewItems())
@@ -101,26 +129,30 @@ function shouldWeShowPopup()
 	// else: normal use case
 	else
 	{
-		if (gNbOpenedTabs == 0)
+		findDeezerTab(function (iDeezerTabId) 
 		{
-			gNowPlayingData = null; // reset playing data
-			chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
-			chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
-		}
-		else
-		{
-			chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
-		}
+			if (iDeezerTabId == null)
+			{
+				gNowPlayingData = null; // reset playing data
+				chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
+				chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
+				closeNotif();
+			}
+			else
+			{
+				chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
+			}
+		});
 	}
 }
 
 // save active tab any time it changes to be able to go back to it 
 chrome.tabs.onActivated.addListener(function(iActiveTabInfo) 
-{	
+{
 	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
-	{		
+	{
 		// ignore active tab if deezer: we don't want to go back to deezer tab!
-		if (aActiveTab.url.toLowerCase().indexOf('www.deezer.com') < 0)
+		if (!matchDeezerUrl(aActiveTab.url))
 		{
 			gJumpBackToActiveTab.windowsId = aActiveTab.windowId;
 			gJumpBackToActiveTab.tabId = aActiveTab.id;
@@ -130,7 +162,7 @@ chrome.tabs.onActivated.addListener(function(iActiveTabInfo)
 
 // this will react to an event fired in player_listener.js
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) 
-{	
+{
 	switch (request.type)
 	{
 	case "now_playing_updated":
@@ -158,22 +190,10 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		gActionOnHotKey = request.source == 'hotkey';
 		
 		// find all deezer tabs on all the windows, and send the wanted request to each one
-		chrome.windows.getAll(
-			{populate : true},
-			function(windows) 
-			{				
-				for(var i = 0; i < windows.length; i++) 
-				{
-					for(var j = 0; j < windows[i].tabs.length; j++) 
-					{
-						if (windows[i].tabs[j].url.toLowerCase().indexOf('www.deezer.com') > 0)
-						{
-							var aDeezerTabId =  windows[i].tabs[j].id;
-							chrome.tabs.sendRequest(aDeezerTabId, {name: request.type, action: request.command}, function(response) { if (sendResponse) sendResponse(); });
-						}
-					}
-				}
-			});	
+		findDeezerTab(function(iDeezerTabId) 
+		{
+			chrome.tabs.sendRequest(iDeezerTabId, { name: request.type, action: request.command }, function(response) { if (sendResponse) sendResponse(); });
+		});
 		
 		break;
 		
@@ -191,10 +211,13 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		break;
 		
 	case "jumpToDeezer":
+		// find current active tab
+		// if not deezer tab, jump to the deezer tab
+		// if deezer tab, jump back to saved tab
 		chrome.windows.getAll(
 		{ populate : true },
 		function(windows) 
-		{				
+		{
 			for(var i = 0; i < windows.length; i++) 
 			{
 				// find window with focus
@@ -207,7 +230,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 					if (windows[i].tabs[j].active)
 					{
 						// we're on the Deezer tab, go back to previous tab
-						if (windows[i].tabs[j].url.toLowerCase().indexOf('www.deezer.com') > 0)
+						if (matchDeezerUrl(windows[i].tabs[j].url))
 						{
 							chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true })
 							chrome.tabs.update(gJumpBackToActiveTab.tabId, { selected: true });
@@ -215,30 +238,18 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		
 						// not on the Deezer tab, find it and set it to active
 						else
-						{							
-							chrome.windows.getAll(
-							{ populate : true },
-							function(windows) 
-							{				
-								for(var k = 0; k < windows.length; k++) 
-								{
-									for(var l = 0; l < windows[k].tabs.length; l++) 
-									{
-										if (windows[k].tabs[l].url.toLowerCase().indexOf('www.deezer.com') > 0)
-										{
-											// we found a Deezer tab, switch to it
-											chrome.windows.update(windows[k].id, { focused: true })
-											chrome.tabs.update(windows[k].tabs[l].id, { selected: true });
-											return; // stop process
-										}
-									}
-								}
-							});	
+						{
+							findDeezerTab(function(iDeezerTabId, iDeezerWindowId) 
+							{
+								// we found a Deezer tab, switch to it
+								chrome.windows.update(iDeezerWindowId, { focused: true })
+								chrome.tabs.update(iDeezerTabId, { selected: true });
+							});
 						}
 					}
 				}
 			}
-		});	
+		});
 		break;
 		
 	case "getLOCSTO":
@@ -250,7 +261,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 });
 
 function showNotif()
-{	
+{
 	// if no deezer data, close notif, otherwise show it
 	if (gNowPlayingData == null)
 	{
@@ -259,7 +270,7 @@ function showNotif()
 	}
 	// we have data to show
 	else
-	{		
+	{
 		// update or create notification
 		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		if (   !LOCSTO.notifications.never
@@ -268,14 +279,14 @@ function showNotif()
 			    || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey)
 			   )
 		   )
-		{			
+		{
 			// if we don't have permission to display notifications, close notif if present
 			chrome.permissions.contains(
 				{ permissions: ['notifications'] }, 
 				function(result) 
 				{
 				    if (result)
-				    {			
+				    {
 						// if notif not already visible, create it
 						if (gNotification == null)
 						{
@@ -311,7 +322,7 @@ function updateButtonTooltip()
 }
 
 function propagatePlayingDataToAllTabs()
-{	
+{
 	// refresh all opened popups, tabs (i.e. option page), and notifications
 	chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
 	chrome.extension.getViews({ type: 'popup' }).forEach(function(win) { win.refreshPopup(); });
@@ -336,7 +347,7 @@ function propagatePlayingDataToAllTabs()
 
 // start time out
 function startNotifTimeout()
-{	
+{
 	// hide notification after the wanted delay
 	if (gMouseOverNotif == false && !LOCSTO.notifications.alwaysOn)
 	{
@@ -362,4 +373,9 @@ function closeNotif()
 	
 	gNotification = null; 
 	gNotificationTimeoutId = null;
+}
+
+function matchDeezerUrl(iUrl)
+{
+	return RegExp("^http(s)?://(www\.)?deezer\.com","gi").test(iUrl);
 }
