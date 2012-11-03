@@ -4,11 +4,13 @@ var gNotification = null;
 var gNotificationTimeoutId = null;
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
 var gMouseOverNotif = false; // this boolean is used so that we don't restart the notif timer if mouse over notifs
+var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 }; // remember active tab on which jump to Deezer was called
 
-// remember active tab on which jump to Deezer was called
-var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 };
-
-window.addEventListener('load', setUpPopup(), false);
+// actions to perform when the extension is loaded
+$(window).load(function() 
+{
+	setUpPopup();
+}
 
 // if no popup is set, it means that we should open a new Deezer tab
 chrome.browserAction.onClicked.addListener(function(iTab) 
@@ -48,16 +50,39 @@ chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab)
 		function(result) 
 		{
 		    if (result)
-    			chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" }); 
+				chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" }); 
 		});
 	
 	// recount number of opened deezer tabs
 	setUpPopup();
 });
 
-// count deezer tabs on create and remove 
-chrome.tabs.onCreated.addListener(function(iTab) { setUpPopup(); checkLimitToOneDeezerTab(iTab.id, iTab.url); });
-chrome.tabs.onRemoved.addListener(function(iTabId, iRemoveInfo) { setUpPopup(); });
+// when a tab is opened, create the pop up if needed, and check number of opened deezer tabs
+chrome.tabs.onCreated.addListener(function(iTab) 
+{ 
+	setUpPopup(); 
+	checkLimitToOneDeezerTab(iTab.id, iTab.url); 
+}
+
+// when a tab is removed, check that the popup is still needed
+chrome.tabs.onRemoved.addListener(function(iTabId, iRemoveInfo) 
+{ 
+	setUpPopup(); 
+}
+
+// save active tab any time it changes to be able to go back to it 
+chrome.tabs.onActivated.addListener(function(iActiveTabInfo) 
+{
+	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
+	{
+		// ignore active tab if deezer: we don't want to go back to deezer tab!
+		if (!matchDeezerUrl(aActiveTab.url))
+		{
+			gJumpBackToActiveTab.windowsId = aActiveTab.windowId;
+			gJumpBackToActiveTab.tabId = aActiveTab.id;
+		}
+	});
+}
 
 // check whether we want to limit deezer to one tab
 function checkLimitToOneDeezerTab(iTabId, iNewUrl)
@@ -129,7 +154,7 @@ function setUpPopup()
 	// else: normal use case
 	else
 	{
-		findDeezerTab(function (iDeezerTabId) 
+		findDeezerTab(function(iDeezerTabId)
 		{
 			if (iDeezerTabId == null)
 			{
@@ -145,20 +170,6 @@ function setUpPopup()
 		});
 	}
 }
-
-// save active tab any time it changes to be able to go back to it 
-chrome.tabs.onActivated.addListener(function(iActiveTabInfo) 
-{
-	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
-	{
-		// ignore active tab if deezer: we don't want to go back to deezer tab!
-		if (!matchDeezerUrl(aActiveTab.url))
-		{
-			gJumpBackToActiveTab.windowsId = aActiveTab.windowId;
-			gJumpBackToActiveTab.tabId = aActiveTab.id;
-		}
-	});
-});
 
 // this will react to an event fired in player_listener.js
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) 
@@ -282,8 +293,8 @@ function showNotif()
 		{
 			// if we don't have permission to display notifications, close notif if present
 			chrome.permissions.contains(
-				{ permissions: ['notifications'] }, 
-				function(result) 
+				{ permissions: ['notifications'] },  
+				function(result)
 				{
 				    if (result)
 				    {
@@ -298,7 +309,7 @@ function showNotif()
 						{
 							resetNotifTimeout(); // remove existing timeout
 						}
-			
+
 						// hide notification after the wanted delay
 						startNotifTimeout();
 				    }
@@ -324,9 +335,9 @@ function updateButtonTooltip()
 function propagatePlayingDataToAllTabs()
 {
 	// refresh all opened popups, tabs (i.e. option page), and notifications
-	chrome.extension.getViews({ type: 'tab' }).forEach(function(win) { win.refreshPopup(); });
-	chrome.extension.getViews({ type: 'popup' }).forEach(function(win) { win.refreshPopup(); });
-	chrome.extension.getViews({ type: "notification" }).forEach(function(win) { win.refreshPopup(); });
+	chrome.extension.getViews({ type: 'tab' }).forEach(refreshPopupOnWindow);
+	chrome.extension.getViews({ type: 'popup' }).forEach(refreshPopupOnWindow);
+	chrome.extension.getViews({ type: "notification" }).forEach(refreshPopupOnWindow);
 	
 	if (gNowPlayingData != null)
 	{
@@ -344,6 +355,7 @@ function propagatePlayingDataToAllTabs()
 		document.getElementById('next_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
 	}
 }
+function refreshPopupOnWindow(win) { win.refreshPopup(); }
 
 // start time out
 function startNotifTimeout()
