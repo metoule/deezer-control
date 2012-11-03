@@ -7,13 +7,15 @@ var gMouseOverNotif = false; // this boolean is used so that we don't restart th
 var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 }; // remember active tab on which jump to Deezer was called
 
 // actions to perform when the extension is loaded
-$(window).load(function() 
+$(window).load(windowOnLoadListener);
+function windowOnLoadListener() 
 {
 	setUpPopup();
 }
 
 // if no popup is set, it means that we should open a new Deezer tab
-chrome.browserAction.onClicked.addListener(function(iTab) 
+chrome.browserAction.onClicked.addListener(browserActionOnClickListener);
+function browserActionOnClickListener(iTab) 
 {
 	// extension has just been updated, a click will open the option page
 	if (LOCSTO.shouldWeShowNewItems())
@@ -33,10 +35,11 @@ chrome.browserAction.onClicked.addListener(function(iTab)
 	{
 		chrome.tabs.create({ url: 'http://www.deezer.com' });
 	}
-});
+}
 
 // inject hotkeys.js on any page if user allowed it
-chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab) 
+chrome.tabs.onUpdated.addListener(tabsOnUpdatedListener);
+function tabsOnUpdatedListener(iTabId, iChangeInfo, iTab) 
 {
 	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
 	checkLimitToOneDeezerTab(iTabId, iChangeInfo.url);
@@ -55,23 +58,26 @@ chrome.tabs.onUpdated.addListener(function(iTabId, iChangeInfo, iTab)
 	
 	// recount number of opened deezer tabs
 	setUpPopup();
-});
+}
 
 // when a tab is opened, create the pop up if needed, and check number of opened deezer tabs
-chrome.tabs.onCreated.addListener(function(iTab) 
+chrome.tabs.onCreated.addListener(tabsOnCreatedListener);
+function tabsOnCreatedListener(iTab) 
 { 
 	setUpPopup(); 
 	checkLimitToOneDeezerTab(iTab.id, iTab.url); 
 }
 
 // when a tab is removed, check that the popup is still needed
-chrome.tabs.onRemoved.addListener(function(iTabId, iRemoveInfo) 
+chrome.tabs.onRemoved.addListener(tabsOnRemovedListener);
+function tabsOnRemovedListener(iTabId, iRemoveInfo) 
 { 
 	setUpPopup(); 
 }
 
 // save active tab any time it changes to be able to go back to it 
-chrome.tabs.onActivated.addListener(function(iActiveTabInfo) 
+chrome.tabs.onActivated.addListener(tabsOnActivatedListener);
+function tabsOnActivatedListener(iActiveTabInfo) 
 {
 	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
 	{
@@ -107,7 +113,7 @@ function checkLimitToOneDeezerTab(iTabId, iNewUrl)
 			}, iTabId);
 		}
 	}
-}
+} 
 
 // find any Deezer tab not matching iIgnoreTabId, and call the callback with its tab and window id
 function findDeezerTab(iCallback, iIgnoreTabId)
@@ -154,25 +160,28 @@ function setUpPopup()
 	// else: normal use case
 	else
 	{
-		findDeezerTab(function(iDeezerTabId)
-		{
-			if (iDeezerTabId == null)
-			{
-				gNowPlayingData = null; // reset playing data
-				chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
-				chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
-				closeNotif();
-			}
-			else
-			{
-				chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
-			}
-		});
+		findDeezerTab(onFindDeezerTabForPopupSetup);
+	}
+}
+
+function onFindDeezerTabForPopupSetup(iDeezerTabId)
+{
+	if (iDeezerTabId == null)
+	{
+		gNowPlayingData = null; // reset playing data
+		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
+		chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
+		closeNotif();
+	}
+	else
+	{
+		chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
 	}
 }
 
 // this will react to an event fired in player_listener.js
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) 
+chrome.extension.onRequest.addListener(extensionOnRequestListener);
+function extensionOnRequestListener(request, sender, sendResponse) 
 {
 	switch (request.type)
 	{
@@ -269,7 +278,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 		break;
 
 	}
-});
+}
 
 function showNotif()
 {
@@ -292,36 +301,36 @@ function showNotif()
 		   )
 		{
 			// if we don't have permission to display notifications, close notif if present
-			chrome.permissions.contains(
-				{ permissions: ['notifications'] },  
-				function(result)
-				{
-				    if (result)
-				    {
-						// if notif not already visible, create it
-						if (gNotification == null)
-						{
-							gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways&notif=on");
-							gNotification.show();
-						} 
-						// else, we already have a notif opened
-						else 
-						{
-							resetNotifTimeout(); // remove existing timeout
-						}
-
-						// hide notification after the wanted delay
-						startNotifTimeout();
-				    }
-				    // not authorized, remove notif
-				    else
-				    {
-						resetNotifTimeout(); // remove existing timeout
-						closeNotif();
-				    }
-				});
+			chrome.permissions.contains({ permissions: ['notifications'] }, onCheckNotifPermission);
 		}
 	}
+}
+
+function onCheckNotifPermission(iPermissionGranted)
+{
+    if (iPermissionGranted)
+    {
+		// if notif not already visible, create it
+		if (gNotification == null)
+		{
+			gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways&notif=on");
+			gNotification.show();
+		} 
+		// else, we already have a notif opened
+		else 
+		{
+			resetNotifTimeout(); // remove existing timeout
+		}
+
+		// hide notification after the wanted delay
+		startNotifTimeout();
+    }
+    // not authorized, remove notif
+    else
+    {
+		resetNotifTimeout(); // remove existing timeout
+		closeNotif();
+    }
 }
 
 function updateButtonTooltip()
