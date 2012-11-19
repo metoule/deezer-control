@@ -25,20 +25,28 @@
 			<!-- Option tab: welcome -->
 			<section id="welcome">
 				<h1 data-i18n-content="options_page_tab_welcome_h1"></h1>
-				<div data-i18n-content="options_page_tab_welcome_content"></div>
+				<div data-i18n-content="options_page_tab_welcome_content_present"></div>
+				<ul>
+              <li data-i18n-content="options_page_tab_welcome_content_item_1"></li>
+              <li data-i18n-content="options_page_tab_welcome_content_item_2"></li>
+              <li data-i18n-content="options_page_tab_welcome_content_item_3"></li>
+              <li data-i18n-content="options_page_tab_welcome_content_item_4"></li>
+				</ul>
 				<div id="remember_to">
 					<h2 data-i18n-content="options_page_tab_welcome_remember_to"></h2>
 					<div><a id="button_rate_extension" data-i18n-content="options_page_tab_welcome_button_rate_extension" target="_blank"></a><span data-i18n-content="options_page_tab_welcome_rate_label"></span></div>
-					<div><a data-i18n-content="options_page_tab_welcome_donate_button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a><span data-i18n-content="options_page_tab_welcome_donate_label"></span></div>
+					<div><a id="button_donate" data-i18n-content="options_page_tab_welcome_donate_button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a><span data-i18n-content="options_page_tab_welcome_donate_label"></span></div>
 				</div>
-				<div><span data-i18n-content="options_page_tab_welcome_contact_me_at"></span>: <a href="mailto:m520152112e@gmail.com" target="_blank">m520152112e@gmail.com</a></div>
+            <div><span data-i18n-content="options_page_tab_welcome_contact_me_at"></span>: <a href="mailto:m520152112e@gmail.com" target="_blank">m520152112e@gmail.com</a></div>
 			</section>
 		
 		
 			<!-- Option tab: style chooser -->
 			<section id="popup_style">
 				<h1 data-i18n-content="options_page_tab_popup_style_h1"></h1>
-				<span data-i18n-content="options_page_tab_popup_style_choose_style"></span>:
+            <div data-i18n-content="options_page_tab_popup_what_are_popups"></div>
+            <br/>
+				<span class="emphasis" data-i18n-content="options_page_tab_popup_style_choose_style"></span>:
 				<select id="popup_style_chooser">
 		 			<option value="large" data-i18n-content="options_page_tab_popup_style_style_large"></option>
 		 			<option value="small" data-i18n-content="options_page_tab_popup_style_style_small"></option>
@@ -207,20 +215,22 @@
          <!-- Option tab: misc options -->
          <section id="misc">
             <h1 data-i18n-content="options_page_tab_misc_h1"></h1>
+            <div data-i18n-content="options_page_tab_misc_what_are_misc_options"></div>
                
-            <fieldset>
-               <h2 data-i18n-content="options_page_tab_misc_limit_deezer_to_one_tab_h2"></h2>
-               <div id="miscLimitDeezerToOneTab">
+            <h2 data-i18n-content="options_page_tab_misc_limit_deezer_to_one_tab_h2"></h2>
+            <div id="miscLimitDeezerToOneTab">
+               <div data-i18n-content="options_page_tab_misc_limit_deezer_to_one_tab_explanation"></div>
+               <div class="yes_no_bar">
                   <button class="two_state_unselected" data-i18n-content="yes"></button>
                   <button class="two_state_unselected" data-i18n-content="no"></button>
                </div>
-               
-               <div class="save_cancel_bar">
-                  <button id="button_save_misc" data-i18n-content="options_page_button_save"></button>
-                  <button id="button_cancel_misc" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
-                  <span id="status_misc"></span>
-               </div>
-            </fieldset>
+            </div>
+            
+            <div class="save_cancel_bar">
+               <button id="button_save_misc" data-i18n-content="options_page_button_save"></button>
+               <button id="button_cancel_misc" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
+               <span id="status_misc"></span>
+            </div>
          </section>
          
       </div>

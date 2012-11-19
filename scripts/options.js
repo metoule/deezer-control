@@ -19,10 +19,17 @@ function preparePage()
 	$("#notifs_fade_away_delay").change(function () { refreshNotifsOptions(); });
 	$("#button_save_notifications").click(function () { saveNotifications(); });
 
-	$('#miscLimitDeezerToOneTab').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
+	$('#miscLimitDeezerToOneTab > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
 	$("#button_save_misc").click(function () { saveMiscOptions(); });
 
 	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
+	
+	// set two buttons to the same size for better look and feel
+	var aWidth = Math.max($("#button_rate_extension").width(), $("#button_donate").width());
+	$("#button_rate_extension").width(aWidth);
+	$("#button_donate").width(aWidth);
+	
+	// yes / no bars
 }
 
 // read local storage, and set interface accordingly
@@ -153,8 +160,8 @@ function restoreHotkey(iHotKeyName)
 function refreshMiscOptions()
 {
 	// limit deezer to one tab
-	$("#miscLimitDeezerToOneTab").children('button:eq(0)').toggleClass('two_state_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
-	$("#miscLimitDeezerToOneTab").children('button:eq(1)').toggleClass('two_state_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
+	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').toggleClass('two_state_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
+	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(1)').toggleClass('two_state_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
 }
 
 
@@ -225,7 +232,7 @@ function saveNotifications()
 function saveMiscOptions()
 {
 	// limit deezer to one tab
-	LOCSTO.miscOptions.limitDeezerToOneTab = $("#miscLimitDeezerToOneTab").children('button:eq(0)').hasClass('two_state_selected');
+	LOCSTO.miscOptions.limitDeezerToOneTab = $("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').hasClass('two_state_selected');
 
 	LOCSTO.saveMiscOptions();
 

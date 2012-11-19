@@ -14,12 +14,16 @@ h1
 	text-transform: uppercase;
 }
 
+.emphasis, h2
+{
+   color: #202020;
+   font-size: 14px;
+   font-weight: bold;
+   text-shadow: #EFEFEF 0px 1px 0px;
+}
 h2
 {
-	color: #202020;
-	font-size: 14px;
 	margin: 15px 0px 5px 0px;
-	text-shadow: #EFEFEF 0px 1px 0px;
 }
 
 #center_block
@@ -129,10 +133,13 @@ select, #remember_to a, .button_cancel
 	border: 1px solid #D0D0D0;
 	color: gray;
 	cursor: pointer;
+	text-align: center;
 	font-weight: bold;
 	padding: 5px 10px 5px 10px;
 	text-shadow: 0 1px white;	
 }
+
+#remember_to a { display: inline-block; line-height: 16px; margin: -5px 0px -5px 0px; }
 
 /* TODO implement cancel buttons correctly */
 .button_cancel { display: none; }
@@ -344,6 +351,12 @@ fieldset *
 	font-style: italic;
 	font-weight: bold;	
 	visibility: hidden;
+}
+
+div.yes_no_bar
+{
+   padding: 5px; 
+   margin: 5px 0px -5px -5px; 
 }
 
 div.save_cancel_bar
