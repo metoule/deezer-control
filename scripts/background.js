@@ -161,7 +161,8 @@ function setUpPopup()
 	// extension has just been updated, show new items
 	if (LOCSTO.shouldWeShowNewItems())
 	{
-		chrome.browserAction.setBadgeText({ text: "NEW" });
+		chrome.browserAction.setBadgeBackgroundColor({ color: "#FF0000" });
+		chrome.browserAction.setBadgeText({ text: chrome.app.getDetails().version });
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('showNewItemsTitle') });
 		chrome.browserAction.setPopup({ popup: '' }); // don't create a popup, we want to open the options page
 	} 
