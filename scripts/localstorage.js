@@ -56,12 +56,6 @@ var LOCSTO = LOCSTO || {
 		this.installedVersion = this.get('installedVersion') || "0.0.0";
 		var aExtensionVersion = chrome.app.getDetails().version;
 		
-		if (this.installedVersion >= "0.1.2")
-		{
-			this.saveInstalledVersion();
-			return false;
-		}
-		
 		return this.installedVersion < aExtensionVersion;
 	},
 	
