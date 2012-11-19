@@ -40,7 +40,7 @@ function browserActionOnClickListener(iTab)
 // inject hotkeys.js on any page if user allowed it
 chrome.tabs.onUpdated.addListener(tabsOnUpdatedListener);
 function tabsOnUpdatedListener(iTabId, iChangeInfo, iTab) 
-{
+{	
 	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
 	checkLimitToOneDeezerTab(iTabId, iChangeInfo.url);
 	
@@ -48,13 +48,19 @@ function tabsOnUpdatedListener(iTabId, iChangeInfo, iTab)
 	if (iChangeInfo.status != "complete")
 		return;
 	
-	chrome.permissions.contains(
-		{ origins: ['<all_urls>'] }, 
+	// ignore all chrome internal urls
+	if (iTab.url.lastIndexOf("chrome", 0) !== 0)
+	{
+		chrome.permissions.contains(
+		{
+			origins: [ "<all_urls>" ] 
+		}, 
 		function(result) 
 		{
 			if (result)
-				chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" }); 
+				chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" });
 		});
+	}
 	
 	// recount number of opened deezer tabs
 	setUpPopup();
@@ -63,7 +69,7 @@ function tabsOnUpdatedListener(iTabId, iChangeInfo, iTab)
 // when a tab is opened, create the pop up if needed, and check number of opened deezer tabs
 chrome.tabs.onCreated.addListener(tabsOnCreatedListener);
 function tabsOnCreatedListener(iTab) 
-{ 
+{
 	setUpPopup(); 
 	checkLimitToOneDeezerTab(iTab.id, iTab.url); 
 }
@@ -71,7 +77,7 @@ function tabsOnCreatedListener(iTab)
 // when a tab is removed, check that the popup is still needed
 chrome.tabs.onRemoved.addListener(tabsOnRemovedListener);
 function tabsOnRemovedListener(iTabId, iRemoveInfo) 
-{ 
+{
 	setUpPopup(); 
 }
 
@@ -81,6 +87,8 @@ function tabsOnActivatedListener(iActiveTabInfo)
 {
 	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
 	{
+		if (!aActiveTab) return;
+		
 		// ignore active tab if deezer: we don't want to go back to deezer tab!
 		if (!matchDeezerUrl(aActiveTab.url))
 		{
