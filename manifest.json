@@ -4,7 +4,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDesc__",
   "browser_action": {
-                        "default_icon": "/imgs/icons/deezer_19x19.png", 
+                        "default_icon": "imgs/icons/deezer_19x19.png", 
                         "default_title": "__MSG_defaultTitle__"
                     },
   "background": { "page": "background.html" },
@@ -13,7 +13,7 @@
                          {
                              "all_frames": false,
                              "matches": [ "http://*.deezer.com/*" ],
-                             "js": [ "/scripts/player_listener.js" ],
+                             "js": [ "scripts/player_listener.js" ],
                              "run_at": "document_end"
                          }
                      ],
@@ -22,8 +22,8 @@
                      "tabs"
                  ], 
   "optional_permissions": [ "notifications", "<all_urls>" ],
-  "icons": {  "16": "/imgs/icons/deezer_16x16.png",
-              "48": "/imgs/icons/deezer_48x48.png",
-             "128": "/imgs/icons/deezer_128x128.png" 
+  "icons": {  "16": "imgs/icons/deezer_16x16.png",
+              "48": "imgs/icons/deezer_48x48.png",
+             "128": "imgs/icons/deezer_128x128.png" 
            }
 }
