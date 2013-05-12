@@ -1,4 +1,4 @@
-#popup_display 
+.popup_display 
 {
 	background-color: black;
 	color: white;
@@ -8,6 +8,7 @@
 div#controls
 {
 	margin: 0;
+	position: relative;
 	z-index: 600;
 }
 
@@ -16,16 +17,15 @@ div#controls a
 	cursor: pointer;
 	display: inline-block;
 	position: relative;
-	top: -1px;
 	vertical-align: middle;
 }
 
-div#controls-left 
+div.controls-left 
 { 
 	float: left;
 }
 
-div#controls-right 
+div.controls-right 
 { 
 	float: right;
 }
@@ -50,6 +50,7 @@ div#controls-right
 
 #now_playing_info span 
 { 
+   cursor: pointer;
 	display: block; 
 	overflow: hidden;
 	text-overflow: ellipsis; 

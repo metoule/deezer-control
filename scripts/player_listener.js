@@ -5,7 +5,7 @@
  * 
  * On page load, we add a listener to #current-track, which is a <A> element holding the song's title.
  * 
- * Deezer used jQuery .text() method to update the content, which doesn't fire a DOMCharacterDataModified event 
+ * Deezer uses jQuery .text() method to update the content, which doesn't fire a DOMCharacterDataModified event 
  * but a DOMNodeRemoved followed by a DOMNodeInserted - thus the event we listen to.
  * 
  * When a DOMNodeInserted is fired, we update our myPlayerInfo <DIV>, and update our other <DIV>, lastUpdate.
@@ -37,8 +37,10 @@ document.addEventListener('load', function(e)
 				"myPlayerInfo = document.getElementById('myPlayerInfo');" +
 				"myPlayerInfo.setAttribute('dz_playing', dzPlayer.isPlaying());" +
 				"myPlayerInfo.setAttribute('dz_artist',  dzPlayer.getArtistName());" +
+				"myPlayerInfo.setAttribute('dz_artist_id',(dzPlayer.getCurrentSongInfo() != null ? dzPlayer.getCurrentSongInfo().ART_ID : ''));" +
 				"myPlayerInfo.setAttribute('dz_track',   dzPlayer.getSongTitle());" +
 				"myPlayerInfo.setAttribute('dz_album',   dzPlayer.getAlbumTitle());" +
+				"myPlayerInfo.setAttribute('dz_album_id',(dzPlayer.getCurrentSongInfo() != null ? dzPlayer.getCurrentSongInfo().ALB_ID : ''));" +
 				"myPlayerInfo.setAttribute('dz_cover',   dzPlayer.getCover());" +
 				"myPlayerInfo.setAttribute('dz_prev_cover',   (dzPlayer.getPrevSongInfo() != null ? dzPlayer.getPrevSongInfo().ALB_PICTURE : ''));" +
 				"myPlayerInfo.setAttribute('dz_next_cover',   (dzPlayer.getNextSongInfo() != null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));" +
@@ -95,10 +97,27 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 				document.getElementById('myPlayerInfo').setAttribute('dz_playing', aAction == "play" ? "true" : "false"); 
 						
 			sendJsonPlayerInfo(null); // thanks to this, changes on play / pause are tracked
-			location.href = "javascript: if (typeof(playercontrol) != 'undefined') playercontrol.doAction('" + aAction + "');";
+			executeDoAction(aAction);
+			break;
+			
+			
+		case "doAction":			
+			// special action linkCurrentArtist (doesn't exist on Deezer)
+			if (request.action == 'linkCurrentArtist')
+			{
+				location.href = "javascript: loadBox('artist/" + document.getElementById('myPlayerInfo').getAttribute('dz_artist_id') + "')";
+				break;
+			}		
+			
+			executeDoAction(request.action);
 			break;
     }
 	
 	// call the response callback to process the rest of the process
 	sendResponse();
 });
+
+function executeDoAction(action)
+{
+	location.href = "javascript: if (typeof(playercontrol) != 'undefined') playercontrol.doAction('" + action + "');";	
+}

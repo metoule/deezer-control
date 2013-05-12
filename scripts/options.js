@@ -17,6 +17,7 @@ function preparePage()
 
 	$('input:radio[name="notifs_show_when"]').change(function () { activateNotifications(); });
 	$("#notifs_fade_away_delay").change(function () { refreshNotifsOptions(); });
+	$("#notifs_style").change(function () { refreshNotifsOptions(); });
 	$("#button_save_notifications").click(function () { saveNotifications(); });
 
 	$('#miscLimitDeezerToOneTab > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
@@ -52,6 +53,7 @@ function restoreOptions()
 		$('input:radio[name="notifs_show_when"]').filter('[value="never"]').prop('checked', true);
 
 	$('#notifs_fade_away_delay').val(LOCSTO.notifications.fadeAwayDelay / 1000);
+	$("#notifs_style_chooser").val(LOCSTO.notifications.style);
 
 	refreshNotifsOptions(); // ensure options are correctly shown
 
@@ -72,12 +74,20 @@ function refreshNotifsOptions()
 {
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 
+	// show slider for notifs duration?
 	if (aNotifsShowWhen == 'on_hotkey_only' || aNotifsShowWhen == 'on_song_change')
 		$('#notifs_fade_away_delay').parent().css('display', 'block');
 	else
 		$('#notifs_fade_away_delay').parent().css('display', 'none');
+	
+	// show style chooser?
+	if (aNotifsShowWhen != 'never')
+		$('#notifs_style').css('display', 'block');
+	else
+		$('#notifs_style').css('display', 'none');
 
 	$('#notifs_fade_away_delay_display').text($('#notifs_fade_away_delay').val());
+	loadStyle($("#notifs_style_chooser").val());
 }
 
 function refreshHotKeysOptions()
@@ -204,19 +214,20 @@ function saveNotifications()
 {
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 	var aNotifsDelay = $('#notifs_fade_away_delay').val() * 1000;
+	var aNotifsStyle = $("#notifs_style_chooser").val();
 
 	// the key names are due to the old notifications system
 	if (aNotifsShowWhen == 'never')
-		LOCSTO.notifications = { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
+		LOCSTO.notifications = { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'never_hides')
-		LOCSTO.notifications = { never: false, alwaysOn: true, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
+		LOCSTO.notifications = { never: false, alwaysOn: true, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'on_song_change')
-		LOCSTO.notifications = { never: false, alwaysOn: false, visible: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay };
+		LOCSTO.notifications = { never: false, alwaysOn: false, visible: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'on_hotkey_only')
-		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay };
+		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	LOCSTO.saveNotifications();
 
@@ -279,6 +290,19 @@ function resetSections()
 
 function showSection(id)
 {
+	// since we use ids to fill the popup content, we can't have several previews in the same page;
+	// move it to the needed place when needed!
+	if (id == 'popup_style')
+	{
+		loadStyle($("#popup_style_chooser").val());
+		$('#preview_inner_border').append($('#preview_content'));
+	}
+	else if (id == 'notifications')
+	{
+		loadStyle($("#notifs_style_chooser").val());
+		$('#preview_notifs').append($('#preview_content'));
+	}
+	
 	$('#tab_chooser > nav > a').removeClass('currentone');
 	$('#center_block > section:not(#' + id + ')').css('display', 'none');
 	$('#' + id).css('display', 'block');

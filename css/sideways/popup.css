@@ -1,9 +1,9 @@
 @import url('../popup.css');
 
-#popup_display
+.popup_display
 {
 	min-height: 80px;
-	min-width: 280px;
+	min-width: 290px;
 	margin: 5px;
 }
 
@@ -12,9 +12,6 @@ div#controls
 	float: right;
 	height: 20px;
 	line-height: 20px;
-	position: absolute;
-	right: 5px;
-	top: 5px;
 }
 
 div#controls a 
@@ -56,7 +53,6 @@ div#controls a
 #now_playing
 {
 	height: 80px;
-	width: 100%;
 }
 
 #now_playing_info
