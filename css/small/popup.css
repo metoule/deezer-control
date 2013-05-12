@@ -1,6 +1,6 @@
 @import url('../popup.css');
 
-#popup_display
+.popup_display
 {
 	min-height: 140px;
 	min-width: 120px;
@@ -52,7 +52,6 @@ div#controls a
 #now_playing
 {
 	height: 120px;
-	width: 120px;
 }
 
 #now_playing_info

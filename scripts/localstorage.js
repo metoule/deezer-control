@@ -35,7 +35,7 @@ var LOCSTO = LOCSTO || {
 		// they changed from the beginning, so: 
 		//   - visible = on_song_change
 		//   - alwaysOn = never_hides
-		this.notifications = FillDictWithDefaults(this.get('notifications'), { never: false, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000 });
+		this.notifications = FillDictWithDefaults(this.get('notifications'), { never: false, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
 		
 		// hot keys
 			   this.prevHotKey =         FillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });

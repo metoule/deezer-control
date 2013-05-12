@@ -55,15 +55,15 @@
 				<button id="button_save_style" data-i18n-content="options_page_button_save"></button>
 				<button id="button_cancel_style" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
 				<span id="status_style"></span>
-				<br/>			
+				<br/>
 		
 				<!-- Preview pane -->
 				<div id="fake_omnibar">
-					<div id="controls-left">
+					<div class="controls-left">
 						&nbsp;<span id="world_icon"></span>
 					</div>
 					<a href="http://www.deezer.com" target="_blank">www.deezer.com</a>
-					<div id="controls-right">
+					<div class="controls-right">
 						&nbsp;<span id="star_icon"></span>
 					</div>
 				</div>
@@ -72,12 +72,12 @@
 					<span id="arrow_preview"></span>
 					<div id="preview_outer_border">
 						<div id="preview_inner_border">
-							<div id="popup_display" style="display: inline-block;">
+							<div id="preview_content" class="popup_display" style="display: inline-block;">
 								<div id="controls">
-									<div id="controls-left">
+									<div class="controls-left">
 										&nbsp;
 									</div>
-									<div id="controls-right">
+									<div class="controls-right">
 										&nbsp;<a id="control-prev"></a><a id="control-pause"></a><a id="control-play"></a><a id="control-next"></a>
 									</div>
 								</div>
@@ -151,7 +151,7 @@
 						<span class="warning"></span>
 					</div>
 					
-               <h2 data-i18n-content="options_page_tab_hotkeys_jumpToDeezerHotKey_h2" style="padding-left: 35px;"></h2>
+               <h2 data-i18n-content="options_page_tab_hotkeys_jumpToDeezerHotKey_h2"></h2>
                <div style="margin-top: -10px; font-style: italic;" data-i18n-content="options_page_tab_hotkeys_warning_jumpToDeezerHotKey"></div>
                <div id="jumpToDeezerHotKey">
                   <button class="two_state_unselected">SHIFT</button>
@@ -177,9 +177,9 @@
 				<h1 data-i18n-content="options_page_tab_notifs_h1"></h1>
 				<div data-i18n-content="options_page_tab_notifs_what_are_notifications"></div>
 				
-				<fieldset>
-					<h2 data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
+				<h2 data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
 					
+            <fieldset>
 					<input type="radio" name="notifs_show_when" value="never" id="notifs_show_never"/>
 					<label for="notifs_show_never" data-i18n-content="options_page_tab_notifs_show_never"></label>
 					<span class="warning" id='chrome_permission_not_granted' data-i18n-content="options_page_tab_notifs_chrome_permission_not_granted"></span>
@@ -202,13 +202,28 @@
 						<input type="range" id="notifs_fade_away_delay" min="1" max="10" step="0.5" value="3"></input>
 						<span id="notifs_fade_away_delay_display"></span>
 					</div>
+            </fieldset>
 					
-					<div class="save_cancel_bar">
-						<button id="button_save_notifications" data-i18n-content="options_page_button_save"></button>
-						<button id="button_cancel_notifications" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
-						<span id="status_notifs"></span>
-					</div>
-				</fieldset>
+				<!-- Style -->
+				<div id="notifs_style">
+	            <span class="emphasis" data-i18n-content="options_page_tab_popup_style_choose_style"></span>:
+	            <select id="notifs_style_chooser">
+	               <option value="sideways" data-i18n-content="options_page_tab_popup_style_style_sideways"></option>
+                  <option value="line" data-i18n-content="options_page_tab_notifs_style_style_line"></option>
+	            </select>
+	            
+                 <!-- Preview pane -->
+	            <div id="fake_notifs">
+		            <div id="fake_notifs_header">Deezer Control</div>
+		            <div id="preview_notifs"><!-- placeholder for preview pane --></div>
+               </div>
+              </div>
+				
+				<div class="save_cancel_bar">
+					<button id="button_save_notifications" data-i18n-content="options_page_button_save"></button>
+					<button id="button_cancel_notifications" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
+					<span id="status_notifs"></span>
+				</div>
 			</section>
       
       

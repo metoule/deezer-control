@@ -1,9 +1,7 @@
 
-var COVER_SIZE_LARGE = "250x250";
-var COVER_SIZE_SMALL = "120x120";
-var COVER_SIZE_SIDEWAYS = "80x80";
-
-var COVER_SIZE = COVER_SIZE_LARGE;
+var COVER_SIZES = { large: '250x250', small: '120x120', sideways: '80x80', line: '25x25' };
+var COVER_SIZE = COVER_SIZES.large;
+var COVER_SIZE_NOTIFS = COVER_SIZES.sideways;
 
 window.addEventListener('load', function(e) { preparePopup(); });
 window.addEventListener('unload', function(e) { if (gup('notif') == 'on') chrome.extension.getBackgroundPage().closeNotif(); });
@@ -24,20 +22,41 @@ function gup(iParamName)
 function preparePopup()
 {
 	loadStyle();
+	COVER_SIZE_NOTIFS = COVER_SIZES[LOCSTO.notifications.style];
 
 	// add interactivity
 	$("#control-prev").click(function ()  { executePlayerAction('prev');  return false; });
 	$("#control-pause").click(function () { executePlayerAction('pause'); return false; });
 	$("#control-play").click(function ()  { executePlayerAction('play');  return false; });
 	$("#control-next").click(function ()  { executePlayerAction('next');  return false; });
+	$('#now_playing_info_track').click(function ()  { executeDoAction('linkCurrentSong');   return false; });
+	$('#now_playing_info_artist').click(function () { executeDoAction('linkCurrentArtist'); return false; });
 	
+	// add tooltip in case of ellipsis
+	$('#now_playing_info > span').on('mouseenter', function () 
+	{
+		if (this.offsetWidth < this.scrollWidth && !$(this).attr('title'))
+			$(this).attr('title', $(this).text()); 
+	});
+	
+	// reset popup
 	setTimeout(refreshPopup, 0);
 	
 	// we're in a notif scenario, add mouse over and mouse out
 	if (gup('notif') == 'on')
 	{		
-		window.addEventListener('mouseover', function(e) { chrome.extension.getBackgroundPage().gMouseOverNotif = true;  chrome.extension.getBackgroundPage().resetNotifTimeout(); return true; });
-		window.addEventListener('mouseout',  function(e) { chrome.extension.getBackgroundPage().gMouseOverNotif = false; chrome.extension.getBackgroundPage().startNotifTimeout(); return true; });
+		window.addEventListener('mouseover', function(e) 
+				{ 
+					chrome.extension.getBackgroundPage().gMouseOverNotif = true;  
+					chrome.extension.getBackgroundPage().resetNotifTimeout();
+					return true; 
+				});
+		window.addEventListener('mouseout',  function(e) 
+				{ 
+					chrome.extension.getBackgroundPage().gMouseOverNotif = false; 
+					chrome.extension.getBackgroundPage().startNotifTimeout();
+					return true; 
+				});
 	}
 }
 
@@ -45,7 +64,7 @@ function loadStyle(iPopupStyle)
 {
 	var aPopupStyle = iPopupStyle;
 	if (aPopupStyle == null)
-		aPopupStyle = gup('style'); // grep url param (used to force a style for when creating a notification in background.js)
+		aPopupStyle = gup('style'); // grep url param (used to force a style when creating a notification in background.js)
 
 	if (aPopupStyle == null)
 		aPopupStyle = LOCSTO.popupStyle;
@@ -61,9 +80,7 @@ function loadStyle(iPopupStyle)
 		var aOldSize = COVER_SIZE;
 		
 		// set the size of the cover 
-		if (aPopupStyle == 'large') COVER_SIZE = COVER_SIZE_LARGE;
-		else if (aPopupStyle == 'small') COVER_SIZE = COVER_SIZE_SMALL;
-		else if (aPopupStyle == 'sideways') COVER_SIZE = COVER_SIZE_SIDEWAYS;
+		COVER_SIZE = COVER_SIZES[aPopupStyle];
 		
 		// replace img src to show new size
 		document.getElementById('cover').src = document.getElementById('cover').src.replace(aOldSize, COVER_SIZE);
@@ -94,6 +111,12 @@ function executePlayerAction(iCommand)
 	});
 }
 
+// change focus to Deezer tab, and execute wanted action
+function executeDoAction(iAction)
+{
+	chrome.extension.sendRequest({ type: "doAction", action: iAction });
+}
+
 function refreshPopup()
 {
 	// get now playing info from background page
@@ -113,9 +136,8 @@ function refreshPopup()
 		}
 		
 		// set track title and artist
-		document.getElementById('now_playing_info_track').innerHTML = aNowPlayingData.dz_track;
-		document.getElementById('now_playing_info_artist').innerHTML = aNowPlayingData.dz_artist;
-		//document.getElementById('now_playing_info_album').innerHTML = aNowPlayingData.dz_album;
+		$('#now_playing_info_track').text(aNowPlayingData.dz_track);
+		$('#now_playing_info_artist').text(aNowPlayingData.dz_artist);
 		
 		// show or hide prev / next buttons if needed
 		document.getElementById('control-prev').style.visibility = (aNowPlayingData.dz_is_prev_active == 'true' ? "visible" : "hidden");

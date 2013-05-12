@@ -218,16 +218,34 @@ function extensionOnRequestListener(request, sender, sendResponse)
 	case "controlPlayer":
 		gActionOnHotKey = request.source == 'hotkey';
 		
-		// find all deezer tabs on all the windows, and send the wanted request to each one
+		// send the wanted action to the deezer tab
 		findDeezerTab(function(iDeezerTabId) 
 		{
 			chrome.tabs.sendRequest(iDeezerTabId, { name: request.type, action: request.command }, function(response) { if (sendResponse) sendResponse(); });
 		});
 		
 		break;
+
+	case "doAction":		
+		findDeezerTab(function(iDeezerTabId, iDeezerWindowId) 
+		{
+			chrome.tabs.sendRequest(iDeezerTabId, { name: request.type, action: request.action });
+			onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId);
+		});
+		
+		break;
 		
 	case "showNotif":
 		gActionOnHotKey = request.source == 'hotkey' || request.source == 'options';
+		
+		// options page can change the style: force close the notif
+		if (request.source == 'options')
+		{
+			resetNotifTimeout(); // remove existing timeout
+			closeNotif();
+		}
+		
+		// show it
 		showNotif();
 		
 		// call the callback method
@@ -324,7 +342,7 @@ function onCheckNotifPermission(iPermissionGranted)
 		// if notif not already visible, create it
 		if (gNotification == null)
 		{
-			gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=sideways&notif=on");
+			gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=" + LOCSTO.notifications.style + "&notif=on");
 			gNotification.show();
 		} 
 		// else, we already have a notif opened
@@ -364,15 +382,18 @@ function propagatePlayingDataToAllTabs()
 		// set images in background page to cache album covers for faster display
 		loadStyle(); // load COVER_SIZE variable
 		
-		// load notification size image
-		document.getElementById('prev_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
-		document.getElementById('cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
-		document.getElementById('next_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE_SIDEWAYS + "-000000-80-0-0.jpg";
-					
+		// load notification size image if needed
+		if (!LOCSTO.notifications.never)
+		{
+			document.getElementById('prev_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg";
+			document.getElementById('cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg";
+			document.getElementById('next_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg";
+		}
+		
 		// load full image (might be the same size)
-		document.getElementById('prev_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
-		document.getElementById('cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
-		document.getElementById('next_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+		document.getElementById('prev_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+		document.getElementById('cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+		document.getElementById('next_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
 	}
 }
 function refreshPopupOnWindow(win) { win.refreshPopup(); }
