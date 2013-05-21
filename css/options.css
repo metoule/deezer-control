@@ -79,6 +79,11 @@ h2.new_item
 {
    background: url(/imgs/new.png) no-repeat 5px 5px;
 }
+span.new_item
+{
+   background: url(/imgs/new.png) no-repeat 0px 3px;
+   padding-left: 30px;
+}
 
 section
 {
