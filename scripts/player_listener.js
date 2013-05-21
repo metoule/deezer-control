@@ -33,25 +33,26 @@ document.addEventListener('load', function(e)
 		  && document.getElementById('h_pause') != null) 
 		{
 			location.href = "javascript:" +
-				"function updateMyPlayerInfo() {" +
-				"myPlayerInfo = document.getElementById('myPlayerInfo');" +
-				"myPlayerInfo.setAttribute('dz_playing', dzPlayer.isPlaying());" +
-				"myPlayerInfo.setAttribute('dz_artist',  dzPlayer.getArtistName());" +
-				"myPlayerInfo.setAttribute('dz_artist_id',(dzPlayer.getCurrentSongInfo() != null ? dzPlayer.getCurrentSongInfo().ART_ID : ''));" +
-				"myPlayerInfo.setAttribute('dz_track',   dzPlayer.getSongTitle());" +
-				"myPlayerInfo.setAttribute('dz_album',   dzPlayer.getAlbumTitle());" +
-				"myPlayerInfo.setAttribute('dz_album_id',(dzPlayer.getCurrentSongInfo() != null ? dzPlayer.getCurrentSongInfo().ALB_ID : ''));" +
-				"myPlayerInfo.setAttribute('dz_cover',   dzPlayer.getCover());" +
-				"myPlayerInfo.setAttribute('dz_prev_cover',   (dzPlayer.getPrevSongInfo() != null ? dzPlayer.getPrevSongInfo().ALB_PICTURE : ''));" +
-				"myPlayerInfo.setAttribute('dz_next_cover',   (dzPlayer.getNextSongInfo() != null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));" +
-				"myPlayerInfo.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());" +
-				"myPlayerInfo.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());" +
-				"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
-			"};" + 
-			"document.getElementById('current-track').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
-			"document.getElementById('h_play').addEventListener('click', updateMyPlayerInfo , false);" +
-			"document.getElementById('h_pause').addEventListener('click', updateMyPlayerInfo , false);" + 
-			"updateMyPlayerInfo();"
+				"function updateMyPlayerInfo()" +
+				"{" +
+					"myPlayerInfo = $('#myPlayerInfo');" +
+					"myPlayerInfo.attr('dz_playing',     dzPlayer.isPlaying());" +
+					"myPlayerInfo.attr('dz_artist',      dzPlayer.getArtistName());" +
+					"myPlayerInfo.attr('dz_artist_id',  (dzPlayer.getCurrentSongInfo() != null ? dzPlayer.getCurrentSongInfo().ART_ID : ''));" +
+					"myPlayerInfo.attr('dz_track',       dzPlayer.getSongTitle());" +
+					"myPlayerInfo.attr('dz_album',       dzPlayer.getAlbumTitle());" +
+					"myPlayerInfo.attr('dz_album_id',   (dzPlayer.getCurrentSongInfo() != null ? dzPlayer.getCurrentSongInfo().ALB_ID : ''));" +
+					"myPlayerInfo.attr('dz_cover',       dzPlayer.getCover());" +
+					"myPlayerInfo.attr('dz_prev_cover', (dzPlayer.getPrevSongInfo() != null ? dzPlayer.getPrevSongInfo().ALB_PICTURE : ''));" +
+					"myPlayerInfo.attr('dz_next_cover', (dzPlayer.getNextSongInfo() != null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));" +
+					"myPlayerInfo.attr('dz_is_prev_active',   playercontrol.prevButtonActive());" +
+					"myPlayerInfo.attr('dz_is_next_active',   playercontrol.nextButtonActive());" +
+					"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
+				"};" + 
+				"document.getElementById('current-track').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
+				"(function() { orig = $.fn.show; $.fn.show = function() { var ev = new $.Event('show'); orig.apply(this, arguments); $(this).trigger(ev); }})();" +
+				"$('#h_play, #h_pause').bind('show', function(e) { updateMyPlayerInfo(); });" +
+				"updateMyPlayerInfo();"
 			;
 		}
 		

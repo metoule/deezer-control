@@ -2,6 +2,7 @@
  * Song and artist names are now links to their respective pages
  * It's now possible to skin the notifications
  * Don't preload notifications covers if not needed
+ * Correctly monitor play / pause changes
 
 1.1 - 27 Jan 2013
  * Fixed https://bitbucket.org/metoule/deezer_control/issue/1/package-incorrect
