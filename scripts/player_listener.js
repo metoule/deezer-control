@@ -50,8 +50,8 @@ document.addEventListener('load', function(e)
 					"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
 				"};" + 
 				"document.getElementById('current-track').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
-				"(function() { orig = $.fn.show; $.fn.show = function() { var ev = new $.Event('show'); orig.apply(this, arguments); $(this).trigger(ev); }})();" +
-				"$('#h_play, #h_pause').bind('show', function(e) { updateMyPlayerInfo(); });" +
+				"(function($) { var orig = $.fn.show; $.fn.show = function() { var ev = new $.Event('dzCtrlShow'); var ret = orig.apply(this, arguments); $(this).trigger(ev); return ret; }})(jQuery);" +
+				"$('#h_play, #h_pause').bind('dzCtrlShow', function(e) { updateMyPlayerInfo(); });" +
 				"updateMyPlayerInfo();"
 			;
 		}
