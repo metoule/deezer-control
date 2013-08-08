@@ -3,7 +3,7 @@
  * Content script can't use JS object of the page, but they can access the DOM.
  * Use our own DIV to store info.
  * 
- * On page load, we add a listener to #current-track, which is a <A> element holding the song's title.
+ * On page load, we add a listener to #player_track_title, which is a <A> element holding the song's title.
  * 
  * Deezer uses jQuery .text() method to update the content, which doesn't fire a DOMCharacterDataModified event 
  * but a DOMNodeRemoved followed by a DOMNodeInserted - thus the event we listen to.
@@ -16,7 +16,7 @@
 document.addEventListener('load', function(e) 
 {
 	if (document.getElementById('myPlayerInfo') == null)
-	{		
+	{
 		// create an invisible fake div
 		var aMyPlayerInfoDom = document.createElement('div');
 		aMyPlayerInfoDom.id = "myPlayerInfo";
@@ -28,9 +28,9 @@ document.addEventListener('load', function(e)
 		document.getElementsByTagName("body")[0].appendChild(aMyPlayerInfoDom);
 		
 		// inject a new JS method in the DOM 
-		if (document.getElementById('current-track') != null 
-		  && document.getElementById('h_play') != null
-		  && document.getElementById('h_pause') != null) 
+		if (document.getElementById('player_track_title') != null 
+		  && document.getElementById('player_control_play') != null
+		  && document.getElementById('player_control_pause') != null) 
 		{
 			location.href = "javascript:" +
 				"function updateMyPlayerInfo()" +
@@ -49,9 +49,9 @@ document.addEventListener('load', function(e)
 					"myPlayerInfo.attr('dz_is_next_active',   playercontrol.nextButtonActive());" +
 					"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
 				"};" + 
-				"document.getElementById('current-track').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
+				"document.getElementById('player_track_title').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
 				"(function($) { var orig = $.fn.show; $.fn.show = function() { var ev = new $.Event('dzCtrlShow'); var ret = orig.apply(this, arguments); $(this).trigger(ev); return ret; }})(jQuery);" +
-				"$('#h_play, #h_pause').bind('dzCtrlShow', function(e) { updateMyPlayerInfo(); });" +
+				"$('#player_control_play, #player_control_pause').bind('dzCtrlShow', function(e) { updateMyPlayerInfo(); });" +
 				"updateMyPlayerInfo();"
 			;
 		}
