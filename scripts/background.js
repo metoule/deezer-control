@@ -1,9 +1,6 @@
 
 var gNowPlayingData = null;
-var gNotification = null;
-var gNotificationTimeoutId = null;
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
-var gMouseOverNotif = false; // this boolean is used so that we don't restart the notif timer if mouse over notifs
 var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 }; // remember active tab on which jump to Deezer was called
 
 // actions to perform when the extension is loaded
@@ -180,7 +177,7 @@ function onFindDeezerTabForPopupSetup(iDeezerTabId)
 		gNowPlayingData = null; // reset playing data
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
 		chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
-		closeNotif();
+		NOTIFS.destroyNotif();
 	}
 	else
 	{
@@ -240,10 +237,7 @@ function extensionOnRequestListener(request, sender, sendResponse)
 		
 		// options page can change the style: force close the notif
 		if (request.source == 'options')
-		{
-			resetNotifTimeout(); // remove existing timeout
-			closeNotif();
-		}
+			NOTIFS.destroyNotif();
 		
 		// show it
 		showNotif();
@@ -314,8 +308,7 @@ function showNotif()
 	// if no deezer data, close notif, otherwise show it
 	if (gNowPlayingData == null)
 	{
-		resetNotifTimeout(); // remove existing timeout
-		closeNotif();
+		NOTIFS.destroyNotif();
 	}
 	// we have data to show
 	else
@@ -338,28 +331,10 @@ function showNotif()
 function onCheckNotifPermission(iPermissionGranted)
 {
     if (iPermissionGranted)
-    {
-		// if notif not already visible, create it
-		if (gNotification == null)
-		{
-			gNotification = webkitNotifications.createHTMLNotification("/popup.html?style=" + LOCSTO.notifications.style + "&notif=on");
-			gNotification.show();
-		} 
-		// else, we already have a notif opened
-		else 
-		{
-			resetNotifTimeout(); // remove existing timeout
-		}
-
-		// hide notification after the wanted delay
-		startNotifTimeout();
-    }
-    // not authorized, remove notif
+    	NOTIFS.createNotif();
+    
     else
-    {
-		resetNotifTimeout(); // remove existing timeout
-		closeNotif();
-    }
+    	NOTIFS.destroyNotif();
 }
 
 function updateButtonTooltip()
@@ -375,7 +350,7 @@ function propagatePlayingDataToAllTabs()
 	// refresh all opened popups, tabs (i.e. option page), and notifications
 	chrome.extension.getViews({ type: 'tab' }).forEach(refreshPopupOnWindow);
 	chrome.extension.getViews({ type: 'popup' }).forEach(refreshPopupOnWindow);
-	chrome.extension.getViews({ type: "notification" }).forEach(refreshPopupOnWindow);
+	NOTIFS.refreshNotif();
 	
 	if (gNowPlayingData != null)
 	{
@@ -397,36 +372,6 @@ function propagatePlayingDataToAllTabs()
 	}
 }
 function refreshPopupOnWindow(win) { win.refreshPopup(); }
-
-// start time out
-function startNotifTimeout()
-{
-	// hide notification after the wanted delay
-	if (gMouseOverNotif == false && !LOCSTO.notifications.alwaysOn)
-	{
-		gNotificationTimeoutId = setTimeout(closeNotif, LOCSTO.notifications.fadeAwayDelay);
-	}
-}
-
-// reset time out
-function resetNotifTimeout()
-{
-	if (gNotificationTimeoutId != null)
-	{
-		window.clearTimeout(gNotificationTimeoutId);
-		gNotificationTimeoutId = null;
-	}
-}
-
-// close notif and reset everything
-function closeNotif()
-{
-	if (gNotification != null) 
-		gNotification.cancel(); 
-	
-	gNotification = null; 
-	gNotificationTimeoutId = null;
-}
 
 function matchDeezerUrl(iUrl)
 {

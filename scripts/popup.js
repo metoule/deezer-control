@@ -47,14 +47,12 @@ function preparePopup()
 	{		
 		window.addEventListener('mouseover', function(e) 
 				{ 
-					chrome.extension.getBackgroundPage().gMouseOverNotif = true;  
-					chrome.extension.getBackgroundPage().resetNotifTimeout();
+					chrome.extension.getBackgroundPage().NOTIFS.onMouseOverNotif();
 					return true; 
 				});
 		window.addEventListener('mouseout',  function(e) 
 				{ 
-					chrome.extension.getBackgroundPage().gMouseOverNotif = false; 
-					chrome.extension.getBackgroundPage().startNotifTimeout();
+					chrome.extension.getBackgroundPage().NOTIFS.onMouseOutNotif();
 					return true; 
 				});
 	}

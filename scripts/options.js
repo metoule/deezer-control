@@ -7,6 +7,9 @@ function preparePage()
 	restoreOptions();
 	resetSections();
 	i18n.process(document);
+	
+	// set correct section for notifications
+	$('#notifications_nav').attr('href', '#' + NOTIFS.optionsPageSection)
 
 	// create interactivity
 	$("#popup_style_chooser").change(function () { loadStyle($("#popup_style_chooser").val()); });
