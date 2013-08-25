@@ -1,6 +1,6 @@
 
-var OLD_NOTIFS = OLD_NOTIFS || {
-	
+var OLD_NOTIFS = OLD_NOTIFS || 
+{
 	gNotification: null, 
 	gNotificationTimeoutId: null, 
 	gMouseOverNotif: false, 
@@ -71,20 +71,51 @@ var OLD_NOTIFS = OLD_NOTIFS || {
 	
 };
 
-var NEW_NOTIFS = NEW_NOTIFS || {
-
-	optionsPageSection: 'notifications_new', 
+var NEW_NOTIFS = NEW_NOTIFS || 
+{
+	optionsPageSection: 'notifications',
+	currentTrack: null, 
 	
 	createNotif: function()
 	{
+		this.createUpdateNotif(chrome.notifications.create);
 	}, 
 	
 	destroyNotif: function()
 	{
+		var _this = this;
+		chrome.notifications.clear('deezer_control', function(wasCleared) 
+		{ 
+			if (wasCleared)
+				_this.currentTrack = null; 
+		}); 
 	}, 
 	
 	refreshNotif: function()
 	{
+		if (this.currentTrack != null)
+			this.createUpdateNotif(chrome.notifications.update);
+	}, 
+	
+	createUpdateNotif: function(notifMethod)
+	{
+		var aNowPlayingData = chrome.extension.getBackgroundPage().gNowPlayingData;
+		var content = {
+				type: 'basic', 
+				title:   aNowPlayingData.dz_track, 
+				message: aNowPlayingData.dz_artist,
+				iconUrl: "http://cdn-images.deezer.com/images/cover/" + aNowPlayingData.dz_cover + "/80x80-000000-80-0-0.jpg",
+				buttons: null,
+				priority: 0
+		};
+		
+		// don't update notification if it's the same track
+		var newTrack = content.message + '-' + content.title;
+		if (newTrack == this.currentTrack)
+			return;
+
+		var _this = this;
+        notifMethod('deezer_control', content, function() { _this.currentTrack = newTrack; });
 	}, 
 	
 	resetNotifTimeout: function()
@@ -107,5 +138,13 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 	
 };
 
-
-var NOTIFS = webkitNotifications.createHTMLNotification === "undefined" ? NEW_NOTIFS : OLD_NOTIFS;
+var NOTIFS = OLD_NOTIFS;
+if (typeof webkitNotifications.createHTMLNotification === "undefined")
+{
+	NOTIFS = NEW_NOTIFS;
+	chrome.notifications.onClosed.addListener(function(notificationId, byUser)
+	{
+		if (notificationId == 'deezer_control')
+			NOTIFS.currentTrack = null;
+	});
+}
