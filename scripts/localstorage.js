@@ -22,6 +22,12 @@ function FillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues)
 	return aMyNewObject;
 }
 
+
+var COVER_SIZES = { large: '250x250', small: '120x120', sideways: '80x80', line: '25x25' };
+var COVER_SIZE = COVER_SIZES.large;
+var COVER_SIZE_NOTIFS = COVER_SIZES.sideways;
+
+
 var LOCSTO = LOCSTO || {
 	
 	/*
@@ -46,6 +52,10 @@ var LOCSTO = LOCSTO || {
 	   
 	   // misc options
 	   this.miscOptions = FillDictWithDefaults(this.get('miscOptions'), { limitDeezerToOneTab: true });
+	   
+	   // set global variables
+	   COVER_SIZE = COVER_SIZES[this.popupStyle];
+	   COVER_SIZE_NOTIFS = COVER_SIZES[this.notifications.style];
 	},
 	
 	/*
