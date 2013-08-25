@@ -1,10 +1,5 @@
 
-var COVER_SIZES = { large: '250x250', small: '120x120', sideways: '80x80', line: '25x25' };
-var COVER_SIZE = COVER_SIZES.large;
-var COVER_SIZE_NOTIFS = COVER_SIZES.sideways;
-
 window.addEventListener('load', function(e) { preparePopup(); });
-window.addEventListener('unload', function(e) { if (gup('notif') == 'on') chrome.extension.getBackgroundPage().closeNotif(); });
 
 function gup(iParamName)
 {
@@ -22,7 +17,6 @@ function gup(iParamName)
 function preparePopup()
 {
 	loadStyle();
-	COVER_SIZE_NOTIFS = COVER_SIZES[LOCSTO.notifications.style];
 
 	// add interactivity
 	$("#control-prev").click(function ()  { executePlayerAction('prev');  return false; });
@@ -88,25 +82,7 @@ function loadStyle(iPopupStyle)
 
 function executePlayerAction(iCommand)
 {
-	chrome.extension.sendRequest({ type: "controlPlayer", command: iCommand, source: "popup" }, function() 
-	{
-		// this trick is used to display the correct play / pause button 
-		// when the user press it in the popup
-		var aNowPlayingData = chrome.extension.getBackgroundPage().gNowPlayingData;
-		if (aNowPlayingData == null) return;
-		if (iCommand == 'play')
-			aNowPlayingData.dz_playing = 'true';
-		else if (iCommand == 'pause')
-			aNowPlayingData.dz_playing = 'false';
-		else if (iCommand == 'playpause')
-		{
-			if (aNowPlayingData.dz_playing == 'true')
-				aNowPlayingData.dz_playing = 'false';
-			else 
-				aNowPlayingData.dz_playing = 'true';
-		}
-		refreshPopup();
-	});
+	chrome.extension.sendRequest({ type: "controlPlayer", command: iCommand, source: "popup" });
 }
 
 // change focus to Deezer tab, and execute wanted action
