@@ -332,7 +332,6 @@ function onCheckNotifPermission(iPermissionGranted)
 {
     if (iPermissionGranted)
     	NOTIFS.createNotif();
-    
     else
     	NOTIFS.destroyNotif();
 }
@@ -353,10 +352,7 @@ function propagatePlayingDataToAllTabs()
 	NOTIFS.refreshNotif();
 	
 	if (gNowPlayingData != null)
-	{
-		// set images in background page to cache album covers for faster display
-		loadStyle(); // load COVER_SIZE variable
-		
+	{		
 		// load notification size image if needed
 		if (!LOCSTO.notifications.never)
 		{
