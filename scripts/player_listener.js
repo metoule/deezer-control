@@ -3,12 +3,10 @@
  * Content script can't use JS object of the page, but they can access the DOM.
  * Use our own DIV to store info.
  * 
- * On page load, we add a listener to #player_track_title, which is a <A> element holding the song's title.
+ * On page load, we add a mutation observer to #player_track_title, which is a <A> element holding the song's title.
+ * The mutation observer fires once all mutations are performed, which allows for far less update to be triggered.
  * 
- * Deezer uses jQuery .text() method to update the content, which doesn't fire a DOMCharacterDataModified event 
- * but a DOMNodeRemoved followed by a DOMNodeInserted - thus the event we listen to.
- * 
- * When a DOMNodeInserted is fired, we update our myPlayerInfo <DIV>, and update our other <DIV>, lastUpdate.
+ * When a DOMCharacterDataModified is fired, we update our myPlayerInfo <DIV>, and update our other <DIV>, lastUpdate.
  * This time, since we use innerHTML, the event fired is DOMCharacterDataModified. We listen to that event, 
  * and send the resulting player info to background.html to store it for use in the popup.
  * 
@@ -21,6 +19,7 @@ document.addEventListener('load', function(e)
 		var aMyPlayerInfoDom = document.createElement('div');
 		aMyPlayerInfoDom.id = "myPlayerInfo";
 		aMyPlayerInfoDom.style.display = 'none';
+		
 		// create a child to monitor and help force the info update
 		var aLastUpdateDom = document.createElement('div');
 		aLastUpdateDom.id = "lastUpdate";
@@ -33,10 +32,10 @@ document.addEventListener('load', function(e)
 		  && document.getElementById('player_control_pause') != null) 
 		{
 			location.href = "javascript:" +
-				"function updateMyPlayerInfo()" +
+				"function updateMyPlayerInfo(event)" +
 				"{" +
 					"myPlayerInfo = $('#myPlayerInfo');" +
-					"myPlayerInfo.attr('dz_playing',     dzPlayer.isPlaying());" +
+					"myPlayerInfo.attr('dz_playing',    $('#player_control_play').css('display') == 'none');" +
 					"myPlayerInfo.attr('dz_artist',      dzPlayer.getArtistName());" +
 					"myPlayerInfo.attr('dz_artist_id',  (dzPlayer.getCurrentSongInfo() != null ? dzPlayer.getCurrentSongInfo().ART_ID : ''));" +
 					"myPlayerInfo.attr('dz_track',       dzPlayer.getSongTitle());" +
@@ -47,21 +46,35 @@ document.addEventListener('load', function(e)
 					"myPlayerInfo.attr('dz_next_cover', (dzPlayer.getNextSongInfo() != null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));" +
 					"myPlayerInfo.attr('dz_is_prev_active',   playercontrol.prevButtonActive());" +
 					"myPlayerInfo.attr('dz_is_next_active',   playercontrol.nextButtonActive());" +
-					"document.getElementById('lastUpdate').innerHTML = Math.floor(new Date().getTime());" + 
+					"$('#lastUpdate').text(Math.floor(new Date().getTime()));" + 
 				"};" + 
-				"document.getElementById('player_track_title').addEventListener('DOMNodeInserted', updateMyPlayerInfo , false);" +
-				"(function($) { var orig = $.fn.show; $.fn.show = function() { var ev = new $.Event('dzCtrlShow'); var ret = orig.apply(this, arguments); $(this).trigger(ev); return ret; }})(jQuery);" +
-				"$('#player_control_play, #player_control_pause').bind('dzCtrlShow', function(e) { updateMyPlayerInfo(); });" +
-				"updateMyPlayerInfo();"
+				"{" +
+				"  var observer = new MutationObserver(function(mutations)" + 
+				"  {" +
+				"    if (mutations.length == 1)" +
+				"    {" +
+				"      var mutation = mutations[0];" +
+				"      if (mutation.oldValue != mutation.target.getAttribute(mutation.attributeName))" +
+				"        updateMyPlayerInfo();" +
+				"    }" +
+				"  });" +
+				"  observer.observe(document.getElementById('player_control_play'), { attributes: true, attributeOldValue: true, attributeFilter: ['style'] });" +  
+				"}" +
+				"{ " +
+				"  var observer = new MutationObserver(function(mutations) { updateMyPlayerInfo(); });" +
+				"  observer.observe(document.querySelector('#player_track_title'), { childList: true, characterData: true });" + 
+				"}"
 			;
 		}
 		
 		// add a listener for events on our new DIV, and post it to our extension
-		document.getElementById('lastUpdate').addEventListener('DOMCharacterDataModified', sendJsonPlayerInfo, false);
+		var observer = new MutationObserver(function(mutations) { sendJsonPlayerInfo(); });
+		var config = { attributes: false, childList: true, characterData: true }; 
+		observer.observe(document.getElementById('lastUpdate'), config);
 	}
 } , true);
 
-function sendJsonPlayerInfo(event)
+function sendJsonPlayerInfo()
 {	
 	// filter attributes to only keep those we want
 	var aAllAttributes = document.getElementById('myPlayerInfo').attributes; 
@@ -69,9 +82,7 @@ function sendJsonPlayerInfo(event)
 	for (i = 0 ; i < aAllAttributes.length; i++) 
 	{
 		if (aAllAttributes[i].name.substring(0, 3) == "dz_")
-		{
 			aDzAttributes[aAllAttributes[i].name] = aAllAttributes[i].value;
-		}
     }
 	
 	// send the results to background.html
@@ -97,7 +108,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 			if (aAction == "play" || aAction == "pause")
 				document.getElementById('myPlayerInfo').setAttribute('dz_playing', aAction == "play" ? "true" : "false"); 
 						
-			sendJsonPlayerInfo(null); // thanks to this, changes on play / pause are tracked
+			sendJsonPlayerInfo(); // thanks to this, changes on play / pause are tracked
 			executeDoAction(aAction);
 			break;
 			
