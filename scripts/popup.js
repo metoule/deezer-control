@@ -82,13 +82,13 @@ function loadStyle(iPopupStyle)
 
 function executePlayerAction(iCommand)
 {
-	chrome.extension.sendRequest({ type: "controlPlayer", command: iCommand, source: "popup" });
+	chrome.runtime.sendMessage({ type: "controlPlayer", command: iCommand, source: "popup" });
 }
 
 // change focus to Deezer tab, and execute wanted action
 function executeDoAction(iAction)
 {
-	chrome.extension.sendRequest({ type: "doAction", action: iAction });
+	chrome.runtime.sendMessage({ type: "doAction", action: iAction });
 }
 
 function refreshPopup()

@@ -4,6 +4,11 @@
 	"defaultTitle": { "message": "Open a new Deezer tab" }, 
 	"showNewItemsTitle": { "message": "Open the options page to see what's new" }, 
 	
+	"playback_prev":  { "message": "Previous" },
+	"playback_play":  { "message": "Play" }, 
+	"playback_pause": { "message": "Pause" }, 
+	"playback_next":  { "message": "Next" },  
+	
 	"yes": { "message": "Yes" },
 	"no":  { "message": "No" }, 
 	
