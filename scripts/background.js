@@ -314,10 +314,18 @@ function showNotif()
 				)
 			)
 		{
-	    	NOTIFS.createNotif();
-
+			// if we don't have permission to display notifications, close notif if present
+			chrome.permissions.contains({ permissions: ['notifications'] }, onCheckNotifPermission);
 		}
 	}
+}
+
+function onCheckNotifPermission(iPermissionGranted)
+{
+	if (iPermissionGranted)
+		NOTIFS.createNotif();
+	else
+		NOTIFS.destroyNotif();
 }
 
 function updateButtonTooltip()
