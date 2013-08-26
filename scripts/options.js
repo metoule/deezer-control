@@ -239,7 +239,7 @@ function saveNotifications()
 	setTimeout(function() { $("#status_notifs").text(""); }, 750);
 
 	// reshow notifs so that the user sees the change straight away
-	chrome.extension.sendRequest({ type: "showNotif", source: "options" });
+	chrome.runtime.sendMessage({ type: "showNotif", source: "options" });
 }
 
 

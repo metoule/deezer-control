@@ -15,27 +15,27 @@ HOTKEYS_LISTENER.register();
 
 function keyboardNavigation(e) 
 {
-	chrome.extension.sendRequest({ type: "getLOCSTO" }, function(LOCSTO) 
+	chrome.runtime.sendMessage({ type: "getLOCSTO" }, function(LOCSTO) 
 	{ 
 		if (eventMatchHotKey(e, LOCSTO.prevHotKey))
 		{
-			chrome.extension.sendRequest({ type: "controlPlayer", command: "prev", source: "hotkey" });
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: "prev", source: "hotkey" });
 		}
 		else if (eventMatchHotKey(e, LOCSTO.playPauseHotKey))
 		{
-			chrome.extension.sendRequest({ type: "controlPlayer", command: "playpause", source: "hotkey" });
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: "playpause", source: "hotkey" });
 		} 
 		else if (eventMatchHotKey(e, LOCSTO.nextHotKey))
 		{
-			chrome.extension.sendRequest({ type: "controlPlayer", command: "next", source: "hotkey" });
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: "next", source: "hotkey" });
 		}
 		else if (eventMatchHotKey(e, LOCSTO.whatZatSongHotKey))
 		{
-			chrome.extension.sendRequest({ type: "showNotif", source: "hotkey" });
+			chrome.runtime.sendMessage({ type: "showNotif", source: "hotkey" });
 		}
 		else if (eventMatchHotKey(e, LOCSTO.jumpToDeezerHotKey))
 		{
-			chrome.extension.sendRequest({ type: "jumpToDeezer", source: "hotkey" });
+			chrome.runtime.sendMessage({ type: "jumpToDeezer", source: "hotkey" });
 		}
 	}); 
 }

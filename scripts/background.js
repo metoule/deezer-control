@@ -186,8 +186,8 @@ function onFindDeezerTabForPopupSetup(iDeezerTabId)
 }
 
 // this will react to an event fired in player_listener.js
-chrome.extension.onRequest.addListener(extensionOnRequestListener);
-function extensionOnRequestListener(request, sender, sendResponse) 
+chrome.runtime.onMessage.addListener(extensionOnMessageListener);
+function extensionOnMessageListener(request, sender, sendResponse) 
 {
 	switch (request.type)
 	{
@@ -203,10 +203,6 @@ function extensionOnRequestListener(request, sender, sendResponse)
 		// show / hide notif if needed
 		showNotif();
 		
-		// call the callback method
-		if (sendResponse)
-			sendResponse();
-		
 		// reset the fact that action is on media key event
 		gActionOnHotKey = false;
 		
@@ -218,7 +214,7 @@ function extensionOnRequestListener(request, sender, sendResponse)
 		// send the wanted action to the deezer tab
 		findDeezerTab(function(iDeezerTabId) 
 		{
-			chrome.tabs.sendRequest(iDeezerTabId, { name: request.type, action: request.command }, function(response) { if (sendResponse) sendResponse(); });
+			chrome.tabs.sendMessage(iDeezerTabId, { name: request.type, action: request.command });
 		});
 		
 		break;
@@ -226,7 +222,7 @@ function extensionOnRequestListener(request, sender, sendResponse)
 	case "doAction":		
 		findDeezerTab(function(iDeezerTabId, iDeezerWindowId) 
 		{
-			chrome.tabs.sendRequest(iDeezerTabId, { name: request.type, action: request.action });
+			chrome.tabs.sendMessage(iDeezerTabId, { name: request.type, action: request.action });
 			onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId);
 		});
 		
@@ -235,16 +231,9 @@ function extensionOnRequestListener(request, sender, sendResponse)
 	case "showNotif":
 		gActionOnHotKey = request.source == 'hotkey' || request.source == 'options';
 		
-		// options page can change the style: force close the notif
-		if (request.source == 'options')
-			NOTIFS.destroyNotif();
-		
-		// show it
+		// force notif refresh
+		NOTIFS.destroyNotif();
 		showNotif();
-		
-		// call the callback method
-		if (sendResponse)
-			sendResponse();
 		
 		// reset the fact that action is on media key event
 		gActionOnHotKey = false;
@@ -291,9 +280,12 @@ function extensionOnRequestListener(request, sender, sendResponse)
 	case "getLOCSTO":
 		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		sendResponse(LOCSTO);
+		return true;
 		break;
 
 	}
+	
+	return false;
 }
 
 function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId) 
@@ -322,18 +314,10 @@ function showNotif()
 				)
 			)
 		{
-			// if we don't have permission to display notifications, close notif if present
-			chrome.permissions.contains({ permissions: ['notifications'] }, onCheckNotifPermission);
+	    	NOTIFS.createNotif();
+
 		}
 	}
-}
-
-function onCheckNotifPermission(iPermissionGranted)
-{
-    if (iPermissionGranted)
-    	NOTIFS.createNotif();
-    else
-    	NOTIFS.destroyNotif();
 }
 
 function updateButtonTooltip()

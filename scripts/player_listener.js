@@ -82,15 +82,20 @@ function sendJsonPlayerInfo()
 	for (i = 0 ; i < aAllAttributes.length; i++) 
 	{
 		if (aAllAttributes[i].name.substring(0, 3) == "dz_")
-			aDzAttributes[aAllAttributes[i].name] = aAllAttributes[i].value;
+		{
+			if (typeof aAllAttributes[i].value !== 'undefined')
+				aDzAttributes[aAllAttributes[i].name] = aAllAttributes[i].value;
+			else
+				aDzAttributes[aAllAttributes[i].name] = '';
+		}
     }
 	
 	// send the results to background.html
-	chrome.extension.sendRequest({ type: "now_playing_updated", nowPlayingData: aDzAttributes });
+	chrome.runtime.sendMessage({ type: "now_playing_updated", nowPlayingData: aDzAttributes });
 }
 
 // this will perform actions on the deezer page - sent by popup.html
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) 
 {
 	switch (request.name)
 	{
@@ -125,8 +130,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 			break;
     }
 	
-	// call the response callback to process the rest of the process
-	sendResponse();
+	// no callback is used, return false
+	return false;
 });
 
 function executeDoAction(action)
