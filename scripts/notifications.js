@@ -1,7 +1,6 @@
 
 var OLD_NOTIFS = OLD_NOTIFS || 
 {
-	optionsPageSection: 'notifications', 
 	htmlNotification: null, 
 	timeoutId: null, 
 	mouseOverNotif: false, 
@@ -59,7 +58,7 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 	
 	onMouseOverNotif: function()
 	{
-		this.mouseOverNotif = true;  
+		this.mouseOverNotif = true;
 		this.resetNotifTimeout();
 	}, 
 	
@@ -73,12 +72,11 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 
 var NEW_NOTIFS = NEW_NOTIFS || 
 {
-	optionsPageSection: 'notifications',
 	currentData: null,
 	buttonPrev:  { title: chrome.i18n.getMessage('playback_prev'),  iconUrl: 'imgs/large/prev.png'  },
 	buttonPlay:  { title: chrome.i18n.getMessage('playback_play'),  iconUrl: 'imgs/large/play.png'  },
-	buttonPause: { title: chrome.i18n.getMessage('playback_pause'), iconUrl: 'imgs/large/pause.png'  },
-	buttonNext:  { title: chrome.i18n.getMessage('playback_next'),  iconUrl: 'imgs/large/next.png'   },
+	buttonPause: { title: chrome.i18n.getMessage('playback_pause'), iconUrl: 'imgs/large/pause.png' },
+	buttonNext:  { title: chrome.i18n.getMessage('playback_next'),  iconUrl: 'imgs/large/next.png'  },
 	
 	createNotif: function()
 	{
@@ -129,7 +127,7 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 			return;
 
 		this.currentData = newData;
-        notifMethod('deezer_control', content, function() {});
+		notifMethod('deezer_control', content, function() {});
 	}, 
 	
 	buttonClicked: function(buttonIndex)
@@ -147,7 +145,7 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	
 	resetCurrentData: function()
 	{
-		this.currentData =  null; 
+		this.currentData = null; 
 	}, 
 	
 	resetNotifTimeout: function()

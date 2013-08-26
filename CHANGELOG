@@ -1,5 +1,7 @@
 1.6 - 
  * New notifications system to support latest Chrome versions
+ * Use latest Chrome API
+ * Player listener rewritten to fire less events 
  
 1.5 - 08 Aug 2013
  * Update listener script to match Deezer update
