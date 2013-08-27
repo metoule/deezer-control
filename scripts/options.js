@@ -4,48 +4,76 @@ window.addEventListener('load', function(e) { preparePage(); });
 
 function preparePage()
 {
-	restoreOptions();
-	resetSections();
 	i18n.process(document);
 	
-	// set correct section for notifications
-	$('#notifications_nav').attr('href', '#' + NOTIFS.optionsPageSection)
+	preparePage_welcome();
+	preparePage_style();
+	preparePage_hotKeys();
+	preparePage_notifs();
+	preparePage_misc();
 
+	resetSections();
+}
+
+
+function preparePage_welcome()
+{
+	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
+
+	// set two buttons to the same size for better look and feel
+	// note: if the buttons are not visible, the widrth is 0; use default widths in that case
+	var aWidth = Math.max($("#button_rate_extension").width(), $("#button_donate").width());
+	if (aWidth != 0)
+	{
+		$("#button_rate_extension").width(aWidth);
+		$("#button_donate").width(aWidth);
+	}
+}
+
+
+function preparePage_style()
+{
 	// create interactivity
 	$("#popup_style_chooser").change(function () { loadStyle($("#popup_style_chooser").val()); });
 	$("#button_save_style").click(function () { savePopupStyle(); });
 
+	// restore value 
+	$("#popup_style_chooser").val(LOCSTO.popupStyle);
+}
+
+
+function preparePage_hotKeys()
+{
+	// create interactivity
 	$("#button_activate_hotkeys").click(function () { activateHotKeys(); });
 	$("#button_save_hotkeys").click(function () { saveHotKeys(); });
 
+	// hot keys are activated only if we have permission on all tabs
+	// if we don't permission, show an explanation
+	refreshHotKeysOptions();
+}
+
+
+function preparePage_notifs()
+{
+	if (typeof webkitNotifications.createHTMLNotification === "undefined")
+		preparePage_notifsNew();
+	else
+		preparePage_notifsOld();
+}
+
+
+function preparePage_notifsOld()
+{
+	$('#notifications_old').attr('id', 'notifications');
+
+	// create interactivity
 	$('input:radio[name="notifs_show_when"]').change(function () { activateNotifications(); });
 	$("#notifs_fade_away_delay").change(function () { refreshNotifsOptions(); });
 	$("#notifs_style").change(function () { refreshNotifsOptions(); });
-	$("#button_save_notifications").click(function () { saveNotifications(); });
+	$("#button_save_notifications_old").click(function () { saveNotifications_old(); });
 
-	$('#miscLimitDeezerToOneTab > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
-	$("#button_save_misc").click(function () { saveMiscOptions(); });
-
-	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
-	
-	// set two buttons to the same size for better look and feel
-	var aWidth = Math.max($("#button_rate_extension").width(), $("#button_donate").width());
-	$("#button_rate_extension").width(aWidth);
-	$("#button_donate").width(aWidth);
-	
-	// yes / no bars
-}
-
-// read local storage, and set interface accordingly
-function restoreOptions()
-{
-	//		   Popup style
-	//--------------------------------
-	$("#popup_style_chooser").val(LOCSTO.popupStyle);
-
-
-	//		Notifications
-	//--------------------------------
+	// restore value 
 	if (LOCSTO.notifications.alwaysOn)
 		$('input:radio[name="notifs_show_when"]').filter('[value="never_hides"]').prop('checked', true);
 	else if (LOCSTO.notifications.visible)
@@ -58,20 +86,34 @@ function restoreOptions()
 	$('#notifs_fade_away_delay').val(LOCSTO.notifications.fadeAwayDelay / 1000);
 	$("#notifs_style_chooser").val(LOCSTO.notifications.style);
 
-	refreshNotifsOptions(); // ensure options are correctly shown
+	refreshNotifsOptions();
+}
 
 
-	//		Hot keys
-	//--------------------------------
-	// hot keys are activated only if we have permission on all tabs
-	// if we don't permission, show an explanation
-	refreshHotKeysOptions();
+function preparePage_notifsNew()
+{
+	$('#notifications_new').attr('id', 'notifications');
+	
+	// create interactivity
+	$('#notifsActivate > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
+	$("#button_save_notifications").click(function () { saveNotifications_new(); });
+	
+	// restore value
+	$("#notifsActivate > .yes_no_bar").children('button:eq(0)').toggleClass('two_state_unselected',  LOCSTO.notifications.never).toggleClass('two_state_selected', !LOCSTO.notifications.never);
+	$("#notifsActivate > .yes_no_bar").children('button:eq(1)').toggleClass('two_state_unselected', !LOCSTO.notifications.never).toggleClass('two_state_selected',  LOCSTO.notifications.never);
+}
 
 
-	//		 Misc options
-	//--------------------------------
+function preparePage_misc()
+{
+	// create interactivity
+	$('#miscLimitDeezerToOneTab > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
+	$("#button_save_misc").click(function () { saveMiscOptions(); });
+
+	// restore value 
 	refreshMiscOptions();
 }
+
 
 function refreshNotifsOptions()
 {
@@ -92,6 +134,7 @@ function refreshNotifsOptions()
 	$('#notifs_fade_away_delay_display').text($('#notifs_fade_away_delay').val());
 	loadStyle($("#notifs_style_chooser").val());
 }
+
 
 function refreshHotKeysOptions()
 {
@@ -117,6 +160,7 @@ function refreshHotKeysOptions()
 		}
 	});
 }
+
 
 function restoreHotkey(iHotKeyName)
 {
@@ -170,6 +214,7 @@ function restoreHotkey(iHotKeyName)
 	aHotKeySelect.children('input:eq(1)').val(LOCSTO[iHotKeyName].keyCode);
 }
 
+
 function refreshMiscOptions()
 {
 	// limit deezer to one tab
@@ -189,6 +234,7 @@ function savePopupStyle()
 	setTimeout(function() { $("#status_style").text(""); }, 750);
 }
 
+
 function saveHotKeys()
 {
 	storeHotKey('prevHotKey');
@@ -203,6 +249,7 @@ function saveHotKeys()
 	setTimeout(function() { $("#status_hotkeys").text(""); }, 750);
 }
 
+
 function storeHotKey(iHotKeyName)
 {
 	var aHotKeyDiv = $("#" + iHotKeyName);
@@ -213,7 +260,8 @@ function storeHotKey(iHotKeyName)
 	LOCSTO[iHotKeyName].keyCode  = aHotKeyDiv.children('input:eq(1)').val();
 }
 
-function saveNotifications()
+
+function saveNotifications_old()
 {
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 	var aNotifsDelay = $('#notifs_fade_away_delay').val() * 1000;
@@ -233,6 +281,26 @@ function saveNotifications()
 		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	LOCSTO.saveNotifications();
+
+	// Update status_style to let user know options were saved.
+	$("#status_notifs_old").text(chrome.i18n.getMessage("options_page_options_saved"));
+	setTimeout(function() { $("#status_notifs_old").text(""); }, 750);
+
+	// reshow notifs so that the user sees the change straight away
+	chrome.runtime.sendMessage({ type: "showNotif", source: "options" });
+}
+
+
+function saveNotifications_new()
+{
+	var activated = $("#notifsActivate > .yes_no_bar").children('button:eq(0)').hasClass('two_state_selected');
+	
+	if ((LOCSTO.notifications.never && activated) || (!LOCSTO.notifications.never && !activated))
+	{
+		LOCSTO.notifications.never    = !activated;
+		LOCSTO.notifications.alwaysOn =  activated;
+		LOCSTO.saveNotifications();
+	}
 
 	// Update status_style to let user know options were saved.
 	$("#status_notifs").text(chrome.i18n.getMessage("options_page_options_saved"));
@@ -255,6 +323,7 @@ function saveMiscOptions()
 	setTimeout(function() { $("#status_misc").text(""); }, 750);
 }
 
+
 // deal with chrome permissions
 function activateHotKeys()
 {
@@ -263,6 +332,7 @@ function activateHotKeys()
 		refreshHotKeysOptions();
 	});
 }
+
 
 function activateNotifications()
 {
@@ -282,6 +352,7 @@ function activateNotifications()
 	refreshNotifsOptions();
 }
 
+
 // navigation bar
 function resetSections()
 {
@@ -290,6 +361,7 @@ function resetSections()
 	if(location.hash)
 		showSection(location.hash.replace(/^\#/, ''));
 }
+
 
 function showSection(id)
 {
