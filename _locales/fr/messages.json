@@ -51,6 +51,10 @@
 	"options_page_tab_notifs_show_on_hotkey_only": { "message": "Afficher les notifications uniquement lorsqu'un raccourci clavier est utilisé (i.e. pas lorsqu'un bouton de la popup ou de Deezer est utilisé). Disparaît automatiquement." }, 
 	"options_page_tab_notifs_fade_away_delay": { "message": "Masquer les notifications automatiquement après..." }, 
 	"options_page_tab_notifs_style_style_line": { "message": "simple ligne" },
+	"options_page_tab_notifs_what_happened_old_notifs_question": { "message": "What happened to the old notifications?" },
+	"options_page_tab_notifs_what_happened_old_notifs_answer": { "message": "The old notification system has been replaced by the new system you see today. While this offers a consistent notification UI across extensions, it's more restrictive. That's why there are only two buttons, and that's why the customization options have disappeared." },
+	"options_page_tab_notifs_activate_explanation": { "message": "When activated, the notifications will live in the system tray. You can always force a redisplay by using the hotkey for 'show me current song'." },
+	
    
 	"options_page_tab_hotkeys_h1": { "message": "Raccourcis clavier" }, 
 	"options_page_tab_hotkeys_what_are_hotkeys": { "message": "Utilisez votre clavier pour contrôler Deezer avec les raccourcis clavier ! Vous pouvez choisir n'importe quelle combinaison de touches: les touches multimédia sont pré-configurées, mais ne vous limitez pas !" },
