@@ -43,7 +43,7 @@
 	
 	"options_page_tab_notifs_h1": { "message": "Notifications" },
 	"options_page_tab_notifs_what_are_notifications": { "message": "See which song is currently playing, control Deezer, all that without even opening the popup! You can choose when to display a notification, so that it's never in your way." },
-	"options_page_tab_notifs_chrome_permission_not_granted": { "message": "User didn't grant permission to display notifications!" },  
+	"options_page_tab_notifs_chrome_permission_not_granted": { "message": "Permission to display notifications not granted!" },  
 	"options_page_tab_notifs_show_notifs_when_title": { "message": "Show notifications?" },  
 	"options_page_tab_notifs_show_never": { "message": "Never show notifications" },  
 	"options_page_tab_notifs_show_never_hides": { "message": "Show notifications as long as a Deezer tab is opened. Doesn't auto hide." },  
@@ -52,7 +52,7 @@
 	"options_page_tab_notifs_fade_away_delay": { "message": "Auto hide notifications after..." }, 
 	"options_page_tab_notifs_style_style_line": { "message": "single line" },
 	"options_page_tab_notifs_what_happened_old_notifs_question": { "message": "What happened to the old notifications?" },
-	"options_page_tab_notifs_what_happened_old_notifs_answer": { "message": "The old notification system has been replaced by the new system you see today. While this offers a consistent notification UI across extensions, it's more restrictive. That's why there are only two buttons, and that's why the customization options have disappeared." },
+	"options_page_tab_notifs_what_happened_old_notifs_answer": { "message": "The old Google Chrome notification system has been replaced by the new system you see today. While this offers a consistent notification UI across extensions, it's more restrictive. That's why there are only two buttons, and that's why the customization options have disappeared." },
 	"options_page_tab_notifs_activate_explanation": { "message": "When activated, the notifications will live in the system tray. You can always force a redisplay by using the hotkey for 'show me current song'." },
 	
 	"options_page_tab_hotkeys_h1": { "message": "Hot keys" }, 
