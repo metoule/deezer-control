@@ -244,33 +244,26 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		// find current active tab
 		// if not deezer tab, jump to the deezer tab
 		// if deezer tab, jump back to saved tab
-		chrome.windows.getAll(
+		chrome.windows.getLastFocused(
 		{ populate : true },
-		function(windows) 
+		function(window) 
 		{
-			for(var i = 0; i < windows.length; i++) 
+			// find the active tab
+			for(var j = 0; j < window.tabs.length; j++) 
 			{
-				// find window with focus
-				if (!windows[i].focused)
-					continue;
-				
-				// find the active tab
-				for(var j = 0; j < windows[i].tabs.length; j++) 
+				if (window.tabs[j].active)
 				{
-					if (windows[i].tabs[j].active)
+					// we're on the Deezer tab, go back to previous tab
+					if (request.source != 'notif' && matchDeezerUrl(window.tabs[j].url))
 					{
-						// we're on the Deezer tab, go back to previous tab
-						if (matchDeezerUrl(windows[i].tabs[j].url))
-						{
-							chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true });
-							chrome.tabs.update(gJumpBackToActiveTab.tabId, { selected: true });
-						}
-		
-						// not on the Deezer tab, find it and set it to active
-						else
-						{
-							findDeezerTab(onFindDeezerTabForJumpToDeezer);
-						}
+						chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true });
+						chrome.tabs.update(gJumpBackToActiveTab.tabId, { selected: true });
+					}
+	
+					// not on the Deezer tab, find it and set it to active
+					else
+					{
+						findDeezerTab(onFindDeezerTabForJumpToDeezer);
 					}
 				}
 			}
