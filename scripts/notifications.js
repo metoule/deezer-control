@@ -73,14 +73,14 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 var NEW_NOTIFS = NEW_NOTIFS || 
 {
 	currentData: null,
-	buttonPrev:  { title: chrome.i18n.getMessage('playback_prev'),  iconUrl: 'imgs/large/prev.png'  },
-	buttonPlay:  { title: chrome.i18n.getMessage('playback_play'),  iconUrl: 'imgs/large/play.png'  },
-	buttonPause: { title: chrome.i18n.getMessage('playback_pause'), iconUrl: 'imgs/large/pause.png' },
-	buttonNext:  { title: chrome.i18n.getMessage('playback_next'),  iconUrl: 'imgs/large/next.png'  },
+	buttonPrev:  { title: chrome.i18n.getMessage('playback_prev'),  iconUrl: 'imgs/notifs/prev.png'  },
+	buttonPlay:  { title: chrome.i18n.getMessage('playback_play'),  iconUrl: 'imgs/notifs/play.png'  },
+	buttonPause: { title: chrome.i18n.getMessage('playback_pause'), iconUrl: 'imgs/notifs/pause.png' },
+	buttonNext:  { title: chrome.i18n.getMessage('playback_next'),  iconUrl: 'imgs/notifs/next.png'  },
 	
 	createNotif: function()
 	{
-		this.createUpdateNotif(chrome.notifications.create);
+		this.createUpdateNotif(chrome.notifications.create, function(notifId) {});
 	}, 
 	
 	destroyNotif: function()
@@ -95,11 +95,11 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	
 	refreshNotif: function()
 	{
-		if (this.currentTrack != null)
-			this.createUpdateNotif(chrome.notifications.update);
+		if (this.currentData != null)
+			this.createUpdateNotif(chrome.notifications.update, function(wasUpdated) {});
 	}, 
 	
-	createUpdateNotif: function(notifMethod)
+	createUpdateNotif: function(notifMethod, callbackMethod)
 	{
 		// we're only allowed two buttons: display play/pause, and next
 		var notifButtons = []; 
@@ -116,10 +116,11 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 				type: 'basic', 
 				title:   gNowPlayingData.dz_track, 
 				message: gNowPlayingData.dz_artist,
-				iconUrl: "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/80x80-000000-80-0-0.jpg",
+				iconUrl: 'http://cdn-images.deezer.com/images/cover/' + gNowPlayingData.dz_cover + '/80x80-000000-80-0-0.jpg',
 				buttons: notifButtons,
 				priority: 0
 		};
+		
 		
 		// don't update notification if same data
 		var newData = JSON.stringify(content);
@@ -127,7 +128,7 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 			return;
 
 		this.currentData = newData;
-		notifMethod('deezer_control', content, function() {});
+		notifMethod('deezer_control', content, callbackMethod);
 	}, 
 	
 	buttonClicked: function(buttonIndex)
@@ -141,6 +142,17 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'pause', source: "popup" });
 		else if (notifButton.title == this.buttonNext.title)
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "popup" });
+		
+		// workaround for https://code.google.com/p/chromium/issues/detail?id=246637
+		var _this = this;
+		chrome.notifications.clear('deezer_control', function(wasCleared) 
+		{ 
+			if (wasCleared)
+			{
+				_this.resetCurrentData();
+				_this.createNotif();
+			}
+		}); 
 	}, 
 	
 	resetCurrentData: function()
@@ -182,5 +194,11 @@ if (typeof webkitNotifications.createHTMLNotification === "undefined")
 	{
 		if (notificationId == 'deezer_control')
 			NOTIFS.buttonClicked(buttonIndex);
+	});
+	
+	chrome.notifications.onClicked.addListener(function(notificationId)
+	{
+		if (notificationId == 'deezer_control')
+			chrome.runtime.sendMessage({ type: 'jumpToDeezer', source: 'notif' });
 	});
 }
