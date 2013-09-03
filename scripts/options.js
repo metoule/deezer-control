@@ -68,7 +68,7 @@ function preparePage_notifsOld()
 	$('#notifications_old').attr('id', 'notifications');
 
 	// create interactivity
-	$('input:radio[name="notifs_show_when"]').change(function () { activateNotifications(); });
+	$('input:radio[name="notifs_show_when"]').change(function () { activateNotifications_old(); });
 	$("#notifs_fade_away_delay").change(function () { refreshNotifsOptions(); });
 	$("#notifs_style").change(function () { refreshNotifsOptions(); });
 	$("#button_save_notifications_old").click(function () { saveNotifications_old(); });
@@ -95,8 +95,8 @@ function preparePage_notifsNew()
 	$('#notifications_new').attr('id', 'notifications');
 	
 	// create interactivity
-	$('#notifsActivate > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
-	$("#button_save_notifications").click(function () { saveNotifications_new(); });
+	$('#notifsActivate > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); activateNotifications(); });
+	$("#button_save_notifications").click(function () { saveNotifications(); });
 	
 	// restore value
 	$("#notifsActivate > .yes_no_bar").children('button:eq(0)').toggleClass('two_state_unselected',  LOCSTO.notifications.never).toggleClass('two_state_selected', !LOCSTO.notifications.never);
@@ -291,7 +291,7 @@ function saveNotifications_old()
 }
 
 
-function saveNotifications_new()
+function saveNotifications()
 {
 	var activated = $("#notifsActivate > .yes_no_bar").children('button:eq(0)').hasClass('two_state_selected');
 	
@@ -334,7 +334,7 @@ function activateHotKeys()
 }
 
 
-function activateNotifications()
+function activateNotifications_old()
 {
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 	if (aNotifsShowWhen != "never")
@@ -343,13 +343,31 @@ function activateNotifications()
 		{
 			if (!granted)
 			{
-				$('#chrome_permission_not_granted').css("visibility", "visible");
+				$('#chrome_permission_not_granted_old').css("visibility", "visible");
 				$('input:radio[name="notifs_show_when"]').filter('[value="never"]').prop('checked', true);
 			}
 	  	});
 	}
 
 	refreshNotifsOptions();
+}
+
+
+function activateNotifications()
+{
+	var activated = $("#notifsActivate > .yes_no_bar").children('button:eq(0)').hasClass('two_state_selected');
+	if (activated)
+	{
+		chrome.permissions.request({ permissions: ['notifications'] }, function(granted)
+		{
+			if (!granted)
+			{
+				$('#chrome_permission_not_granted').css("visibility", "visible");
+				$("#notifsActivate > .yes_no_bar").children('button:eq(0)').toggleClass('two_state_unselected',  true).toggleClass('two_state_selected', false);
+				$("#notifsActivate > .yes_no_bar").children('button:eq(1)').toggleClass('two_state_unselected', false).toggleClass('two_state_selected',  true);
+			}
+	  	});
+	}
 }
 
 
