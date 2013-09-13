@@ -51,11 +51,10 @@
 	"options_page_tab_notifs_show_on_hotkey_only": { "message": "Afficher les notifications uniquement lorsqu'un raccourci clavier est utilisé (i.e. pas lorsqu'un bouton de la popup ou de Deezer est utilisé). Disparaît automatiquement." }, 
 	"options_page_tab_notifs_fade_away_delay": { "message": "Masquer les notifications automatiquement après..." }, 
 	"options_page_tab_notifs_style_style_line": { "message": "simple ligne" },
-	"options_page_tab_notifs_what_happened_old_notifs_question": { "message": "What happened to the old notifications?" },
-	"options_page_tab_notifs_what_happened_old_notifs_answer": { "message": "The old notification system has been replaced by the new system you see today. While this offers a consistent notification UI across extensions, it's more restrictive. That's why there are only two buttons, and that's why the customization options have disappeared." },
-	"options_page_tab_notifs_activate_explanation": { "message": "When activated, the notifications will live in the system tray. You can always force a redisplay by using the hotkey for 'show me current song'." },
+	"options_page_tab_notifs_what_happened_old_notifs_question": { "message": "Où sont les anciennes notifications?" },
+	"options_page_tab_notifs_what_happened_old_notifs_answer": { "message": "L'ancien système de notifications de Google Chrome a été supprimé, et remplacé par celui que vous voyez aujourd'hui. Il permet une expérience uniforme pour toutes les extensions; en contrepartie, il n'est pas aussi permissif. En particuliers, c'est pour cela qu'il n'y plus que deux boutons, et que les options de personnalisation ont disparues." },
+	"options_page_tab_notifs_activate_explanation": { "message": "Lorsque l'option est activée, les notifications vivent dans la barre des tâches. Le raccourci clavier 'montre moi la chanson en cours' peut être utilisé pour forcer un ré-affichage." },
 	
-   
 	"options_page_tab_hotkeys_h1": { "message": "Raccourcis clavier" }, 
 	"options_page_tab_hotkeys_what_are_hotkeys": { "message": "Utilisez votre clavier pour contrôler Deezer avec les raccourcis clavier ! Vous pouvez choisir n'importe quelle combinaison de touches: les touches multimédia sont pré-configurées, mais ne vous limitez pas !" },
 	"options_page_tab_hotkeys_activation_hot_keys":  { "message": "Pour pouvoir activer cette fonctionnalité, Deezer Control a besoin d'écouter toute combinaison de touches entrée sur n'importe quel site que vous visitez, d'où l'avertissement de Chrome. Deezer Control ne lit aucune de vos données." }, 
