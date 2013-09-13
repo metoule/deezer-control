@@ -1,4 +1,4 @@
-1.6 - 
+1.6 - 13 Sep 2013
  * New notifications system to support latest Chrome versions
  * Use latest Chrome API
  * Player listener rewritten to fire less events 
