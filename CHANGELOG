@@ -1,4 +1,4 @@
-1.7 - 
+1.7 - 24 Sep 2013 
  * Improved first time install:
  * Deezer tab no longer needs to be refreshed for the popup to display content 
  * When hotkeys are activated for the first time, hotkeys.js is injected on all opened pages 
