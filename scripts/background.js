@@ -4,11 +4,33 @@ var gActionOnHotKey = false; // this boolean will be used to show the notifs onl
 var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 }; // remember active tab on which jump to Deezer was called
 
 // actions to perform when the extension is loaded
-$(window).load(windowOnLoadListener);
-function windowOnLoadListener() 
+$(window).load(setUpPopup);
+
+// install, update, or chrome update
+chrome.runtime.onInstalled.addListener(function(details)
 {
-	setUpPopup();
-}
+	if (details.reason == "install")
+	{
+		// inject content script on Deezer tab, and force setup
+		findDeezerTab(function(iDeezerTabId)
+		{
+			if (iDeezerTabId == null)
+				return;
+
+			chrome.tabs.executeScript(iDeezerTabId, 
+					{ file: "/scripts/player_listener.js" }, 
+					function()
+					{
+						chrome.tabs.sendMessage(iDeezerTabId, { name: "setupListener" });
+					}
+			);
+		});
+	} 
+	else if (details.reason == "update") 
+	{
+		// details.previousVersion;	
+	}
+});
 
 // if no popup is set, it means that we should open a new Deezer tab
 chrome.browserAction.onClicked.addListener(browserActionOnClickListener);
@@ -130,7 +152,7 @@ function findDeezerTab(iCallback, iIgnoreTabId)
 		for(var i = 0; i < windows.length; i++) 
 		{
 			var aWindow = windows[i];
-			for(var j = 0; j < windows[i].tabs.length; j++) 
+			for(var j = 0; j < aWindow.tabs.length; j++) 
 			{
 				var aTab = aWindow.tabs[j];
 				if (matchDeezerUrl(aTab.url))
@@ -274,6 +296,28 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		sendResponse(LOCSTO);
 		return true;
+		break;
+		
+	case "injectHotKeysJsOnAllTabs":
+		chrome.windows.getAll(
+			{ populate : true },
+			function(windows) 
+			{
+				for(var i = 0; i < windows.length; i++) 
+				{
+					var aWindow = windows[i];
+					for(var j = 0; j < aWindow.tabs.length; j++) 
+					{
+						var aTab = aWindow.tabs[j];
+						
+						// ignore all chrome internal urls
+						if (aTab.url.lastIndexOf("chrome", 0) !== 0)
+						{
+							chrome.tabs.executeScript(aTab.id, { file: "/scripts/hotkeys.js" });
+						}
+					}
+				}
+			});
 		break;
 
 	}

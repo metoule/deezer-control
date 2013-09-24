@@ -180,8 +180,12 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	
 };
 
-var NOTIFS = OLD_NOTIFS;
-if (typeof webkitNotifications.createHTMLNotification === "undefined")
+var NOTIFS = null;
+
+if (typeof webkitNotifications.createHTMLNotification !== "undefined")
+	NOTIFS = OLD_NOTIFS;
+
+else if (typeof chrome.notifications !== "undefined")
 {
 	NOTIFS = NEW_NOTIFS;
 	chrome.notifications.onClosed.addListener(function(notificationId, byUser)
