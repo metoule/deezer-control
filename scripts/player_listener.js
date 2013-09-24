@@ -11,7 +11,9 @@
  * and send the resulting player info to background.html to store it for use in the popup.
  * 
  */ 
-document.addEventListener('load', function(e) 
+document.addEventListener('load', setupListener, true);
+
+function setupListener()
 {
 	if (document.getElementById('myPlayerInfo') == null)
 	{
@@ -32,7 +34,7 @@ document.addEventListener('load', function(e)
 		  && document.getElementById('player_control_pause') != null) 
 		{
 			location.href = "javascript:" +
-				"function updateMyPlayerInfo(event)" +
+				"function updateMyPlayerInfo()" +
 				"{" +
 					"myPlayerInfo = $('#myPlayerInfo');" +
 					"myPlayerInfo.attr('dz_playing',    $('#player_control_play').css('display') == 'none');" +
@@ -63,7 +65,8 @@ document.addEventListener('load', function(e)
 				"{ " +
 				"  var observer = new MutationObserver(function(mutations) { updateMyPlayerInfo(); });" +
 				"  observer.observe(document.querySelector('#player_track_title'), { childList: true, characterData: true });" + 
-				"}"
+				"}" + 
+				"updateMyPlayerInfo()"
 			;
 		}
 		
@@ -72,7 +75,7 @@ document.addEventListener('load', function(e)
 		var config = { attributes: false, childList: true, characterData: true }; 
 		observer.observe(document.getElementById('lastUpdate'), config);
 	}
-} , true);
+}
 
 function sendJsonPlayerInfo()
 {	
@@ -127,6 +130,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 			}		
 			
 			executeDoAction(request.action);
+			break;
+			
+		case "setupListener":
+			setupListener();
+			sendJsonPlayerInfo();
 			break;
     }
 	

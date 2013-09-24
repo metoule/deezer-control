@@ -1,3 +1,8 @@
+1.7 - 
+ * Improved first time install:
+ * Deezer tab no longer needs to be refreshed for the popup to display content 
+ * When hotkeys are activated for the first time, hotkeys.js is injected on all opened pages 
+ 
 1.6 - 13 Sep 2013
  * New notifications system to support latest Chrome versions
  * Use latest Chrome API
