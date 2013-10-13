@@ -60,12 +60,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 				var aDzPlaying = document.getElementById('myPlayerInfo').getAttribute('dz_playing');
 				aAction = aDzPlaying == "true" ? "pause" : "play";
 			}
-			
-			// update dz_playing if needed
-			if (aAction == "play" || aAction == "pause")
-				document.getElementById('myPlayerInfo').setAttribute('dz_playing', aAction == "play" ? "true" : "false"); 
 						
-			sendJsonPlayerInfo(); // thanks to this, changes on play / pause are tracked
 			executeDoAction(aAction);
 			break;
 			
