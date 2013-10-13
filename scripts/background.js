@@ -9,26 +9,27 @@ $(window).load(setUpPopup);
 // install, update, or chrome update
 chrome.runtime.onInstalled.addListener(function(details)
 {
-	if (details.reason == "install")
+	// inject content script on Deezer tab
+	if (details.reason == "install" || details.reason == "update")
 	{
-		// inject content script on Deezer tab, and force setup
 		findDeezerTab(function(iDeezerTabId)
 		{
 			if (iDeezerTabId == null)
 				return;
 
-			chrome.tabs.executeScript(iDeezerTabId, 
-					{ file: "/scripts/player_listener.js" }, 
-					function()
-					{
-						chrome.tabs.sendMessage(iDeezerTabId, { name: "setupListener" });
-					}
-			);
+			chrome.tabs.executeScript(iDeezerTabId, { file: "/scripts/player_listener.js" });
 		});
-	} 
-	else if (details.reason == "update") 
-	{
-		// details.previousVersion;	
+		
+		// re-inject hotkeys on all opened tabs
+		chrome.permissions.contains(
+		{
+			origins: [ "<all_urls>" ] 
+		}, 
+		function(result) 
+		{
+			if (result)
+				extensionOnMessageListener({ type: 'injectHotKeysJsOnAllTabs' });
+		});
 	}
 });
 
