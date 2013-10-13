@@ -24,9 +24,9 @@ var observerPlay = new MutationObserver(function(mutations)
 {
 	if (mutations.length == 1)
     {
-      var mutation = mutations[0];
-      if (mutation.oldValue != mutation.target.getAttribute(mutation.attributeName))
-        updateMyPlayerInfo();
+		var mutation = mutations[0];
+		if (mutation.oldValue != mutation.target.getAttribute(mutation.attributeName))
+			updateMyPlayerInfo();
     }
 });
 observerPlay.observe(document.getElementById('player_control_play'), { attributes: true, attributeOldValue: true, attributeFilter: ['style'] });  

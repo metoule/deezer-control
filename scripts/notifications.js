@@ -16,6 +16,8 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 		// else, we already have a notif opened
 		else 
 		{
+			// refresh content
+			chrome.extension.getViews({ type: "notification" }).forEach(function(win) { win.refreshPopup(); });	
 			this.resetNotifTimeout(); // remove existing timeout
 		}
 
@@ -30,11 +32,6 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 		
 		this.htmlNotification = null; 
 		this.timeoutId = null;
-	}, 
-	
-	refreshNotif: function()
-	{
-		chrome.extension.getViews({ type: "notification" }).forEach(function(win) { win.refreshPopup(); });		
 	}, 
 	
 	resetNotifTimeout: function()
@@ -80,33 +77,13 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	
 	createNotif: function()
 	{
-		this.createUpdateNotif(chrome.notifications.create, function(notifId) {});
-	}, 
-	
-	destroyNotif: function()
-	{
-		var _this = this;
-		chrome.notifications.clear('deezer_control', function(wasCleared) 
-		{ 
-			if (wasCleared)
-				_this.resetCurrentData(); 
-		}); 
-	}, 
-	
-	refreshNotif: function()
-	{
-		if (this.currentData != null)
-			this.createUpdateNotif(chrome.notifications.update, function(wasUpdated) {});
-	}, 
-	
-	createUpdateNotif: function(notifMethod, callbackMethod)
-	{
 		// we're only allowed two buttons: display play/pause, and next
 		var notifButtons = []; 
 		if (gNowPlayingData.dz_playing == 'true')
 			notifButtons.push(this.buttonPause);
 		else
 			notifButtons.push(this.buttonPlay);		
+		
 		if (gNowPlayingData.dz_is_next_active == 'true')
 			notifButtons.push(this.buttonNext);
 		else if (gNowPlayingData.dz_is_prev_active == 'true')
@@ -128,11 +105,24 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 			return;
 
 		this.currentData = newData;
-		notifMethod('deezer_control', content, callbackMethod);
+		chrome.notifications.create('deezer_control', content, function(notifId) {});
+	}, 
+	
+	destroyNotif: function()
+	{
+		var _this = this;
+		chrome.notifications.clear('deezer_control', function(wasCleared) 
+		{ 
+			if (wasCleared)
+				_this.resetCurrentData(); 
+		}); 
 	}, 
 	
 	buttonClicked: function(buttonIndex)
 	{
+		// workaround for https://code.google.com/p/chromium/issues/detail?id=246637
+		this.destroyNotif();
+		
 		var notifButton = JSON.parse(this.currentData).buttons[buttonIndex];
 		if (notifButton.title == this.buttonPrev.title)
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "popup" });
@@ -142,17 +132,6 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'pause', source: "popup" });
 		else if (notifButton.title == this.buttonNext.title)
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "popup" });
-		
-		// workaround for https://code.google.com/p/chromium/issues/detail?id=246637
-		var _this = this;
-		chrome.notifications.clear('deezer_control', function(wasCleared) 
-		{ 
-			if (wasCleared)
-			{
-				_this.resetCurrentData();
-				_this.createNotif();
-			}
-		}); 
 	}, 
 	
 	resetCurrentData: function()
@@ -190,7 +169,7 @@ else if (typeof chrome.notifications !== "undefined")
 	NOTIFS = NEW_NOTIFS;
 	chrome.notifications.onClosed.addListener(function(notificationId, byUser)
 	{
-		if (notificationId == 'deezer_control' && byUser)
+		if (notificationId == 'deezer_control')
 			NOTIFS.resetCurrentData();
 	});
 	

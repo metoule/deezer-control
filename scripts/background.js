@@ -223,9 +223,6 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		
 		propagatePlayingDataToAllTabs();
 		
-		// show / hide notif if needed
-		showNotif();
-		
 		// reset the fact that action is on media key event
 		gActionOnHotKey = false;
 		
@@ -353,17 +350,15 @@ function showNotif()
 			)
 		{
 			// if we don't have permission to display notifications, close notif if present
-			chrome.permissions.contains({ permissions: ['notifications'] }, onCheckNotifPermission);
+			chrome.permissions.contains({ permissions: ['notifications'] }, function(iPermissionGranted)
+			{
+				if (iPermissionGranted)
+					NOTIFS.createNotif();
+				else
+					NOTIFS.destroyNotif();
+			});
 		}
 	}
-}
-
-function onCheckNotifPermission(iPermissionGranted)
-{
-	if (iPermissionGranted)
-		NOTIFS.createNotif();
-	else
-		NOTIFS.destroyNotif();
 }
 
 function updateButtonTooltip()
@@ -379,7 +374,9 @@ function propagatePlayingDataToAllTabs()
 	// refresh all opened popups, tabs (i.e. option page), and notifications
 	chrome.extension.getViews({ type: 'tab' }).forEach(refreshPopupOnWindow);
 	chrome.extension.getViews({ type: 'popup' }).forEach(refreshPopupOnWindow);
-	NOTIFS.refreshNotif();
+	
+	// show / hide notif if needed
+	showNotif();
 	
 	if (gNowPlayingData != null)
 	{		
