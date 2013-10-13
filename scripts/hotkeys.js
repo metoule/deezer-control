@@ -1,17 +1,5 @@
 
-var HOTKEYS_LISTENER = HOTKEYS_LISTENER || {
-	
-	register: function()
-	{
-		if (!this.isRegistered)
-		{
-			window.addEventListener('keydown', keyboardNavigation, false);
-			this.isRegistered = true;
-		}
-	}
-	
-};
-HOTKEYS_LISTENER.register();
+window.addEventListener('keydown', keyboardNavigation, false);
 
 function keyboardNavigation(e) 
 {
