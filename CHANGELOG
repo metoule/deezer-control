@@ -1,3 +1,9 @@
+1.8 - 
+ * Extension keeps working after update (no longer requires a page refresh)
+ * Limit the number of useless notification refresh 
+ * Listener on player changes is now in its own file
+ * Re-added notifications display options  
+
 1.7 - 24 Sep 2013 
  * Improved first time install:
  * Deezer tab no longer needs to be refreshed for the popup to display content 
