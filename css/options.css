@@ -58,7 +58,7 @@ a
 	text-decoration: none; 
 }
 
-#tab_chooser nav a
+nav a
 {
 	border-right: 1px solid #D0D0D0;
 	color: #919191;
@@ -74,12 +74,16 @@ a
 a.new_item
 {
 	background: url(/imgs/new.png) no-repeat 5px 9px;
+	padding-left: 10px; /* we want a left padding of 5px; double it to account for centerness */
+	width: 149px; /* normal size (159px) minus left padding */
 }
+
 h2.new_item
 {
    background: url(/imgs/new.png) no-repeat 5px 5px;
    padding-left: 35px;
 }
+
 span.new_item
 {
    background: url(/imgs/new.png) no-repeat 0px 3px;
@@ -372,6 +376,7 @@ fieldset *
 #notifications input[type="radio"]
 {
 	height: 25px;
+	margin-right: 1px; 
 }
 
 #notifications input[type="radio"] + label
