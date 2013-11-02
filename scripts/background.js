@@ -342,22 +342,24 @@ function showNotif()
 	{
 		// update or create notification
 		LOCSTO.loadOptions(); // otherwise options might not be up to date
-		if (   !LOCSTO.notifications.never
-			&& (   LOCSTO.notifications.alwaysOn 
-				|| LOCSTO.notifications.visible /* on_song_change*/
-				|| (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey)
-				)
-			)
+		if (LOCSTO.notifications.never)
 		{
-			// if we don't have permission to display notifications, close notif if present
-			chrome.permissions.contains({ permissions: ['notifications'] }, function(iPermissionGranted)
-			{
-				if (iPermissionGranted)
-					NOTIFS.createNotif();
-				else
-					NOTIFS.destroyNotif();
-			});
+			NOTIFS.destroyNotif();
+			return;
 		}
+		
+		// force a full redisplay of the notifs
+		var forceRedisplay =     LOCSTO.notifications.visible /* on_song_change*/ 
+						     || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey);
+		
+		// if we don't have permission to display notifications, close notif if present
+		chrome.permissions.contains({ permissions: ['notifications'] }, function(iPermissionGranted)
+		{
+			if (iPermissionGranted)
+				NOTIFS.createNotif(forceRedisplay);
+			else
+				NOTIFS.destroyNotif();
+		});
 	}
 }
 

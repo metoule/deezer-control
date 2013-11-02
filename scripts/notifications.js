@@ -5,7 +5,7 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 	timeoutId: null, 
 	mouseOverNotif: false, 
 	
-	createNotif: function()
+	createNotif: function(forceRedisplay)
 	{
 		// if notif not already visible, create it
 		if (this.htmlNotification == null)
@@ -75,7 +75,7 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	buttonPause: { title: chrome.i18n.getMessage('playback_pause'), iconUrl: 'imgs/notifs/pause.png' },
 	buttonNext:  { title: chrome.i18n.getMessage('playback_next'),  iconUrl: 'imgs/notifs/next.png'  },
 	
-	createNotif: function()
+	createNotif: function(forceRedisplay)
 	{
 		// we're only allowed two buttons: display play/pause, and next
 		var notifButtons = []; 
@@ -104,34 +104,49 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 		if (newData == this.currentData)
 			return;
 
-		this.currentData = newData;
-		chrome.notifications.create('deezer_control', content, function(notifId) {});
+		if (forceRedisplay)
+		{
+			this.destroyNotif(function(_this) 
+			{
+				_this.currentData = newData;
+				chrome.notifications.create('deezer_control', content, function(notifId) {});
+			});
+		}
+		else
+		{
+			this.currentData = newData;
+			chrome.notifications.create('deezer_control', content, function(notifId) {});
+		}
 	}, 
 	
-	destroyNotif: function()
+	destroyNotif: function(callback)
 	{
 		var _this = this;
 		chrome.notifications.clear('deezer_control', function(wasCleared) 
-		{ 
-			if (wasCleared)
-				_this.resetCurrentData(); 
-		}); 
+		{
+			_this.resetCurrentData(); 
+			if (callback)
+				callback(_this); 
+		});
 	}, 
 	
 	buttonClicked: function(buttonIndex)
 	{
 		// workaround for https://code.google.com/p/chromium/issues/detail?id=246637
-		this.destroyNotif();
-		
 		var notifButton = JSON.parse(this.currentData).buttons[buttonIndex];
-		if (notifButton.title == this.buttonPrev.title)
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "popup" });
-		else if (notifButton.title == this.buttonPlay.title)
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'play', source: "popup" });
-		else if (notifButton.title == this.buttonPause.title)
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'pause', source: "popup" });
-		else if (notifButton.title == this.buttonNext.title)
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "popup" });
+		this.destroyNotif(function(_this) 
+		{
+			// we use source as hotkey to ensure that when we're on mode 'on hot keys only', 
+			// the notif doesn't disappear on click
+			if (notifButton.title == _this.buttonPrev.title)
+				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "hotkey" });
+			else if (notifButton.title == _this.buttonPlay.title)
+				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'play', source: "hotkey" });
+			else if (notifButton.title == _this.buttonPause.title)
+				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'pause', source: "hotkey" });
+			else if (notifButton.title == _this.buttonNext.title)
+				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "hotkey" });
+		});
 	}, 
 	
 	resetCurrentData: function()
@@ -141,10 +156,12 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	
 	resetNotifTimeout: function()
 	{
+		// NOP: obsolete for new notifs
 	}, 
 	
 	startNotifTimeout: function()
 	{
+		// NOP: obsolete for new notifs
 	}, 
 	
 	onMouseOverNotif: function()
