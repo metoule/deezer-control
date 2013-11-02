@@ -180,21 +180,21 @@
 				<h2 data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
 					
 				<fieldset>
-					<input type="radio" name="notifs_show_when" value="never" id="notifs_show_never"/>
-					<label for="notifs_show_never" data-i18n-content="options_page_tab_notifs_show_never"></label>
+					<input type="radio" name="notifs_show_when_old" value="never" id="notifs_show_never_old"/>
+					<label for="notifs_show_never_old" data-i18n-content="options_page_tab_notifs_show_never"></label>
 					<span class="warning" id='chrome_permission_not_granted_old' data-i18n-content="options_page_tab_notifs_chrome_permission_not_granted"></span>
 					<br/>
 					
-					<input type="radio" name="notifs_show_when" value="never_hides" id="notifs_show_never_hides"/>
-					<label for="notifs_show_never_hides" data-i18n-content="options_page_tab_notifs_show_never_hides"></label>
+					<input type="radio" name="notifs_show_when_old" value="never_hides" id="notifs_show_never_hides_old"/>
+					<label for="notifs_show_never_hides_old" data-i18n-content="options_page_tab_notifs_show_never_hides_old"></label>
 					<br/>
 					
-					<input type="radio" name="notifs_show_when" value="on_song_change" id="notifs_show_on_song_change"/>
-					<label for="notifs_show_on_song_change" data-i18n-content="options_page_tab_notifs_show_on_song_change"></label>
+					<input type="radio" name="notifs_show_when_old" value="on_song_change" id="notifs_show_on_song_change_old"/>
+					<label for="notifs_show_on_song_change_old" data-i18n-content="options_page_tab_notifs_show_on_song_change_old"></label>
 					<br/>
 					
-					<input type="radio" name="notifs_show_when" value="on_hotkey_only" id="notifs_show_on_hotkey_only"/>
-					<label for="notifs_show_on_hotkey_only" data-i18n-content="options_page_tab_notifs_show_on_hotkey_only"></label>
+					<input type="radio" name="notifs_show_when_old" value="on_hotkey_only" id="notifs_show_on_hotkey_only_old"/>
+					<label for="notifs_show_on_hotkey_only_old" data-i18n-content="options_page_tab_notifs_show_on_hotkey_only_old"></label>
 					<br/>
 					
 					<div>
@@ -232,17 +232,24 @@
 				<h1 data-i18n-content="options_page_tab_notifs_h1"></h1>
 				<div data-i18n-content="options_page_tab_notifs_what_are_notifications"></div>
 				
-				<h2 data-i18n-content="options_page_tab_notifs_what_happened_old_notifs_question"></h2>
-				<div data-i18n-content="options_page_tab_notifs_what_happened_old_notifs_answer"></div>
-				<h2 data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
-				<div id="notifsActivate">
-					<div data-i18n-content="options_page_tab_notifs_activate_explanation"></div>
-					<div class="yes_no_bar">
-						<button class="two_state_unselected" data-i18n-content="yes"></button>
-						<button class="two_state_unselected" data-i18n-content="no"></button>
-						<span class="warning" id='chrome_permission_not_granted' data-i18n-content="options_page_tab_notifs_chrome_permission_not_granted"></span>
-					</div>
-				</div>
+				<h2 class="new_item" data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
+				<fieldset>
+					<input type="radio" name="notifs_show_when" value="never" id="notifs_show_never"/>
+					<label for="notifs_show_never" data-i18n-content="options_page_tab_notifs_show_never"></label>
+					<span class="warning" id='chrome_permission_not_granted_old' data-i18n-content="options_page_tab_notifs_chrome_permission_not_granted"></span>
+					<br/>
+					
+					<input type="radio" name="notifs_show_when" value="never_hides" id="notifs_show_never_hides"/>
+					<label for="notifs_show_never_hides" data-i18n-content="options_page_tab_notifs_show_never_hides"></label>
+					<br/>
+					
+					<input type="radio" name="notifs_show_when" value="on_song_change" id="notifs_show_on_song_change"/>
+					<label for="notifs_show_on_song_change" data-i18n-content="options_page_tab_notifs_show_on_song_change"></label>
+					<br/>
+					
+					<input type="radio" name="notifs_show_when" value="on_hotkey_only" id="notifs_show_on_hotkey_only"/>
+					<label for="notifs_show_on_hotkey_only" data-i18n-content="options_page_tab_notifs_show_on_hotkey_only"></label>
+				</fieldset>
 				
 				<div class="save_cancel_bar">
 					<button id="button_save_notifications" data-i18n-content="options_page_button_save"></button>

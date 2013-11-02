@@ -78,6 +78,7 @@ a.new_item
 h2.new_item
 {
    background: url(/imgs/new.png) no-repeat 5px 5px;
+   padding-left: 35px;
 }
 span.new_item
 {
@@ -371,6 +372,12 @@ fieldset *
 #notifications input[type="radio"]
 {
 	height: 25px;
+}
+
+#notifications input[type="radio"] + label
+{
+	position: relative;
+	top: 3px;
 }
 
 #notifs_fade_away_delay_display:after
