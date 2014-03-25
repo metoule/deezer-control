@@ -21,7 +21,8 @@
   "permissions":	[ 
 						"http://*.deezer.com/*", 
 						"notifications", 
-						"tabs"
+						"tabs",
+          				"webNavigation"
 					],
   "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' http://cdn-images.deezer.com/images/cover/;",
   "optional_permissions": [ "<all_urls>" ],
