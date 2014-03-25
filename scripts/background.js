@@ -58,41 +58,28 @@ function browserActionOnClickListener(iTab)
 }
 
 // inject hotkeys.js on any page if user allowed it
-chrome.tabs.onUpdated.addListener(tabsOnUpdatedListener);
-function tabsOnUpdatedListener(iTabId, iChangeInfo, iTab) 
-{	
-	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
-	checkLimitToOneDeezerTab(iTabId, iChangeInfo.url);
-	
-	// wait until loading is complete
-	if (iChangeInfo.status != "complete")
+chrome.webNavigation.onCommitted.addListener(function(data) 
+{
+	// ignore sub frames
+	if (data.frameId !== 0)
 		return;
 	
-	// ignore all chrome internal urls
-	if (iTab.url.lastIndexOf("chrome", 0) !== 0)
-	{
-		chrome.permissions.contains(
-		{
-			origins: [ "<all_urls>" ] 
-		}, 
-		function(result) 
-		{
-			if (result)
-				chrome.tabs.executeScript(iTabId, { file: "/scripts/hotkeys.js" });
-		});
-	}
+	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
+	checkLimitToOneDeezerTab(data.tabId, data.url);
 	
+	chrome.permissions.contains(
+	{
+		origins: [ "<all_urls>" ] 
+	}, 
+	function(result) 
+	{
+		if (result)
+			chrome.tabs.executeScript(data.tabId, { file: "/scripts/hotkeys.js", runAt: "document_start" });
+	});
+
 	// recount number of opened deezer tabs
 	setUpPopup();
-}
-
-// when a tab is opened, create the pop up if needed, and check number of opened deezer tabs
-chrome.tabs.onCreated.addListener(tabsOnCreatedListener);
-function tabsOnCreatedListener(iTab) 
-{
-	setUpPopup(); 
-	checkLimitToOneDeezerTab(iTab.id, iTab.url); 
-}
+});
 
 // when a tab is removed, check that the popup is still needed
 chrome.tabs.onRemoved.addListener(tabsOnRemovedListener);
