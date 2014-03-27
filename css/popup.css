@@ -5,30 +5,24 @@
 	padding: 0px;
 }
 
-div#controls
+#controls
 {
 	margin: 0;
 	position: relative;
 	z-index: 600;
 }
 
-div#controls a 
+#controls a 
 { 
 	cursor: pointer;
 	display: inline-block;
+	opacity: 0.95;
 	position: relative;
 	vertical-align: middle;
 }
 
-div.controls-left 
-{ 
-	float: left;
-}
-
-div.controls-right 
-{ 
-	float: right;
-}
+div.controls-left  { float: left;  }
+div.controls-right { float: right; }
 
 #now_playing
 {

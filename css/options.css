@@ -275,7 +275,7 @@ select:hover, #remember_to a:hover, .button_cancel:hover
 
 #world_icon, #star_icon
 {
-	background: url(/imgs/omnibox_http.png) no-repeat;
+	background: no-repeat;
 	display: inline-block;
 	height: 19px;
 	width: 19px;
@@ -284,7 +284,7 @@ select:hover, #remember_to a:hover, .button_cancel:hover
 	top: -1px;
 	vertical-align: middle;
 }
-#world_icon { background: url(/imgs/omnibox_http.png) no-repeat; }
+#world_icon { background: url(/imgs/omnibox_http.png) no-repeat; margin-left: 5px; }
 #star_icon { background: url(/imgs/omnibox_star_dark.png) no-repeat; }
 
 #extension_icon

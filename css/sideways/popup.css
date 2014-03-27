@@ -7,54 +7,28 @@
 	margin: 5px;
 }
 
-div#controls
+#controls
 {
 	float: right;
 	height: 20px;
 	line-height: 20px;
 }
 
-div#controls a 
+#controls a 
 { 
-	height: 10px;
-	margin-right: 5px; 
+	height: 16px;
+	margin-right: 6px;
 }
 
-#control-settings
-{
-	background: url(/imgs/small/settings.png);
-	width: 10px;
-}
+#controls a:hover { opacity: 1; }
+#control-settings { background: url(/imgs/large/settings.png); width: 16px; }
+#control-prev     { background: url(/imgs/large/prev.png);     width: 24px; }
+#control-next     { background: url(/imgs/large/next.png);     width: 24px; }
+#control-pause    { background: url(/imgs/large/pause.png);    width: 16px; }
+#control-play     { background: url(/imgs/large/play.png);     width: 16px; }
+#control-play     { background: url(/imgs/small/play.png);     width: 10px; }
 
-#control-prev 
-{
-	background: url(/imgs/small/prev.png);
-	width: 17px;
-}
-
-#control-pause 
-{
-	background: url(/imgs/small/pause.png);
-	width: 10px;
-}
-
-#control-play 
-{
-	background: url(/imgs/small/play.png) no-repeat;
-	width: 10px;
-}
-
-#control-next 
-{
-	background: url(/imgs/small/next.png);
-	width: 17px;
-}
-
-#now_playing
-{
-	height: 80px;
-}
-
+#now_playing { height: 80px; }
 #now_playing_info
 {
 	margin-left: 95px;
@@ -68,13 +42,9 @@ div#controls a
 	font-size: 16px;
 	margin-bottom: 2px;
 }
+#now_playing_info_artist { font-size: 16px; }
 
-#now_playing_info_artist 
-{ 
-	font-size: 16px;
-}
-
-img#cover 
+#cover 
 {
 	height: 80px;
 	width: 80px;

@@ -7,55 +7,27 @@
 	margin: 5px;
 }
 
-div#controls
+#controls
 {
-   float: right;
-   height: 16px;
-   line-height: 16px;
+    float: right;
+    height: 16px;
+    line-height: 16px;
 }
 
-div#controls a 
+#controls a 
 { 
-   height: 10px;
-   margin-right: 5px; 
+    height: 10px;
+    margin-right: 5px; 
 }
 
-#control-settings
-{
-   background: url(/imgs/small/settings.png);
-   width: 10px;
-}
+#controls a:hover { opacity: 1; }
+#control-settings { background: url(/imgs/small/settings.png); width: 10px; }
+#control-prev     { background: url(/imgs/small/prev.png);     width: 15px; }
+#control-next     { background: url(/imgs/small/next.png);     width: 15px; }
+#control-pause    { background: url(/imgs/small/pause.png);    width: 10px; }
+#control-play     { background: url(/imgs/small/play.png);     width: 10px; }
 
-#control-prev 
-{
-   background: url(/imgs/small/prev.png);
-   width: 17px;
-}
-
-#control-pause 
-{
-   background: url(/imgs/small/pause.png);
-   width: 10px;
-}
-
-#control-play 
-{
-   background: url(/imgs/small/play.png) no-repeat;
-   width: 10px;
-}
-
-#control-next 
-{
-   background: url(/imgs/small/next.png);
-   width: 17px;
-}
-
-#now_playing
-{
-	height: 16px;
-	line-height: 14px;
-}
-
+#now_playing { height: 16px; line-height: 14px; }
 #now_playing_info
 {
 	margin-left: 26px;
@@ -66,9 +38,9 @@ div#controls a
 
 #now_playing_info span 
 {
-   display: inline-block;
-   max-width: 86px;
-   padding-top: 1px;
+    display: inline-block;
+    max-width: 86px;
+    padding-top: 1px;
 }
 
 #now_playing_info_track
@@ -76,13 +48,9 @@ div#controls a
 	font-size: 14px;
 	margin-right: 5px;
 }
+#now_playing_info_artist { font-size: 14px; }
 
-#now_playing_info_artist 
-{ 
-	font-size: 14px;
-}
-
-img#cover 
+#cover 
 {
 	height: 25px;
 	width: 25px;

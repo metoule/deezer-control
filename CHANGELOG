@@ -1,3 +1,8 @@
+1.9 -
+ * New, flatter, icons
+ * Fix: prevent hotkeys from being seen twice
+ * Improvement: hotkeys can be used even if the page isn't fully loaded
+ 
 1.8 - 
  * Extension keeps working after update (no longer requires a page refresh)
  * Limit the number of useless notification refresh 
