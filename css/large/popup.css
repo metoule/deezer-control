@@ -7,53 +7,27 @@
 	margin: 0px 12px 12px 12px;
 }
 
-div#controls
+#controls
 {
 	height: 28px;
 	line-height: 28px;
+	padding-right: 3px;
 }
 
-div#controls a 
+#controls a 
 { 
 	height: 16px;
-	margin-right: 8px;
+	margin-right: 6px;
 }
 
-#control-settings
-{
-	background: url(/imgs/large/settings.png);
-	width: 16px;
-}
+#controls a:hover { opacity: 1; }
+#control-settings { background: url(/imgs/large/settings.png); width: 16px; }
+#control-prev     { background: url(/imgs/large/prev.png);     width: 24px; }
+#control-next     { background: url(/imgs/large/next.png);     width: 24px; }
+#control-pause    { background: url(/imgs/large/pause.png);    width: 16px; }
+#control-play     { background: url(/imgs/large/play.png);     width: 16px; }
 
-#control-prev 
-{
-	background: url(/imgs/large/prev.png);
-	width: 27px;
-}
-
-#control-pause 
-{
-	background: url(/imgs/large/pause.png);
-	width: 16px;
-}
-
-#control-play 
-{
-	background: url(/imgs/large/play.png) no-repeat;
-	width: 16px;
-}
-
-#control-next 
-{
-	background: url(/imgs/large/next.png);
-	width: 27px;
-}
-
-#now_playing
-{
-	height: 250px;
-}
-
+#now_playing { height: 250px; }
 #now_playing_info
 {
 	padding: 11px 9px 0px 9px;
@@ -68,7 +42,7 @@ div#controls a
 }
 #now_playing_info_artist { font-size: 16px; }
 
-img#cover 
+#cover 
 {
 	height: 250px;
 	width: 250px;
