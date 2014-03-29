@@ -21,7 +21,7 @@ function preparePage_welcome()
 	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
 
 	// set two buttons to the same size for better look and feel
-	// note: if the buttons are not visible, the widrth is 0; use default widths in that case
+	// note: if the buttons are not visible, the width is 0; use default widths in that case
 	var aWidth = Math.max($("#button_rate_extension").width(), $("#button_donate").width());
 	if (aWidth != 0)
 	{
@@ -194,7 +194,7 @@ function restoreHotkey(iHotKeyName)
 		else
 		{
 			$(this).parent().children('button:eq(3)').text(convertKeyCode(event.keyCode, $(this).val()));
-			$(this).next().val(event.keyCode);
+			$(this).next().val(event.keyCode); // input:eq(1)
 		}
 
 		// redisplay
