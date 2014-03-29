@@ -32,6 +32,15 @@ function preparePopup()
 	$('#now_playing_info_track').click(function ()  { executeDoAction('linkCurrentSong');   return false; });
 	$('#now_playing_info_artist').click(function () { executeDoAction('linkCurrentArtist'); return false; });
 	
+	// add tooltip in case of ellipsis (onmouseover to force recompute in the event of style change)
+	$('#now_playing_info > span').mouseover(function () 
+	{
+		var title = '';
+		if (this.offsetWidth < this.scrollWidth)
+			title = $(this).text();
+		$(this).attr('title', title);
+	});
+	
 	// reset popup
 	refreshPopup();
 	
@@ -105,15 +114,6 @@ function refreshPopup()
 		$('#now_playing_info').show();
 		$('#now_playing_info_track').text(aNowPlayingData.dz_track);
 		$('#now_playing_info_artist').text(aNowPlayingData.dz_artist);
-		
-		// add tooltip in case of ellipsis
-		$('#now_playing_info > span').each(function (index) 
-		{
-			var title = '';
-			if (this.offsetWidth < this.scrollWidth)
-				title = $(this).text();
-			$(this).attr('title', title);
-		});
 		
 		// show or hide prev / next buttons if needed
 		$('#control-prev').visibilityToggle(aNowPlayingData.dz_is_prev_active == 'true');
