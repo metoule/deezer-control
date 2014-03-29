@@ -46,7 +46,7 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 	startNotifTimeout: function()
 	{
 		// hide notification after the wanted delay
-		if (this.mouseOverNotif == false && !LOCSTO.notifications.alwaysOn)
+		if (this.mouseOverNotif == false && !LOCSTO.notifications.neverHides)
 		{
 			var _this = this;
 			this.timeoutId = window.setTimeout(function() { _this.destroyNotif(); }, LOCSTO.notifications.fadeAwayDelay);
@@ -152,26 +152,6 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	resetCurrentData: function()
 	{
 		this.currentData = null; 
-	}, 
-	
-	resetNotifTimeout: function()
-	{
-		// NOP: obsolete for new notifs
-	}, 
-	
-	startNotifTimeout: function()
-	{
-		// NOP: obsolete for new notifs
-	}, 
-	
-	onMouseOverNotif: function()
-	{
-		// NOP: obsolete for new notifs
-	}, 
-	
-	onMouseOutNotif: function()
-	{
-		// NOP: obsolete for new notifs
 	}
 	
 };

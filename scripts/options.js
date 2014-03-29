@@ -74,9 +74,9 @@ function preparePage_notifsOld()
 	$("#button_save_notifications_old").click(function () { saveNotifications_old(); });
 
 	// restore value 
-	if (LOCSTO.notifications.alwaysOn)
+	if (LOCSTO.notifications.neverHides)
 		$('input:radio[name="notifs_show_when_old"]').filter('[value="never_hides"]').prop('checked', true);
-	else if (LOCSTO.notifications.visible)
+	else if (LOCSTO.notifications.onSongChange)
 		$('input:radio[name="notifs_show_when_old"]').filter('[value="on_song_change"]').prop('checked', true);
 	else if (LOCSTO.notifications.onHotKeyOnly)
 		$('input:radio[name="notifs_show_when_old"]').filter('[value="on_hotkey_only"]').prop('checked', true);
@@ -98,9 +98,9 @@ function preparePage_notifsNew()
 	$("#button_save_notifications").click(function () { saveNotifications(); });
 
 	// restore value 
-	if (LOCSTO.notifications.alwaysOn)
+	if (LOCSTO.notifications.neverHides)
 		$('input:radio[name="notifs_show_when"]').filter('[value="never_hides"]').prop('checked', true);
-	else if (LOCSTO.notifications.visible)
+	else if (LOCSTO.notifications.onSongChange)
 		$('input:radio[name="notifs_show_when"]').filter('[value="on_song_change"]').prop('checked', true);
 	else if (LOCSTO.notifications.onHotKeyOnly)
 		$('input:radio[name="notifs_show_when"]').filter('[value="on_hotkey_only"]').prop('checked', true);
@@ -274,16 +274,16 @@ function saveNotifications_old()
 
 	// the key names are due to the old notifications system
 	if (aNotifsShowWhen == 'never')
-		LOCSTO.notifications = { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'never_hides')
-		LOCSTO.notifications = { never: false, alwaysOn: true, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'on_song_change')
-		LOCSTO.notifications = { never: false, alwaysOn: false, visible: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'on_hotkey_only')
-		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	LOCSTO.saveNotifications();
 
@@ -306,16 +306,16 @@ function saveNotifications()
 	
 	// the key names are due to the old notifications system
 	if (aNotifsShowWhen == 'never')
-		LOCSTO.notifications = { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'never_hides')
-		LOCSTO.notifications = { never: false, alwaysOn: true, visible: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'on_song_change')
-		LOCSTO.notifications = { never: false, alwaysOn: false, visible: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	else if (aNotifsShowWhen == 'on_hotkey_only')
-		LOCSTO.notifications = { never: false, alwaysOn: false, visible: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
 
 	LOCSTO.saveNotifications();
 
