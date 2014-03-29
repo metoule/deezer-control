@@ -5,10 +5,12 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 	timeoutId: null, 
 	mouseOverNotif: false, 
 	
-	createNotif: function(forceRedisplay)
+	createNotif: function(/*forceRedisplay*/)
 	{
+		"use strict";
+		
 		// if notif not already visible, create it
-		if (this.htmlNotification == null)
+		if (this.htmlNotification === null)
 		{
 			this.htmlNotification = webkitNotifications.createHTMLNotification("/popup.html?style=" + LOCSTO.notifications.style + "&notif=on");
 			this.htmlNotification.show();
@@ -27,8 +29,11 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 	
 	destroyNotif: function()
 	{
-		if (this.htmlNotification != null) 
-			this.htmlNotification.cancel(); 
+		"use strict";
+		if (this.htmlNotification !== null) 
+		{
+			this.htmlNotification.cancel();
+		}
 		
 		this.htmlNotification = null; 
 		this.timeoutId = null;
@@ -36,7 +41,8 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 	
 	resetNotifTimeout: function()
 	{
-		if (this.timeoutId != null)
+		"use strict";
+		if (this.timeoutId !== null)
 		{
 			window.clearTimeout(this.timeoutId);
 			this.timeoutId = null;
@@ -45,30 +51,34 @@ var OLD_NOTIFS = OLD_NOTIFS ||
 	
 	startNotifTimeout: function()
 	{
+		"use strict";
+		
 		// hide notification after the wanted delay
-		if (this.mouseOverNotif == false && !LOCSTO.notifications.neverHides)
+		if (!this.mouseOverNotif && !LOCSTO.notifications.neverHides)
 		{
-			var _this = this;
-			this.timeoutId = window.setTimeout(function() { _this.destroyNotif(); }, LOCSTO.notifications.fadeAwayDelay);
+			var me = this;
+			this.timeoutId = window.setTimeout(function() { me.destroyNotif(); }, LOCSTO.notifications.fadeAwayDelay);
 		}
 	}, 
 	
 	onMouseOverNotif: function()
 	{
+		"use strict";
 		this.mouseOverNotif = true;
 		this.resetNotifTimeout();
 	}, 
 	
 	onMouseOutNotif: function()
 	{
+		"use strict";
 		this.mouseOverNotif = false; 
 		this.startNotifTimeout();
 	}
 	
 };
 
-var NEW_NOTIFS = NEW_NOTIFS || 
-{
+var NEW_NOTIFS = NEW_NOTIFS || {
+		
 	currentData: null,
 	buttonPrev:  { title: chrome.i18n.getMessage('playback_prev'),  iconUrl: 'imgs/notifs/prev.png'  },
 	buttonPlay:  { title: chrome.i18n.getMessage('playback_play'),  iconUrl: 'imgs/notifs/play.png'  },
@@ -77,19 +87,15 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 	
 	createNotif: function(forceRedisplay)
 	{
+		"use strict";
+		var notifButtons, content, newData;
+		
 		// we're only allowed two buttons: display play/pause, and next
-		var notifButtons = []; 
-		if (gNowPlayingData.dz_playing == 'true')
-			notifButtons.push(this.buttonPause);
-		else
-			notifButtons.push(this.buttonPlay);		
+		notifButtons = [];
+		notifButtons.push(gNowPlayingData.dz_playing === 'true' ? this.buttonPause : this.buttonPlay);
+		notifButtons.push(gNowPlayingData.dz_is_next_active === 'true' ? this.buttonNext : this.buttonPrev);
 		
-		if (gNowPlayingData.dz_is_next_active == 'true')
-			notifButtons.push(this.buttonNext);
-		else if (gNowPlayingData.dz_is_prev_active == 'true')
-			notifButtons.push(this.buttonPrev);	
-		
-		var content = {
+		content = {
 				type: 'basic', 
 				title:   gNowPlayingData.dz_track, 
 				message: gNowPlayingData.dz_artist,
@@ -100,57 +106,74 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 		
 		
 		// don't update notification if same data
-		var newData = JSON.stringify(content);
-		if (newData == this.currentData)
-			return;
+		newData = JSON.stringify(content);
+		if (newData === this.currentData)
+		{
+			return;	
+		}
 
 		if (forceRedisplay)
 		{
-			this.destroyNotif(function(_this) 
+			this.destroyNotif(function(me) 
 			{
-				_this.currentData = newData;
-				chrome.notifications.create('deezer_control', content, function(notifId) {});
+				me.currentData = newData;
+				chrome.notifications.create('deezer_control', content, function(/*notifId*/) {/*NOP*/});
 			});
 		}
 		else
 		{
 			this.currentData = newData;
-			chrome.notifications.create('deezer_control', content, function(notifId) {});
+			chrome.notifications.create('deezer_control', content, function(/*notifId*/) {/*NOP*/});
 		}
 	}, 
 	
 	destroyNotif: function(callback)
 	{
-		var _this = this;
-		chrome.notifications.clear('deezer_control', function(wasCleared) 
+		"use strict";
+		
+		var me = this;
+		chrome.notifications.clear('deezer_control', function(/*wasCleared*/) 
 		{
-			_this.resetCurrentData(); 
+			me.resetCurrentData(); 
 			if (callback)
-				callback(_this); 
+			{
+				callback(me);
+			}
 		});
 	}, 
 	
 	buttonClicked: function(buttonIndex)
 	{
+		"use strict";
+		
 		// workaround for https://code.google.com/p/chromium/issues/detail?id=246637
 		var notifButton = JSON.parse(this.currentData).buttons[buttonIndex];
-		this.destroyNotif(function(_this) 
+		this.destroyNotif(function(me) 
 		{
 			// we use source as hotkey to ensure that when we're on mode 'on hot keys only', 
 			// the notif doesn't disappear on click
-			if (notifButton.title == _this.buttonPrev.title)
+			if (notifButton.title === me.buttonPrev.title)
+			{
 				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "hotkey" });
-			else if (notifButton.title == _this.buttonPlay.title)
+			}
+			else if (notifButton.title === me.buttonPlay.title)
+			{
 				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'play', source: "hotkey" });
-			else if (notifButton.title == _this.buttonPause.title)
+			}
+			else if (notifButton.title === me.buttonPause.title)
+			{
 				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'pause', source: "hotkey" });
-			else if (notifButton.title == _this.buttonNext.title)
+			}
+			else if (notifButton.title === me.buttonNext.title)
+			{
 				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "hotkey" });
+			}
 		});
 	}, 
 	
 	resetCurrentData: function()
 	{
+		"use strict";
 		this.currentData = null; 
 	}
 	
@@ -158,27 +181,37 @@ var NEW_NOTIFS = NEW_NOTIFS ||
 
 var NOTIFS = null;
 
-if (typeof webkitNotifications.createHTMLNotification !== "undefined")
+if (webkitNotifications.createHTMLNotification !== undefined)
+{
 	NOTIFS = OLD_NOTIFS;
-
-else if (typeof chrome.notifications !== "undefined")
+}
+else if (chrome.notifications !== undefined)
 {
 	NOTIFS = NEW_NOTIFS;
-	chrome.notifications.onClosed.addListener(function(notificationId, byUser)
+	chrome.notifications.onClosed.addListener(function(notificationId/*, byUser*/)
 	{
-		if (notificationId == 'deezer_control')
+		"use strict";
+		if (notificationId === 'deezer_control')
+		{
 			NOTIFS.resetCurrentData();
+		}
 	});
 	
 	chrome.notifications.onButtonClicked.addListener(function(notificationId, buttonIndex)
 	{
-		if (notificationId == 'deezer_control')
+		"use strict";
+		if (notificationId === 'deezer_control')
+		{
 			NOTIFS.buttonClicked(buttonIndex);
+		}
 	});
 	
 	chrome.notifications.onClicked.addListener(function(notificationId)
 	{
-		if (notificationId == 'deezer_control')
+		"use strict";
+		if (notificationId === 'deezer_control')
+		{
 			chrome.runtime.sendMessage({ type: 'jumpToDeezer', source: 'notif' });
+		}
 	});
 }

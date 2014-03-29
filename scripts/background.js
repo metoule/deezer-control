@@ -9,13 +9,17 @@ $(window).load(setUpPopup);
 // install, update, or chrome update
 chrome.runtime.onInstalled.addListener(function(details)
 {
+	"use strict";
+	
 	// inject content script on Deezer tab
 	if (details.reason === "install" || details.reason === "update")
 	{
 		findDeezerTab(function(iDeezerTabId)
 		{
-			if (iDeezerTabId == null)
+			if (iDeezerTabId === null)
+			{
 				return;
+			}
 
 			chrome.tabs.executeScript(iDeezerTabId, { file: "/scripts/player_listener.js" });
 		});
@@ -28,7 +32,9 @@ chrome.runtime.onInstalled.addListener(function(details)
 		function(result) 
 		{
 			if (result)
+			{
 				extensionOnMessageListener({ type: 'injectHotKeysJsOnAllTabs' });
+			}
 		});
 	}
 	
@@ -41,8 +47,10 @@ chrome.runtime.onInstalled.addListener(function(details)
 
 // if no popup is set, it means that we should open a new Deezer tab
 chrome.browserAction.onClicked.addListener(browserActionOnClickListener);
-function browserActionOnClickListener(iTab) 
+function browserActionOnClickListener(/*iTab*/) 
 {
+	"use strict";
+	
 	// extension has just been updated, a click will open the option page
 	if (LOCSTO.newOptionsToShow)
 	{
@@ -68,9 +76,13 @@ function browserActionOnClickListener(iTab)
 // inject hotkeys.js on any page if user allowed it
 chrome.webNavigation.onCommitted.addListener(function(data) 
 {
+	"use strict";
+	
 	// ignore sub frames
 	if (data.frameId !== 0)
+	{
 		return;
+	}
 	
 	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
 	checkLimitToOneDeezerTab(data.tabId, data.url);
@@ -82,7 +94,9 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 	function(result) 
 	{
 		if (result)
+		{
 			chrome.tabs.executeScript(data.tabId, { file: "/scripts/hotkeys.js", runAt: "document_start" });
+		}
 	});
 
 	// recount number of opened deezer tabs
@@ -90,19 +104,19 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 });
 
 // when a tab is removed, check that the popup is still needed
-chrome.tabs.onRemoved.addListener(tabsOnRemovedListener);
-function tabsOnRemovedListener(iTabId, iRemoveInfo) 
-{
-	setUpPopup(); 
-}
+chrome.tabs.onRemoved.addListener(setUpPopup);
 
 // save active tab any time it changes to be able to go back to it 
 chrome.tabs.onActivated.addListener(tabsOnActivatedListener);
 function tabsOnActivatedListener(iActiveTabInfo) 
 {
+	"use strict";
 	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
 	{
-		if (!aActiveTab) return;
+		if (!aActiveTab)
+		{
+			return;
+		}
 		
 		// ignore active tab if deezer: we don't want to go back to deezer tab!
 		if (!matchDeezerUrl(aActiveTab.url))
@@ -116,16 +130,20 @@ function tabsOnActivatedListener(iActiveTabInfo)
 // check whether we want to limit deezer to one tab
 function checkLimitToOneDeezerTab(iTabId, iNewUrl)
 {
+	"use strict";
+	
 	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
-	if (LOCSTO.miscOptions.limitDeezerToOneTab == true)
+	if (LOCSTO.miscOptions.limitDeezerToOneTab === true)
 	{
 		if (iNewUrl && matchDeezerUrl(iNewUrl))
 		{
 			// find any Deezer tab that's not this one
 			findDeezerTab(function(iDeezerTabId, iDeezerWindowId)
 			{
-				if (iDeezerTabId == null)
+				if (iDeezerTabId === null)
+				{
 					return;
+				}
 
 				// close opening tab
 				chrome.tabs.remove(iTabId);
@@ -141,19 +159,22 @@ function checkLimitToOneDeezerTab(iTabId, iNewUrl)
 // find any Deezer tab not matching iIgnoreTabId, and call the callback with its tab and window id
 function findDeezerTab(iCallback, iIgnoreTabId)
 {
+	"use strict";
+	
 	chrome.windows.getAll(
 	{ populate : true },
 	function(windows) 
 	{
-		for(var i = 0; i < windows.length; i++) 
+		var i, aWindow, j, aTab;
+		for(i = 0; i < windows.length; i++) 
 		{
-			var aWindow = windows[i];
-			for(var j = 0; j < aWindow.tabs.length; j++) 
+			aWindow = windows[i];
+			for(j = 0; j < aWindow.tabs.length; j++) 
 			{
-				var aTab = aWindow.tabs[j];
+				aTab = aWindow.tabs[j];
 				if (matchDeezerUrl(aTab.url))
 				{
-					if (aTab.id != iIgnoreTabId)
+					if (aTab.id !== iIgnoreTabId)
 					{
 						iCallback(aTab.id, aWindow.id);
 						return;
@@ -164,7 +185,9 @@ function findDeezerTab(iCallback, iIgnoreTabId)
 		
 		// no deezer tab found, pass null as arguments of the callback
 		if (iCallback)
+		{
 			iCallback(null, null);
+		}
 	});
 }
 
@@ -173,6 +196,8 @@ function findDeezerTab(iCallback, iIgnoreTabId)
 // otherwise, open a new deezer tab
 function setUpPopup()
 {
+	"use strict";
+	
 	// extension has just been updated, show new items
 	if (LOCSTO.newOptionsToShow)
 	{
@@ -190,7 +215,9 @@ function setUpPopup()
 
 function onFindDeezerTabForPopupSetup(iDeezerTabId)
 {
-	if (iDeezerTabId == null)
+	"use strict";
+	
+	if (iDeezerTabId === null)
 	{
 		gNowPlayingData = null; // reset playing data
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
@@ -207,6 +234,7 @@ function onFindDeezerTabForPopupSetup(iDeezerTabId)
 chrome.runtime.onMessage.addListener(extensionOnMessageListener);
 function extensionOnMessageListener(request, sender, sendResponse) 
 {
+	"use strict";
 	switch (request.type)
 	{
 	case "now_playing_updated":
@@ -214,7 +242,9 @@ function extensionOnMessageListener(request, sender, sendResponse)
 
 		// update the button's tooltip only if no update should be shown
 		if (!LOCSTO.newOptionsToShow)
+		{
 			updateButtonTooltip();
+		}
 		
 		propagatePlayingDataToAllTabs();
 		
@@ -224,7 +254,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		break;
 
 	case "controlPlayer":
-		gActionOnHotKey = request.source == 'hotkey';
+		gActionOnHotKey = request.source === 'hotkey';
 		
 		// send the wanted action to the deezer tab
 		findDeezerTab(function(iDeezerTabId) 
@@ -244,7 +274,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		break;
 		
 	case "showNotif":
-		gActionOnHotKey = request.source == 'hotkey' || request.source == 'options';
+		gActionOnHotKey = request.source === 'hotkey' || request.source === 'options';
 		
 		// force notif refresh
 		NOTIFS.destroyNotif();
@@ -264,12 +294,13 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		function(window) 
 		{
 			// find the active tab
-			for(var j = 0; j < window.tabs.length; j++) 
+			var j;
+			for(j = 0; j < window.tabs.length; j++) 
 			{
 				if (window.tabs[j].active)
 				{
 					// we're on the Deezer tab, go back to previous tab
-					if (request.source != 'notif' && matchDeezerUrl(window.tabs[j].url))
+					if (request.source !== 'notif' && matchDeezerUrl(window.tabs[j].url))
 					{
 						chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true });
 						chrome.tabs.update(gJumpBackToActiveTab.tabId, { selected: true });
@@ -289,28 +320,28 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		sendResponse(LOCSTO);
 		return true;
-		break;
 		
 	case "injectHotKeysJsOnAllTabs":
 		chrome.windows.getAll(
-			{ populate : true },
-			function(windows) 
+		{ populate : true },
+		function(windows) 
+		{
+			var i, aWindow, j, aTab;
+			for(i = 0; i < windows.length; i++) 
 			{
-				for(var i = 0; i < windows.length; i++) 
+				aWindow = windows[i];
+				for(j = 0; j < aWindow.tabs.length; j++) 
 				{
-					var aWindow = windows[i];
-					for(var j = 0; j < aWindow.tabs.length; j++) 
+					aTab = aWindow.tabs[j];
+					
+					// ignore all chrome internal urls
+					if (aTab.url.lastIndexOf("chrome", 0) !== 0)
 					{
-						var aTab = aWindow.tabs[j];
-						
-						// ignore all chrome internal urls
-						if (aTab.url.lastIndexOf("chrome", 0) !== 0)
-						{
-							chrome.tabs.executeScript(aTab.id, { file: "/scripts/hotkeys.js" });
-						}
+						chrome.tabs.executeScript(aTab.id, { file: "/scripts/hotkeys.js" });
 					}
 				}
-			});
+			}
+		});
 		break;
 
 	}
@@ -320,6 +351,8 @@ function extensionOnMessageListener(request, sender, sendResponse)
 
 function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId) 
 {
+	"use strict";
+	
 	// we found a Deezer tab, switch to it
 	chrome.windows.update(iDeezerWindowId, { focused: true });
 	chrome.tabs.update(iDeezerTabId, { selected: true });
@@ -327,8 +360,10 @@ function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId)
 
 function showNotif()
 {
+	"use strict";
+	
 	// if no deezer data, close notif, otherwise show it
-	if (gNowPlayingData == null)
+	if (gNowPlayingData === null)
 	{
 		NOTIFS.destroyNotif();
 	}
@@ -351,23 +386,35 @@ function showNotif()
 		chrome.permissions.contains({ permissions: ['notifications'] }, function(iPermissionGranted)
 		{
 			if (iPermissionGranted)
+			{
 				NOTIFS.createNotif(forceRedisplay);
+			}
 			else
+			{
 				NOTIFS.destroyNotif();
+			}
 		});
 	}
 }
 
 function updateButtonTooltip()
 {
-	if (gNowPlayingData != null)
+	"use strict";
+	
+	if (gNowPlayingData !== null)
+	{
 		chrome.browserAction.setTitle({ title: gNowPlayingData.dz_track + ' - ' + gNowPlayingData.dz_artist });
+	}
 	else
+	{
 		chrome.browserAction.setTitle({ title: '' });
+	}
 }
 
 function propagatePlayingDataToAllTabs()
 {
+	"use strict";
+	
 	// refresh all opened popups, tabs (i.e. option page), and notifications
 	chrome.extension.getViews({ type: 'tab' }).forEach(refreshPopupOnWindow);
 	chrome.extension.getViews({ type: 'popup' }).forEach(refreshPopupOnWindow);
@@ -375,7 +422,7 @@ function propagatePlayingDataToAllTabs()
 	// show / hide notif if needed
 	showNotif();
 	
-	if (gNowPlayingData != null)
+	if (gNowPlayingData !== null)
 	{		
 		// load notification size image if needed
 		if (!LOCSTO.notifications.never)
@@ -391,9 +438,15 @@ function propagatePlayingDataToAllTabs()
 		$('#next_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
 	}
 }
-function refreshPopupOnWindow(win) { win.refreshPopup(); }
+
+function refreshPopupOnWindow(win) 
+{ 
+	"use strict";
+	win.refreshPopup(); 
+}
 
 function matchDeezerUrl(iUrl)
 {
-	return RegExp("^http(s)?://(www.)?deezer.com","gi").test(iUrl);
+	"use strict";
+	return new RegExp("^http(s)?://(www.)?deezer.com","gi").test(iUrl);
 }

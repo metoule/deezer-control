@@ -1,21 +1,28 @@
 
-function FillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues)
+function fillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues)
 {
-	var aMyNewObject = {};
+	"use strict";
+	var aMyNewObject = {}, key;
 	
-	if (iDictWithRealValues == null)
+	if (iDictWithRealValues === null)
+	{
 		iDictWithRealValues = {};
+	}
 
 	// loop on all keys of iDictWithDefaultValues, and assign value to aMyNewObject if key not found in iDictWithRealValues
 	// note: this will also remove any key in iDictWithRealValues not present in iDictWithDefaultValues
-	for(var key in iDictWithDefaultValues)
+	for(key in iDictWithDefaultValues)
 	{
 		if(iDictWithDefaultValues.hasOwnProperty(key))
 		{
 			if (iDictWithRealValues.hasOwnProperty(key))
+			{
 				aMyNewObject[key] = iDictWithRealValues[key];
-			else				
+			} 
+			else
+			{
 				aMyNewObject[key] = iDictWithDefaultValues[key];
+			}
 		}
 	}
 	
@@ -30,34 +37,46 @@ var COVER_SIZE_NOTIFS = COVER_SIZES.sideways;
 //------------------------------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------------------------------
-function Version(strVersion)
+var Version = function Version(strVersion)
 {
+	"use strict";
 	var regexS = "(\\d+)(\\.(\\d+))?(\\.(\\d+))?",
 	    regex = new RegExp(regexS),
 	    results = regex.exec(strVersion);
 	
 	// if no match, default to version 0.0.0
 	if (results === null)
+	{
 		results = regex.exec("0.0.0");
+	}
+	
+	this.major = parseInt(results[1] || 0, 10);
+	this.minor = parseInt(results[3] || 0, 10);
+	this.rev   = parseInt(results[5] || 0, 10);
+};
 
-	this.major = parseInt(results[1] || 0);
-	this.minor = parseInt(results[3] || 0);
-	this.rev   = parseInt(results[5] || 0);
-}
-
-Version.prototype.toString = function() { return this.major + "." + this.minor + "." + this.rev; }
+Version.prototype.toString = function() 
+{ 
+	"use strict";
+	return this.major + "." + this.minor + "." + this.rev; 
+};
 
 // returns -1 if this < otherVersion, 0 if this == otherVersion, and +1 if otherVersion < this
 Version.prototype.compare = function(otherVersion)
 {
+	"use strict";
 	if (this.major !== otherVersion.major)
+	{
 		return this.major - otherVersion.major;
+	}
 
 	if (this.minor !== otherVersion.minor)
+	{
 		return this.minor - otherVersion.minor;
+	}
 	
 	return this.rev - otherVersion.rev;
-}
+};
 
 
 //------------------------------------------------------------------------------------------------------
@@ -70,20 +89,21 @@ var LOCSTO = LOCSTO || {
 	 */
 	loadOptions: function()
 	{
+		"use strict";
 		this.popupStyle = this.get('popup_style') || 'large';
 		
 		// notifications
-		this.notifications = FillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
+		this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
 		
 		// hot keys
-				this.prevHotKey =		 FillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
-		   this.playPauseHotKey =	FillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
-		  		this.nextHotKey =		 FillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
-		 this.whatZatSongHotKey =  FillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87  });
-		this.jumpToDeezerHotKey = FillDictWithDefaults(this.get('jumpToDeezerHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 74  });
+				this.prevHotKey =		 fillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
+		   this.playPauseHotKey =	fillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
+		  		this.nextHotKey =		 fillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
+		 this.whatZatSongHotKey =  fillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87  });
+		this.jumpToDeezerHotKey = fillDictWithDefaults(this.get('jumpToDeezerHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 74  });
 
 	   // misc options
-	   this.miscOptions = FillDictWithDefaults(this.get('miscOptions'), { limitDeezerToOneTab: true });
+	   this.miscOptions = fillDictWithDefaults(this.get('miscOptions'), { limitDeezerToOneTab: true });
 	   
 	   // new options to show the user
 	   this.newOptionsToShow = this.get('newOptionsToShow') || false;
@@ -95,6 +115,7 @@ var LOCSTO = LOCSTO || {
 	
 	updateModel: function()
 	{
+		"use strict";
 		var installedVersion = new Version(this.get('installedVersion')), 
 			extensionVersion = new Version(chrome.app.getDetails().version);
 		
@@ -103,14 +124,14 @@ var LOCSTO = LOCSTO || {
 		//  * renamed notifications keys
 		if (installedVersion.compare(new Version("1.9")) < 0)
 		{
-			this.prevHotKey.keyCode 		= parseInt(this.prevHotKey.keyCode);
-			this.playPauseHotKey.keyCode 	= parseInt(this.playPauseHotKey.keyCode);
-			this.nextHotKey.keyCode 		= parseInt(this.nextHotKey.keyCode);
-			this.whatZatSongHotKey.keyCode 	= parseInt(this.whatZatSongHotKey.keyCode);
-			this.jumpToDeezerHotKey.keyCode = parseInt(this.jumpToDeezerHotKey.keyCode);
+			this.prevHotKey.keyCode 		= parseInt(this.prevHotKey.keyCode, 10);
+			this.playPauseHotKey.keyCode 	= parseInt(this.playPauseHotKey.keyCode, 10);
+			this.nextHotKey.keyCode 		= parseInt(this.nextHotKey.keyCode, 10);
+			this.whatZatSongHotKey.keyCode 	= parseInt(this.whatZatSongHotKey.keyCode, 10);
+			this.jumpToDeezerHotKey.keyCode = parseInt(this.jumpToDeezerHotKey.keyCode, 10);
 			this.saveHotKeys();
 			
-			this.notifications = FillDictWithDefaults(this.get('notifications'), { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
+			this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
 			this.notifications.onSongChange = this.notifications.visible;
 			this.notifications.neverHides = this.notifications.alwaysOn;
 			delete this.notifications.visible;
@@ -132,11 +153,13 @@ var LOCSTO = LOCSTO || {
 	
 	savePopupStyle: function()
 	{
+		"use strict";
 		this.set('popup_style', this.popupStyle);
 	},
 	
 	saveHotKeys: function()
 	{
+		"use strict";
 		this.set('prevHotKey', this.prevHotKey);
 		this.set('playPauseHotKey', this.playPauseHotKey);
 		this.set('nextHotKey', this.nextHotKey);
@@ -146,16 +169,19 @@ var LOCSTO = LOCSTO || {
 	
 	saveNotifications: function()
 	{
+		"use strict";
 		this.set('notifications', this.notifications);
 	}, 
 	
 	saveMiscOptions: function()
 	{
+		"use strict";
 		this.set('miscOptions', this.miscOptions);
 	}, 
 	
 	saveNewOptionsToShow: function()
 	{
+		"use strict";
 		this.set('newOptionsToShow', this.newOptionsToShow);
 	}, 
 	
@@ -163,15 +189,19 @@ var LOCSTO = LOCSTO || {
 	 * generic methods
 	 */
 	
-	set : function(iKey, iValue) {
+	set : function(iKey, iValue) 
+	{
+		"use strict";
 		try 
 		{
 			LOCSTO.remove(iKey);
 			window.localStorage.setItem(iKey, JSON.stringify(iValue));
-		} catch (e) {}
+		} catch (ignore) {}
 	},
 	
-	get : function(iKey) {
+	get : function(iKey) 
+	{
+		"use strict";
 		var aLocalValue = window.localStorage.getItem(iKey);
 		try {
 			return JSON.parse(aLocalValue);
@@ -180,11 +210,15 @@ var LOCSTO = LOCSTO || {
 		}
 	},
 	
-	remove : function(iKey) {
+	remove : function(iKey) 
+	{
+		"use strict";
 		return window.localStorage.removeItem(iKey);
 	},
 	
-	clear : function() {
+	clear : function() 
+	{
+		"use strict";
 		window.localStorage.clear();
 	}
 };
