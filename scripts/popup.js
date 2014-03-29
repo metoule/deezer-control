@@ -135,7 +135,7 @@ function jQueryExtension()
 	$.fn.extend({
 		visibilityToggle: function(showOrHide)
 		{
-		    return this.css('visibility', showOrHide === true ? 'visible' : 'hidden');
+			return this.css('visibility', showOrHide === true ? 'visible' : 'hidden');
 		}
 	});
 }

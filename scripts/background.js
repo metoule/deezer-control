@@ -336,8 +336,8 @@ function showNotif()
 		}
 		
 		// force a full redisplay of the notifs
-		var forceRedisplay =     LOCSTO.notifications.visible /* on_song_change*/ 
-						     || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey);
+		var forceRedisplay =	 LOCSTO.notifications.visible /* on_song_change*/ 
+							 || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey);
 		
 		// if we don't have permission to display notifications, close notif if present
 		chrome.permissions.contains({ permissions: ['notifications'] }, function(iPermissionGranted)

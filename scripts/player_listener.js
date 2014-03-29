@@ -40,7 +40,7 @@ function sendJsonPlayerInfo()
 			else
 				aDzAttributes[aAllAttributes[i].name] = '';
 		}
-    }
+	}
 	
 	// send the results to background.html
 	chrome.runtime.sendMessage({ type: "now_playing_updated", nowPlayingData: aDzAttributes });
@@ -75,7 +75,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 			
 			executeDoAction(request.action);
 			break;
-    }
+	}
 	
 	// no callback is used, return false
 	return false;
