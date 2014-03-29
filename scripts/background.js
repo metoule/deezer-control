@@ -10,7 +10,7 @@ $(window).load(setUpPopup);
 chrome.runtime.onInstalled.addListener(function(details)
 {
 	// inject content script on Deezer tab
-	if (details.reason == "install" || details.reason == "update")
+	if (details.reason === "install" || details.reason === "update")
 	{
 		findDeezerTab(function(iDeezerTabId)
 		{
@@ -31,6 +31,12 @@ chrome.runtime.onInstalled.addListener(function(details)
 				extensionOnMessageListener({ type: 'injectHotKeysJsOnAllTabs' });
 		});
 	}
+	
+	// update local storage if needed
+	if (details.reason === "update")
+	{
+		LOCSTO.updateModel();
+	}
 });
 
 // if no popup is set, it means that we should open a new Deezer tab
@@ -38,13 +44,15 @@ chrome.browserAction.onClicked.addListener(browserActionOnClickListener);
 function browserActionOnClickListener(iTab) 
 {
 	// extension has just been updated, a click will open the option page
-	if (LOCSTO.shouldWeShowNewItems())
+	if (LOCSTO.newOptionsToShow)
 	{
 		chrome.tabs.create({ url: '/options.html' });
 		
 		// user has seen what's new, restore normal use case
+		LOCSTO.newOptionsToShow = false;
+		LOCSTO.saveNewOptionsToShow();
+		
 		chrome.browserAction.setBadgeText({ text: "" });
-		LOCSTO.saveInstalledVersion();
 		setUpPopup();
 		
 		updateButtonTooltip();
@@ -166,7 +174,7 @@ function findDeezerTab(iCallback, iIgnoreTabId)
 function setUpPopup()
 {
 	// extension has just been updated, show new items
-	if (LOCSTO.shouldWeShowNewItems())
+	if (LOCSTO.newOptionsToShow)
 	{
 		chrome.browserAction.setBadgeBackgroundColor({ color: "#FF0000" });
 		chrome.browserAction.setBadgeText({ text: chrome.app.getDetails().version });
@@ -205,7 +213,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		gNowPlayingData = request.nowPlayingData;
 
 		// update the button's tooltip only if no update should be shown
-		if (!LOCSTO.shouldWeShowNewItems())
+		if (!LOCSTO.newOptionsToShow)
 			updateButtonTooltip();
 		
 		propagatePlayingDataToAllTabs();
@@ -336,7 +344,7 @@ function showNotif()
 		}
 		
 		// force a full redisplay of the notifs
-		var forceRedisplay =	 LOCSTO.notifications.visible /* on_song_change*/ 
+		var forceRedisplay =	 LOCSTO.notifications.onSongChange 
 							 || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey);
 		
 		// if we don't have permission to display notifications, close notif if present

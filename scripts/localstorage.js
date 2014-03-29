@@ -27,7 +27,42 @@ var COVER_SIZES = { large: '250x250', small: '120x120', sideways: '80x80', line:
 var COVER_SIZE = COVER_SIZES.large;
 var COVER_SIZE_NOTIFS = COVER_SIZES.sideways;
 
+//------------------------------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------------------------------
+function Version(strVersion)
+{
+	var regexS = "(\\d+)(\\.(\\d+))?(\\.(\\d+))?",
+	    regex = new RegExp(regexS),
+	    results = regex.exec(strVersion);
+	
+	// if no match, default to version 0.0.0
+	if (results === null)
+		results = regex.exec("0.0.0");
 
+	this.major = parseInt(results[1] || 0);
+	this.minor = parseInt(results[3] || 0);
+	this.rev   = parseInt(results[5] || 0);
+}
+
+Version.prototype.toString = function() { return this.major + "." + this.minor + "." + this.rev; }
+
+// returns -1 if this < otherVersion, 0 if this == otherVersion, and +1 if otherVersion < this
+Version.prototype.compare = function(otherVersion)
+{
+	if (this.major !== otherVersion.major)
+		return this.major - otherVersion.major;
+
+	if (this.minor !== otherVersion.minor)
+		return this.minor - otherVersion.minor;
+	
+	return this.rev - otherVersion.rev;
+}
+
+
+//------------------------------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------------------------------
 var LOCSTO = LOCSTO || {
 	
 	/*
@@ -38,10 +73,7 @@ var LOCSTO = LOCSTO || {
 		this.popupStyle = this.get('popup_style') || 'large';
 		
 		// notifications
-		// they changed from the beginning, so: 
-		//   - visible = on_song_change
-		//   - alwaysOn = never_hides
-		this.notifications = FillDictWithDefaults(this.get('notifications'), { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
+		this.notifications = FillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
 		
 		// hot keys
 				this.prevHotKey =		 FillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
@@ -53,20 +85,45 @@ var LOCSTO = LOCSTO || {
 	   // misc options
 	   this.miscOptions = FillDictWithDefaults(this.get('miscOptions'), { limitDeezerToOneTab: true });
 	   
+	   // new options to show the user
+	   this.newOptionsToShow = this.get('newOptionsToShow') || false;
+	   
 	   // set global variables
 	   COVER_SIZE = COVER_SIZES[this.popupStyle];
 	   COVER_SIZE_NOTIFS = COVER_SIZES[this.notifications.style];
 	},
 	
-	/*
-	 * are we in an update scenario?
-	 */
-	shouldWeShowNewItems: function()
+	updateModel: function()
 	{
-		this.installedVersion = this.get('installedVersion') || "0.0.0";
-		var aExtensionVersion = chrome.app.getDetails().version;
+		var installedVersion = new Version(this.get('installedVersion')), 
+			extensionVersion = new Version(chrome.app.getDetails().version);
 		
-		return this.installedVersion == "0.0.0";
+		// new in version 1.9
+		//  * keyCode for hotkeys are integers rather than strings
+		//  * renamed notifications keys
+		if (installedVersion.compare(new Version("1.9")) < 0)
+		{
+			this.prevHotKey.keyCode 		= parseInt(this.prevHotKey.keyCode);
+			this.playPauseHotKey.keyCode 	= parseInt(this.playPauseHotKey.keyCode);
+			this.nextHotKey.keyCode 		= parseInt(this.nextHotKey.keyCode);
+			this.whatZatSongHotKey.keyCode 	= parseInt(this.whatZatSongHotKey.keyCode);
+			this.jumpToDeezerHotKey.keyCode = parseInt(this.jumpToDeezerHotKey.keyCode);
+			this.saveHotKeys();
+			
+			this.notifications = FillDictWithDefaults(this.get('notifications'), { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
+			this.notifications.onSongChange = this.notifications.visible;
+			this.notifications.neverHides = this.notifications.alwaysOn;
+			delete this.notifications.visible;
+			delete this.notifications.alwaysOn;
+			this.saveNotifications();
+			
+			// new options to show in 1.9
+			this.newOptionsToShow = true;
+			this.saveNewOptionsToShow();
+		}
+		
+		// model update finished, store newly installed version
+		this.set('installedVersion', extensionVersion.toString());
 	},
 	
 	/*
@@ -97,9 +154,9 @@ var LOCSTO = LOCSTO || {
 		this.set('miscOptions', this.miscOptions);
 	}, 
 	
-	saveInstalledVersion: function()
+	saveNewOptionsToShow: function()
 	{
-		this.set('installedVersion', chrome.app.getDetails().version);
+		this.set('newOptionsToShow', this.newOptionsToShow);
 	}, 
 	
 	/*

@@ -3,8 +3,7 @@
 function eventMatchHotKey(e, iHotKey)
 {
 	"use strict";
-	// TODO use === for key code (requires to update the saved preferences: e.keyCode is an integer, iHotKey.keyCode is a string)
-	return e.shiftKey === iHotKey.shiftKey && e.altKey === iHotKey.altKey && e.ctrlKey === iHotKey.ctrlKey && e.keyCode == iHotKey.keyCode;
+	return e.shiftKey === iHotKey.shiftKey && e.altKey === iHotKey.altKey && e.ctrlKey === iHotKey.ctrlKey && e.keyCode === iHotKey.keyCode;
 }
 
 function keyboardNavigation(e) 
