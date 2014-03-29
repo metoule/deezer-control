@@ -20,7 +20,7 @@
 }
 
 #controls a:hover { opacity: 1; }
-#control-settings { background: url(/imgs/small/settings.png);	width: 10px; }
+#control-settings { background: url(/imgs/small/settings.png);	width: 10px; margin-left: 5px; }
 #control-prev	  { background: url(/imgs/small/prev.png);		width: 15px; }
 #control-next	  { background: url(/imgs/small/next.png);		width: 15px; }
 #control-pause	  { background: url(/imgs/small/pause.png);		width: 10px; }
