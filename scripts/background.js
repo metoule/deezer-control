@@ -372,15 +372,15 @@ function propagatePlayingDataToAllTabs()
 		// load notification size image if needed
 		if (!LOCSTO.notifications.never)
 		{
-			document.getElementById('prev_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg";
-			document.getElementById('cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg";
-			document.getElementById('next_cover_small').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg";
+			$('#prev_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
+			$('#cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
+			$('#next_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
 		}
 		
 		// load full image (might be the same size)
-		document.getElementById('prev_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
-		document.getElementById('cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
-		document.getElementById('next_cover').src = "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg";
+		$('#prev_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+		$('#cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+		$('#next_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
 	}
 }
 function refreshPopupOnWindow(win) { win.refreshPopup(); }

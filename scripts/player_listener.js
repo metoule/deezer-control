@@ -1,17 +1,17 @@
  
 
 // create an invisible fake div
-if (document.getElementById('myPlayerInfo') == null)
+if (document.getElementById('DeezerControlData') == null)
 {
-	var aMyPlayerInfoDom = document.createElement('div');
-	aMyPlayerInfoDom.id = "myPlayerInfo";
-	aMyPlayerInfoDom.style.display = 'none';
+	var aDeezerControlDataDom = document.createElement('div');
+	aDeezerControlDataDom.id = "DeezerControlData";
+	aDeezerControlDataDom.style.display = 'none';
 	
 	// create a child to monitor and help force the info update
 	var aLastUpdateDom = document.createElement('div');
 	aLastUpdateDom.id = "lastUpdate";
-	aMyPlayerInfoDom.appendChild(aLastUpdateDom);
-	document.body.appendChild(aMyPlayerInfoDom);
+	aDeezerControlDataDom.appendChild(aLastUpdateDom);
+	document.body.appendChild(aDeezerControlDataDom);
 	
 	// inject a new JS script that can interact with the JS objects of the page
 	var s = document.createElement('script');
@@ -29,11 +29,11 @@ if (document.getElementById('myPlayerInfo') == null)
 function sendJsonPlayerInfo()
 {	
 	// filter attributes to only keep those we want
-	var aAllAttributes = document.getElementById('myPlayerInfo').attributes; 
+	var aAllAttributes = document.getElementById('DeezerControlData').attributes; 
 	var aDzAttributes = {}; 
 	for (i = 0 ; i < aAllAttributes.length; i++) 
 	{
-		if (aAllAttributes[i].name.substring(0, 3) == "dz_")
+		if (aAllAttributes[i].name.substring(0, 3) === "dz_")
 		{
 			if (typeof aAllAttributes[i].value !== 'undefined')
 				aDzAttributes[aAllAttributes[i].name] = aAllAttributes[i].value;
@@ -55,10 +55,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 			// in case of media keys, we don't know if it's pause or play
 			// compute !
 			var aAction = request.action;
-			if (aAction == 'playpause')
+			if (aAction === 'playpause')
 			{
-				var aDzPlaying = document.getElementById('myPlayerInfo').getAttribute('dz_playing');
-				aAction = aDzPlaying == "true" ? "pause" : "play";
+				var aDzPlaying = document.getElementById('DeezerControlData').getAttribute('dz_playing');
+				aAction = aDzPlaying === "true" ? "pause" : "play";
 			}
 						
 			executeDoAction(aAction);
@@ -67,9 +67,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 			
 		case "doAction":			
 			// special action linkCurrentArtist (doesn't exist on Deezer)
-			if (request.action == 'linkCurrentArtist')
+			if (request.action === 'linkCurrentArtist')
 			{
-				location.href = "javascript: loadBox('artist/" + document.getElementById('myPlayerInfo').getAttribute('dz_artist_id') + "')";
+				location.href = "javascript: loadBox('artist/" + document.getElementById('DeezerControlData').getAttribute('dz_artist_id') + "')";
 				break;
 			}		
 			
