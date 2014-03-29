@@ -26,7 +26,6 @@
 #control-next	  { background: url(/imgs/large/next.png);		width: 24px; }
 #control-pause	  { background: url(/imgs/large/pause.png);		width: 16px; }
 #control-play	  { background: url(/imgs/large/play.png);		width: 16px; }
-#control-play	  { background: url(/imgs/small/play.png);		width: 10px; }
 
 #now_playing { height: 80px; }
 #now_playing_info

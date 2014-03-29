@@ -11,7 +11,7 @@
 {
 	height: 28px;
 	line-height: 28px;
-	padding-right: 3px;
+	padding: 0px 3px;
 }
 
 #controls a 
@@ -21,7 +21,7 @@
 }
 
 #controls a:hover { opacity: 1; }
-#control-settings { background: url(/imgs/large/settings.png);	width: 16px; }
+#control-settings { background: url(/imgs/large/settings.png);	width: 16px; margin-left: 6px; }
 #control-prev	  { background: url(/imgs/large/prev.png);	 	width: 24px; }
 #control-next	  { background: url(/imgs/large/next.png);	 	width: 24px; }
 #control-pause	  { background: url(/imgs/large/pause.png);		width: 16px; }
