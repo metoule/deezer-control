@@ -1,9 +1,10 @@
 
-window.addEventListener('hashchange', function(e) { showSection(location.hash.replace(/^\#/,'')); });
-window.addEventListener('load', function(e) { preparePage(); });
+window.addEventListener('hashchange', function(/*e*/) { "use strict"; showSection(location.hash.replace(/^\#/,'')); });
+window.addEventListener('load', preparePage);
 
 function preparePage()
 {
+	"use strict";
 	i18n.process(document);
 	
 	preparePage_welcome();
@@ -18,12 +19,13 @@ function preparePage()
 
 function preparePage_welcome()
 {
+	"use strict";
 	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
 
 	// set two buttons to the same size for better look and feel
 	// note: if the buttons are not visible, the width is 0; use default widths in that case
 	var aWidth = Math.max($("#button_rate_extension").width(), $("#button_donate").width());
-	if (aWidth != 0)
+	if (aWidth !== 0)
 	{
 		$("#button_rate_extension").width(aWidth);
 		$("#button_donate").width(aWidth);
@@ -33,9 +35,11 @@ function preparePage_welcome()
 
 function preparePage_style()
 {
+	"use strict";
+	
 	// create interactivity
 	$("#popup_style_chooser").change(function () { loadStyle($("#popup_style_chooser").val()); });
-	$("#button_save_style").click(function () { savePopupStyle(); });
+	$("#button_save_style").click(savePopupStyle);
 
 	// restore value 
 	$("#popup_style_chooser").val(LOCSTO.popupStyle);
@@ -44,9 +48,11 @@ function preparePage_style()
 
 function preparePage_hotKeys()
 {
+	"use strict";
+	
 	// create interactivity
-	$("#button_activate_hotkeys").click(function () { activateHotKeys(); });
-	$("#button_save_hotkeys").click(function () { saveHotKeys(); });
+	$("#button_activate_hotkeys").click(activateHotKeys);
+	$("#button_save_hotkeys").click(saveHotKeys);
 
 	// hot keys are activated only if we have permission on all tabs
 	// if we don't permission, show an explanation
@@ -56,32 +62,48 @@ function preparePage_hotKeys()
 
 function preparePage_notifs()
 {
-	if (typeof webkitNotifications.createHTMLNotification === "undefined")
+	"use strict";
+	
+	if (webkitNotifications.createHTMLNotification === undefined)
+	{
 		preparePage_notifsNew();
+	}
 	else
+	{
 		preparePage_notifsOld();
+	}
 }
 
 
 function preparePage_notifsOld()
 {
+	"use strict";
+	
 	$('#notifications_old').attr('id', 'notifications');
 
 	// create interactivity
-	$('input:radio[name="notifs_show_when_old"]').change(function () { refreshNotifsOptions_old(); });
-	$("#notifs_fade_away_delay").change(function () { refreshNotifsOptions_old(); });
-	$("#notifs_style").change(function () { refreshNotifsOptions_old(); });
-	$("#button_save_notifications_old").click(function () { saveNotifications_old(); });
+	$('input:radio[name="notifs_show_when_old"]').change(refreshNotifsOptions_old);
+	$("#notifs_fade_away_delay").change(refreshNotifsOptions_old);
+	$("#notifs_style").change(refreshNotifsOptions_old);
+	$("#button_save_notifications_old").click(saveNotifications_old);
 
 	// restore value 
 	if (LOCSTO.notifications.neverHides)
+	{
 		$('input:radio[name="notifs_show_when_old"]').filter('[value="never_hides"]').prop('checked', true);
+	}
 	else if (LOCSTO.notifications.onSongChange)
+	{
 		$('input:radio[name="notifs_show_when_old"]').filter('[value="on_song_change"]').prop('checked', true);
+	}
 	else if (LOCSTO.notifications.onHotKeyOnly)
+	{
 		$('input:radio[name="notifs_show_when_old"]').filter('[value="on_hotkey_only"]').prop('checked', true);
+	}
 	else
+	{
 		$('input:radio[name="notifs_show_when_old"]').filter('[value="never"]').prop('checked', true);
+	}
 
 	$('#notifs_fade_away_delay').val(LOCSTO.notifications.fadeAwayDelay / 1000);
 	$("#notifs_style_chooser").val(LOCSTO.notifications.style);
@@ -92,28 +114,46 @@ function preparePage_notifsOld()
 
 function preparePage_notifsNew()
 {
+	"use strict";
+	
 	$('#notifications_new').attr('id', 'notifications');
 
 	// create interactivity
-	$("#button_save_notifications").click(function () { saveNotifications(); });
+	$("#button_save_notifications").click(saveNotifications);
 
 	// restore value 
 	if (LOCSTO.notifications.neverHides)
+	{
 		$('input:radio[name="notifs_show_when"]').filter('[value="never_hides"]').prop('checked', true);
+	}
 	else if (LOCSTO.notifications.onSongChange)
+	{
 		$('input:radio[name="notifs_show_when"]').filter('[value="on_song_change"]').prop('checked', true);
+	}
 	else if (LOCSTO.notifications.onHotKeyOnly)
+	{
 		$('input:radio[name="notifs_show_when"]').filter('[value="on_hotkey_only"]').prop('checked', true);
+	}
 	else
+	{
 		$('input:radio[name="notifs_show_when"]').filter('[value="never"]').prop('checked', true);
+	}
 }
 
 
 function preparePage_misc()
 {
+	"use strict";
+	
 	// create interactivity
-	$('#miscLimitDeezerToOneTab > .yes_no_bar').children('button').click(function() { if (!$(this).hasClass('two_state_selected')) $(this).parent().children('button').toggleClass('two_state_selected two_state_unselected'); });
-	$("#button_save_misc").click(function () { saveMiscOptions(); });
+	$('#miscLimitDeezerToOneTab > .yes_no_bar').children('button').click(function() 
+	{
+		if (!$(this).hasClass('two_state_selected')) 
+		{
+			$(this).parent().children('button').toggleClass('two_state_selected two_state_unselected');
+		}
+	});
+	$("#button_save_misc").click(saveMiscOptions);
 
 	// restore value 
 	refreshMiscOptions();
@@ -122,19 +162,29 @@ function preparePage_misc()
 
 function refreshNotifsOptions_old()
 {
+	"use strict";
+	
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when_old"]:checked').val();
 
 	// show slider for notifs duration?
-	if (aNotifsShowWhen == 'on_hotkey_only' || aNotifsShowWhen == 'on_song_change')
+	if (aNotifsShowWhen === 'on_hotkey_only' || aNotifsShowWhen === 'on_song_change')
+	{
 		$('#notifs_fade_away_delay').parent().css('display', 'block');
+	}
 	else
+	{
 		$('#notifs_fade_away_delay').parent().css('display', 'none');
+	}
 	
 	// show style chooser?
-	if (aNotifsShowWhen != 'never')
+	if (aNotifsShowWhen !== 'never')
+	{
 		$('#notifs_style').css('display', 'block');
+	}
 	else
+	{
 		$('#notifs_style').css('display', 'none');
+	}
 
 	$('#notifs_fade_away_delay_display').text($('#notifs_fade_away_delay').val());
 	loadStyle($("#notifs_style_chooser").val());
@@ -143,6 +193,8 @@ function refreshNotifsOptions_old()
 
 function refreshHotKeysOptions()
 {
+	"use strict";
+	
 	chrome.permissions.contains(
 	{ origins: ['<all_urls>'] },
 	function(result)
@@ -169,6 +221,8 @@ function refreshHotKeysOptions()
 
 function restoreHotkey(iHotKeyName)
 {
+	"use strict";
+	
 	var aHotKeySelect = $("#" + iHotKeyName);
 
 	// on click, all button are selected
@@ -193,7 +247,7 @@ function restoreHotkey(iHotKeyName)
 		}
 		else
 		{
-			$(this).parent().children('button:eq(3)').text(convertKeyCode(event.keyCode, $(this).val()));
+			$(this).parent().children('button:eq(3)').text(convertKeyCode(event.keyCode));
 			$(this).next().val(event.keyCode); // input:eq(1)
 		}
 
@@ -222,6 +276,8 @@ function restoreHotkey(iHotKeyName)
 
 function refreshMiscOptions()
 {
+	"use strict";
+	
 	// limit deezer to one tab
 	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').toggleClass('two_state_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
 	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(1)').toggleClass('two_state_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
@@ -231,17 +287,20 @@ function refreshMiscOptions()
 // Saves options to localStorage.
 function savePopupStyle()
 {
+	"use strict";
+	
 	LOCSTO.popupStyle = $("#popup_style_chooser").val();
 	LOCSTO.savePopupStyle();
 
 	// Update status to let user know options were saved.
-	$("#status_style").text(chrome.i18n.getMessage("options_page_options_saved"));
-	setTimeout(function() { $("#status_style").text(""); }, 750);
+	$("#status_style").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
 }
 
 
 function saveHotKeys()
 {
+	"use strict";
+	
 	storeHotKey('prevHotKey');
 	storeHotKey('playPauseHotKey');
 	storeHotKey('nextHotKey');
@@ -250,46 +309,52 @@ function saveHotKeys()
 	LOCSTO.saveHotKeys();
 
 	// Update status to let user know options were saved.
-	$("#status_hotkeys").text(chrome.i18n.getMessage("options_page_options_saved"));
-	setTimeout(function() { $("#status_hotkeys").text(""); }, 750);
+	$("#status_hotkeys").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
 }
 
 
 function storeHotKey(iHotKeyName)
 {
+	"use strict";
+	
 	var aHotKeyDiv = $("#" + iHotKeyName);
-
 	LOCSTO[iHotKeyName].shiftKey = aHotKeyDiv.children('button:eq(0)').hasClass('two_state_selected');
 	LOCSTO[iHotKeyName].ctrlKey  = aHotKeyDiv.children('button:eq(1)').hasClass('two_state_selected');
 	LOCSTO[iHotKeyName].altKey   = aHotKeyDiv.children('button:eq(2)').hasClass('two_state_selected');
-	LOCSTO[iHotKeyName].keyCode  = aHotKeyDiv.children('input:eq(1)').val();
+	LOCSTO[iHotKeyName].keyCode  = parseInt(aHotKeyDiv.children('input:eq(1)').val(), 10);
 }
 
 
 function saveNotifications_old()
 {
-	var aNotifsShowWhen = $('input:radio[name="notifs_show_when_old"]:checked').val();
-	var aNotifsDelay = $('#notifs_fade_away_delay').val() * 1000;
-	var aNotifsStyle = $("#notifs_style_chooser").val();
+	"use strict";
+	
+	var aNotifsShowWhen = $('input:radio[name="notifs_show_when_old"]:checked').val(), 
+		aNotifsDelay = $('#notifs_fade_away_delay').val() * 1000, 
+		aNotifsStyle = $("#notifs_style_chooser").val();
 
 	// the key names are due to the old notifications system
-	if (aNotifsShowWhen == 'never')
+	if (aNotifsShowWhen === 'never')
+	{
 		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
-	else if (aNotifsShowWhen == 'never_hides')
+	}
+	else if (aNotifsShowWhen === 'never_hides')
+	{
 		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
-	else if (aNotifsShowWhen == 'on_song_change')
+	}
+	else if (aNotifsShowWhen === 'on_song_change')
+	{
 		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
-	else if (aNotifsShowWhen == 'on_hotkey_only')
+	}
+	else if (aNotifsShowWhen === 'on_hotkey_only')
+	{
 		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
+	}
+	
 	LOCSTO.saveNotifications();
 
-	// Update status_style to let user know options were saved.
-	$("#status_notifs_old").text(chrome.i18n.getMessage("options_page_options_saved"));
-	setTimeout(function() { $("#status_notifs_old").text(""); }, 750);
+	// Update status_style to let user know options were saved
+	$("#status_notifs_old").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
 
 	// reshow notifs so that the user sees the change straight away
 	chrome.runtime.sendMessage({ type: "showNotif", source: "options" });
@@ -298,30 +363,34 @@ function saveNotifications_old()
 
 function saveNotifications()
 {
-	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
-
-	// keep old values
-	var aNotifsDelay = LOCSTO.notifications.fadeAwayDelay;
-	var aNotifsStyle = LOCSTO.notifications.style;
+	"use strict";
+	
+	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val(), 
+		aNotifsDelay = LOCSTO.notifications.fadeAwayDelay, 
+		aNotifsStyle = LOCSTO.notifications.style;
 	
 	// the key names are due to the old notifications system
-	if (aNotifsShowWhen == 'never')
+	if (aNotifsShowWhen === 'never')
+	{
 		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
-	else if (aNotifsShowWhen == 'never_hides')
+	}
+	else if (aNotifsShowWhen === 'never_hides')
+	{
 		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
-	else if (aNotifsShowWhen == 'on_song_change')
+	}
+	else if (aNotifsShowWhen === 'on_song_change')
+	{
 		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
-	else if (aNotifsShowWhen == 'on_hotkey_only')
+	}
+	else if (aNotifsShowWhen === 'on_hotkey_only')
+	{
 		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-
+	}
+	
 	LOCSTO.saveNotifications();
 
 	// Update status_style to let user know options were saved.
-	$("#status_notifs").text(chrome.i18n.getMessage("options_page_options_saved"));
-	setTimeout(function() { $("#status_notifs").text(""); }, 750);
+	$("#status_notifs").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
 
 	// reshow notifs so that the user sees the change straight away
 	chrome.runtime.sendMessage({ type: "showNotif", source: "options" });
@@ -330,21 +399,22 @@ function saveNotifications()
 
 function saveMiscOptions()
 {
+	"use strict";
+	
 	// limit deezer to one tab
 	LOCSTO.miscOptions.limitDeezerToOneTab = $("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').hasClass('two_state_selected');
-
 	LOCSTO.saveMiscOptions();
 
 	// Update status to let user know options were saved.
-	$("#status_misc").text(chrome.i18n.getMessage("options_page_options_saved"));
-	setTimeout(function() { $("#status_misc").text(""); }, 750);
+	$("#status_misc").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
 }
 
 
 // deal with chrome permissions
 function activateHotKeys()
 {
-	chrome.permissions.request({ origins: [ '<all_urls>' ] }, function(granted)
+	"use strict";
+	chrome.permissions.request({ origins: [ '<all_urls>' ] }, function(/*granted*/)
 	{
 		refreshHotKeysOptions();
 		chrome.runtime.sendMessage({ type: "injectHotKeysJsOnAllTabs" }); 
@@ -355,23 +425,30 @@ function activateHotKeys()
 // navigation bar
 function resetSections()
 {
+	"use strict";
+	
 	$('#tab_chooser > nav > a:first').addClass('currentone');
 	$('#center_block > section:first').css('display', 'block');
 	if(location.hash)
+	{
 		showSection(location.hash.replace(/^\#/, ''));
+	}
 }
 
 
 function showSection(id)
 {
+	"use strict";
+	var aNewLeft;
+	
 	// since we use ids to fill the popup content, we can't have several previews in the same page;
 	// move it to the needed place when needed!
-	if (id == 'popup_style')
+	if (id === 'popup_style')
 	{
 		loadStyle($("#popup_style_chooser").val());
 		$('#preview_inner_border').append($('#preview_content'));
 	}
-	else if (id == 'notifications')
+	else if (id === 'notifications')
 	{
 		loadStyle($("#notifs_style_chooser").val());
 		$('#preview_notifs').append($('#preview_content'));
@@ -382,13 +459,14 @@ function showSection(id)
 	$('#' + id).css('display', 'block');
 	$('#' + id + '_nav').addClass('currentone');
 
-	var aNewLeft = $('#' + id + '_nav').position().left - $('#tab_chooser > nav > a:first').position().left + 73;
+	aNewLeft = $('#' + id + '_nav').position().left - $('#tab_chooser > nav > a:first').position().left + 73;
 	$('#arrow_line > img').css('left', aNewLeft + 'px');
 }
 
 
-function convertKeyCode(iKeyCode, iPrintedValue)
+function convertKeyCode(iKeyCode)
 {
+	"use strict";
 	var aMapKeyToText = {
 		   8: "keycode_text_backspace",
 		   9: "keycode_text_tab",
@@ -461,7 +539,9 @@ function convertKeyCode(iKeyCode, iPrintedValue)
 	};
 	
 	if (aMapKeyToText.hasOwnProperty(iKeyCode))
+	{
 		return chrome.i18n.getMessage(aMapKeyToText[iKeyCode]);
+	}
 	
 	return String.fromCharCode(iKeyCode);
 }
