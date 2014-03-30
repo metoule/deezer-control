@@ -1,82 +1,4 @@
 
-var OLD_NOTIFS = OLD_NOTIFS || 
-{
-	htmlNotification: null, 
-	timeoutId: null, 
-	mouseOverNotif: false, 
-	
-	createNotif: function(/*forceRedisplay*/)
-	{
-		"use strict";
-		
-		// if notif not already visible, create it
-		if (this.htmlNotification === null)
-		{
-			this.htmlNotification = webkitNotifications.createHTMLNotification("/popup.html?style=" + LOCSTO.notifications.style + "&notif=on");
-			this.htmlNotification.show();
-		} 
-		// else, we already have a notif opened
-		else 
-		{
-			// refresh content
-			chrome.extension.getViews({ type: "notification" }).forEach(function(win) { win.refreshPopup(); });	
-			this.resetNotifTimeout(); // remove existing timeout
-		}
-
-		// hide notification after the wanted delay
-		this.startNotifTimeout();
-	}, 
-	
-	destroyNotif: function()
-	{
-		"use strict";
-		if (this.htmlNotification !== null) 
-		{
-			this.htmlNotification.cancel();
-		}
-		
-		this.htmlNotification = null; 
-		this.timeoutId = null;
-	}, 
-	
-	resetNotifTimeout: function()
-	{
-		"use strict";
-		if (this.timeoutId !== null)
-		{
-			window.clearTimeout(this.timeoutId);
-			this.timeoutId = null;
-		}
-	}, 
-	
-	startNotifTimeout: function()
-	{
-		"use strict";
-		
-		// hide notification after the wanted delay
-		if (!this.mouseOverNotif && !LOCSTO.notifications.neverHides)
-		{
-			var me = this;
-			this.timeoutId = window.setTimeout(function() { me.destroyNotif(); }, LOCSTO.notifications.fadeAwayDelay);
-		}
-	}, 
-	
-	onMouseOverNotif: function()
-	{
-		"use strict";
-		this.mouseOverNotif = true;
-		this.resetNotifTimeout();
-	}, 
-	
-	onMouseOutNotif: function()
-	{
-		"use strict";
-		this.mouseOverNotif = false; 
-		this.startNotifTimeout();
-	}
-	
-};
-
 var NEW_NOTIFS = NEW_NOTIFS || {
 		
 	currentData: null,
@@ -180,12 +102,7 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 };
 
 var NOTIFS = null;
-
-if (webkitNotifications.createHTMLNotification !== undefined)
-{
-	NOTIFS = OLD_NOTIFS;
-}
-else if (chrome.notifications !== undefined)
+if (chrome.notifications !== undefined)
 {
 	NOTIFS = NEW_NOTIFS;
 	chrome.notifications.onClosed.addListener(function(notificationId/*, byUser*/)
