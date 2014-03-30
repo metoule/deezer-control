@@ -1,6 +1,7 @@
 
 var gNowPlayingData = null;
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
+var gActionOnNotifButton = false; // this boolean will be used to show the notifs on notifs button click
 var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 }; // remember active tab on which jump to Deezer was called
 
 // actions to perform when the extension is loaded
@@ -250,11 +251,13 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		
 		// reset the fact that action is on media key event
 		gActionOnHotKey = false;
+		gActionOnNotifButton = false;
 		
 		break;
 
 	case "controlPlayer":
 		gActionOnHotKey = request.source === 'hotkey';
+		gActionOnNotifButton = request.source === 'notif';
 		
 		// send the wanted action to the deezer tab
 		findDeezerTab(function(iDeezerTabId) 
@@ -274,15 +277,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		break;
 		
 	case "showNotif":
-		gActionOnHotKey = request.source === 'hotkey' || request.source === 'options';
-		
-		// force notif refresh
-		NOTIFS.destroyNotif();
-		showNotif();
-		
-		// reset the fact that action is on media key event
-		gActionOnHotKey = false;
-		
+		showNotif(true);
 		break;
 		
 	case "jumpToDeezer":
@@ -358,7 +353,7 @@ function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId)
 	chrome.tabs.update(iDeezerTabId, { selected: true });
 }
 
-function showNotif()
+function showNotif(iForceRedisplay)
 {
 	"use strict";
 	
@@ -380,7 +375,9 @@ function showNotif()
 		
 		// force a full redisplay of the notifs
 		var forceRedisplay =	 LOCSTO.notifications.onSongChange 
-							 || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey);
+							 || (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey)
+							 ||  gActionOnNotifButton
+							 ||  iForceRedisplay === true;
 		
 		// if we don't have permission to display notifications, close notif if present
 		chrome.permissions.contains({ permissions: ['notifications'] }, function(iPermissionGranted)
@@ -448,5 +445,5 @@ function refreshPopupOnWindow(win)
 function matchDeezerUrl(iUrl)
 {
 	"use strict";
-	return new RegExp("^http(s)?://(www.)?deezer.com","gi").test(iUrl);
+	return new RegExp("^http[s]?:\/\/.*deezer\.com.*","gi").test(iUrl);
 }

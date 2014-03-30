@@ -26,15 +26,9 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 				priority: 0
 		};
 		
-		
-		// don't update notification if same data
 		newData = JSON.stringify(content);
-		if (newData === this.currentData)
-		{
-			return;	
-		}
 
-		if (forceRedisplay)
+		if (forceRedisplay === true)
 		{
 			this.destroyNotif(function(me) 
 			{
@@ -44,6 +38,12 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 		}
 		else
 		{
+			// don't update notification if same data
+			if (newData === this.currentData)
+			{
+				return;	
+			}
+			
 			this.currentData = newData;
 			chrome.notifications.create('deezer_control', content, function(/*notifId*/) {/*NOP*/});
 		}
@@ -68,29 +68,23 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 	{
 		"use strict";
 		
-		// workaround for https://code.google.com/p/chromium/issues/detail?id=246637
 		var notifButton = JSON.parse(this.currentData).buttons[buttonIndex];
-		this.destroyNotif(function(me) 
+		if (notifButton.title === this.buttonPrev.title)
 		{
-			// we use source as hotkey to ensure that when we're on mode 'on hot keys only', 
-			// the notif doesn't disappear on click
-			if (notifButton.title === me.buttonPrev.title)
-			{
-				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "hotkey" });
-			}
-			else if (notifButton.title === me.buttonPlay.title)
-			{
-				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'play', source: "hotkey" });
-			}
-			else if (notifButton.title === me.buttonPause.title)
-			{
-				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'pause', source: "hotkey" });
-			}
-			else if (notifButton.title === me.buttonNext.title)
-			{
-				chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "hotkey" });
-			}
-		});
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "notif" });
+		}
+		else if (notifButton.title === this.buttonPlay.title)
+		{
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'play', source: "notif" });
+		}
+		else if (notifButton.title === this.buttonPause.title)
+		{
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'pause', source: "notif" });
+		}
+		else if (notifButton.title === this.buttonNext.title)
+		{
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "notif" });
+		}
 	}, 
 	
 	resetCurrentData: function()
