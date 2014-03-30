@@ -269,7 +269,7 @@ function saveNotifications()
 	$("#status_notifs").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
 
 	// reshow notifs so that the user sees the change straight away
-	chrome.runtime.sendMessage({ type: "showNotif", source: "options" });
+	chrome.runtime.sendMessage({ type: "showNotif" });
 }
 
 
