@@ -93,7 +93,7 @@ var LOCSTO = LOCSTO || {
 		this.popupStyle = this.get('popup_style') || 'large';
 		
 		// notifications
-		this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
+		this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false });
 		
 		// hot keys
 				this.prevHotKey =		 fillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
@@ -110,7 +110,6 @@ var LOCSTO = LOCSTO || {
 	   
 	   // set global variables
 	   COVER_SIZE = COVER_SIZES[this.popupStyle];
-	   COVER_SIZE_NOTIFS = COVER_SIZES[this.notifications.style];
 	},
 	
 	updateModel: function()
@@ -122,6 +121,7 @@ var LOCSTO = LOCSTO || {
 		// new in version 1.9
 		//  * keyCode for hotkeys are integers rather than strings
 		//  * renamed notifications keys
+		//  * removed notifs fade away delay and notifs style (irrelevant with the new notifs)
 		if (installedVersion.compare(new Version("1.9")) < 0)
 		{
 			this.prevHotKey.keyCode 		= parseInt(this.prevHotKey.keyCode, 10);
@@ -131,11 +131,11 @@ var LOCSTO = LOCSTO || {
 			this.jumpToDeezerHotKey.keyCode = parseInt(this.jumpToDeezerHotKey.keyCode, 10);
 			this.saveHotKeys();
 			
-			this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false, fadeAwayDelay: 3000, style: 'sideways' });
-			this.notifications.onSongChange = this.notifications.visible;
+			this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false });
 			this.notifications.neverHides = this.notifications.alwaysOn;
-			delete this.notifications.visible;
+			this.notifications.onSongChange = this.notifications.visible;
 			delete this.notifications.alwaysOn;
+			delete this.notifications.visible;
 			this.saveNotifications();
 			
 			// new options to show in 1.9

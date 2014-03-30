@@ -1,27 +1,14 @@
 
-window.addEventListener('load', function(e) 
+window.addEventListener('load', function(/*e*/) 
 {
+	"use strict";
 	jQueryExtension();
 	preparePopup(); 
 });
 
-// get url parameters
-function gup(iParamName)
-{
-	// taken from http://www.netlobo.com/url_query_string_javascript.html
-	var aParamName = iParamName.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]"),  
-		regexS = "[\\?&]" + aParamName + "=([^&#]*)",
-		regex = new RegExp(regexS),
-		results = regex.exec(window.location.href);
-	
-	if (results === null)
-		return null;
-
-	return results[1];
-}
-
 function preparePopup()
 {
+	"use strict";
 	loadStyle();
 
 	// add interactivity
@@ -37,44 +24,30 @@ function preparePopup()
 	{
 		var title = '';
 		if (this.offsetWidth < this.scrollWidth)
+		{
 			title = $(this).text();
+		}
+		
 		$(this).attr('title', title);
 	});
 	
 	// reset popup
 	refreshPopup();
-	
-	// we're in a notif scenario, add mouse over and mouse out
-	if (gup('notif') === 'on')
-	{
-		window.addEventListener('mouseover', function(e) 
-				{ 
-					chrome.extension.getBackgroundPage().NOTIFS.onMouseOverNotif();
-					return true; 
-				});
-		window.addEventListener('mouseout',  function(e) 
-				{ 
-					chrome.extension.getBackgroundPage().NOTIFS.onMouseOutNotif();
-					return true; 
-				});
-	}
 }
 
 function loadStyle(iPopupStyle)
 {
-	var aPopupStyle = iPopupStyle;
-	if (aPopupStyle == null)
-		aPopupStyle = gup('style'); // grep url param (used to force a style when creating a notification in background.js)
-
-	if (aPopupStyle == null)
-		aPopupStyle = LOCSTO.popupStyle;
+	"use strict";
 	
-	if (aPopupStyle)
+	var aPopupStyle = iPopupStyle || LOCSTO.popupStyle;
+	if (aPopupStyle !== null)
 	{
 		// set the style based on the preference
 		if ($("#popup_style_css").length)
+		{
 			$("#popup_style_css").attr('href', 'css/' + aPopupStyle + '/popup.css');
-
+		}
+		
 		// on resize, we want to fetch the new cover to avoid pixelisation 
 		// on size change from small to large
 		var aOldSize = COVER_SIZE;
@@ -90,20 +63,24 @@ function loadStyle(iPopupStyle)
 
 function executePlayerAction(iCommand)
 {
+	"use strict";
 	chrome.runtime.sendMessage({ type: "controlPlayer", command: iCommand, source: "popup" });
 }
 
 // change focus to Deezer tab, and execute wanted action
 function executeDoAction(iAction)
 {
+	"use strict";
 	chrome.runtime.sendMessage({ type: "doAction", action: iAction });
 }
 
 function refreshPopup()
 {
+	"use strict";
+	
 	// get now playing info from background page
 	var aNowPlayingData = chrome.extension.getBackgroundPage().gNowPlayingData;
-	if (aNowPlayingData != null)
+	if (aNowPlayingData !== null)
 	{	
 		// show pause or play button 
 		var showPause = aNowPlayingData.dz_playing === 'true';
@@ -132,6 +109,7 @@ function refreshPopup()
 
 function jQueryExtension()
 {
+	"use strict";
 	$.fn.extend({
 		visibilityToggle: function(showOrHide)
 		{

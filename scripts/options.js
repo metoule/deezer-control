@@ -63,60 +63,6 @@ function preparePage_hotKeys()
 function preparePage_notifs()
 {
 	"use strict";
-	
-	if (webkitNotifications.createHTMLNotification === undefined)
-	{
-		preparePage_notifsNew();
-	}
-	else
-	{
-		preparePage_notifsOld();
-	}
-}
-
-
-function preparePage_notifsOld()
-{
-	"use strict";
-	
-	$('#notifications_old').attr('id', 'notifications');
-
-	// create interactivity
-	$('input:radio[name="notifs_show_when_old"]').change(refreshNotifsOptions_old);
-	$("#notifs_fade_away_delay").change(refreshNotifsOptions_old);
-	$("#notifs_style").change(refreshNotifsOptions_old);
-	$("#button_save_notifications_old").click(saveNotifications_old);
-
-	// restore value 
-	if (LOCSTO.notifications.neverHides)
-	{
-		$('input:radio[name="notifs_show_when_old"]').filter('[value="never_hides"]').prop('checked', true);
-	}
-	else if (LOCSTO.notifications.onSongChange)
-	{
-		$('input:radio[name="notifs_show_when_old"]').filter('[value="on_song_change"]').prop('checked', true);
-	}
-	else if (LOCSTO.notifications.onHotKeyOnly)
-	{
-		$('input:radio[name="notifs_show_when_old"]').filter('[value="on_hotkey_only"]').prop('checked', true);
-	}
-	else
-	{
-		$('input:radio[name="notifs_show_when_old"]').filter('[value="never"]').prop('checked', true);
-	}
-
-	$('#notifs_fade_away_delay').val(LOCSTO.notifications.fadeAwayDelay / 1000);
-	$("#notifs_style_chooser").val(LOCSTO.notifications.style);
-
-	refreshNotifsOptions_old();
-}
-
-
-function preparePage_notifsNew()
-{
-	"use strict";
-	
-	$('#notifications_new').attr('id', 'notifications');
 
 	// create interactivity
 	$("#button_save_notifications").click(saveNotifications);
@@ -157,37 +103,6 @@ function preparePage_misc()
 
 	// restore value 
 	refreshMiscOptions();
-}
-
-
-function refreshNotifsOptions_old()
-{
-	"use strict";
-	
-	var aNotifsShowWhen = $('input:radio[name="notifs_show_when_old"]:checked').val();
-
-	// show slider for notifs duration?
-	if (aNotifsShowWhen === 'on_hotkey_only' || aNotifsShowWhen === 'on_song_change')
-	{
-		$('#notifs_fade_away_delay').parent().css('display', 'block');
-	}
-	else
-	{
-		$('#notifs_fade_away_delay').parent().css('display', 'none');
-	}
-	
-	// show style chooser?
-	if (aNotifsShowWhen !== 'never')
-	{
-		$('#notifs_style').css('display', 'block');
-	}
-	else
-	{
-		$('#notifs_style').css('display', 'none');
-	}
-
-	$('#notifs_fade_away_delay_display').text($('#notifs_fade_away_delay').val());
-	loadStyle($("#notifs_style_chooser").val());
 }
 
 
@@ -325,66 +240,27 @@ function storeHotKey(iHotKeyName)
 }
 
 
-function saveNotifications_old()
-{
-	"use strict";
-	
-	var aNotifsShowWhen = $('input:radio[name="notifs_show_when_old"]:checked').val(), 
-		aNotifsDelay = $('#notifs_fade_away_delay').val() * 1000, 
-		aNotifsStyle = $("#notifs_style_chooser").val();
-
-	// the key names are due to the old notifications system
-	if (aNotifsShowWhen === 'never')
-	{
-		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-	}
-	else if (aNotifsShowWhen === 'never_hides')
-	{
-		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-	}
-	else if (aNotifsShowWhen === 'on_song_change')
-	{
-		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-	}
-	else if (aNotifsShowWhen === 'on_hotkey_only')
-	{
-		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
-	}
-	
-	LOCSTO.saveNotifications();
-
-	// Update status_style to let user know options were saved
-	$("#status_notifs_old").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
-
-	// reshow notifs so that the user sees the change straight away
-	chrome.runtime.sendMessage({ type: "showNotif", source: "options" });
-}
-
-
 function saveNotifications()
 {
 	"use strict";
 	
-	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val(), 
-		aNotifsDelay = LOCSTO.notifications.fadeAwayDelay, 
-		aNotifsStyle = LOCSTO.notifications.style;
+	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 	
-	// the key names are due to the old notifications system
 	if (aNotifsShowWhen === 'never')
 	{
-		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false };
 	}
 	else if (aNotifsShowWhen === 'never_hides')
 	{
-		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false };
 	}
 	else if (aNotifsShowWhen === 'on_song_change')
 	{
-		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false };
 	}
 	else if (aNotifsShowWhen === 'on_hotkey_only')
 	{
-		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true, fadeAwayDelay: aNotifsDelay, style: aNotifsStyle };
+		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true };
 	}
 	
 	LOCSTO.saveNotifications();
