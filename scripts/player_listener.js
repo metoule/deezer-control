@@ -25,8 +25,8 @@ if (document.getElementById('DeezerControlData') === null)
 	observer.observe(document.getElementById('lastUpdate'), config);
 }
 
-// send player's data to the background page
-function sendJsonPlayerInfo()
+// extract Deezer data
+function getDeezerData()
 {
 	"use strict";
 	
@@ -49,12 +49,18 @@ function sendJsonPlayerInfo()
 		}
 	}
 	
-	// send the results to background.html
-	chrome.runtime.sendMessage({ type: "now_playing_updated", nowPlayingData: aDzAttributes });
+	return aDzAttributes;
+}
+
+// send player's data to the background page
+function sendJsonPlayerInfo()
+{
+	"use strict";
+	chrome.runtime.sendMessage({ type: "now_playing_updated", nowPlayingData: getDeezerData() });
 }
 
 // perform actions on the deezer page
-chrome.runtime.onMessage.addListener(function(request/*, sender, sendResponse*/) 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) 
 {
 	"use strict";
 	
@@ -85,6 +91,11 @@ chrome.runtime.onMessage.addListener(function(request/*, sender, sendResponse*/)
 			
 			executeDoAction(request.action);
 			break;
+			
+
+		case "getDeezerData":
+			sendResponse(getDeezerData());
+			return true;
 	}
 	
 	// no callback is used, return false
