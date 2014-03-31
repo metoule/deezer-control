@@ -277,7 +277,10 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		break;
 		
 	case "showNotif":
-		showNotif(true);
+		ensureRefreshedDeezerData(function()
+		{
+			showNotif(true);
+		});
 		break;
 		
 	case "jumpToDeezer":
@@ -316,6 +319,10 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		sendResponse(LOCSTO);
 		return true;
 		
+	case "getDeezerData":
+		ensureRefreshedDeezerData(sendResponse);
+		return true;
+		
 	case "injectHotKeysJsOnAllTabs":
 		chrome.windows.getAll(
 		{ populate : true },
@@ -342,6 +349,26 @@ function extensionOnMessageListener(request, sender, sendResponse)
 	}
 	
 	return false;
+}
+
+function ensureRefreshedDeezerData(sendResponse)
+{
+	// event page might have been unloaded
+	if (gNowPlayingData === null)
+	{
+		// get deezer data from tab
+		findDeezerTab(function(iDeezerTabId) 
+		{
+			chrome.tabs.sendMessage(iDeezerTabId, { name: "getDeezerData" }, function(deezerData) 
+			{
+				gNowPlayingData = deezerData;
+				sendResponse(gNowPlayingData);
+			});
+		});
+		return;
+	}
+	
+	sendResponse(gNowPlayingData);
 }
 
 function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId) 

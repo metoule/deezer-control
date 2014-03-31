@@ -79,32 +79,35 @@ function refreshPopup()
 	"use strict";
 	
 	// get now playing info from background page
-	var aNowPlayingData = chrome.extension.getBackgroundPage().gNowPlayingData;
-	if (aNowPlayingData !== null)
-	{	
-		// show pause or play button 
-		var showPause = aNowPlayingData.dz_playing === 'true';
-		$('#control-play').css('display', 'inline-block').toggle(!showPause);
-		$('#control-pause').css('display', 'inline-block').toggle(showPause);
-		
-		// set track title and artist
-		$('#now_playing_info').show();
-		$('#now_playing_info_track').text(aNowPlayingData.dz_track);
-		$('#now_playing_info_artist').text(aNowPlayingData.dz_artist);
-		
-		// show or hide prev / next buttons if needed
-		$('#control-prev').visibilityToggle(aNowPlayingData.dz_is_prev_active === 'true');
-		$('#control-next').visibilityToggle(aNowPlayingData.dz_is_next_active === 'true');
-
-		// get the cover (can be ANY SIZE WE WANT :))
-		$('#cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + aNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
-	} 
-	else 
-	{
-		$('#now_playing_info').hide();
-		$('#control-pause').hide();
-		$('#cover').attr('src', "imgs/unknown_cd.png");
-	}
+	chrome.runtime.sendMessage({ type: "getDeezerData" }, function(aNowPlayingData) 
+	{ 
+		console.log(aNowPlayingData);
+		if (aNowPlayingData !== null)
+		{	
+			// show pause or play button 
+			var showPause = aNowPlayingData.dz_playing === 'true';
+			$('#control-play').css('display', 'inline-block').toggle(!showPause);
+			$('#control-pause').css('display', 'inline-block').toggle(showPause);
+			
+			// set track title and artist
+			$('#now_playing_info').show();
+			$('#now_playing_info_track').text(aNowPlayingData.dz_track);
+			$('#now_playing_info_artist').text(aNowPlayingData.dz_artist);
+			
+			// show or hide prev / next buttons if needed
+			$('#control-prev').visibilityToggle(aNowPlayingData.dz_is_prev_active === 'true');
+			$('#control-next').visibilityToggle(aNowPlayingData.dz_is_next_active === 'true');
+	
+			// get the cover (can be ANY SIZE WE WANT :))
+			$('#cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + aNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+		} 
+		else 
+		{
+			$('#now_playing_info').hide();
+			$('#control-pause').hide();
+			$('#cover').attr('src', "imgs/unknown_cd.png");
+		}
+	});
 }
 
 function jQueryExtension()

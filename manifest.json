@@ -7,7 +7,10 @@
 						"default_icon": "imgs/icons/deezer_19x19.png", 
 						"default_title": "__MSG_defaultTitle__"
 					},
-  "background": { "page": "background.html" },
+  "background": { 
+  					"scripts": [ "scripts/jquery-2.1.0.min.js", "scripts/localstorage.js", "scripts/notifications.js", "scripts/background.js" ], 
+  					"persistent": false 
+				},
   "options_page": "options.html",
   "content_scripts":	[
 							{
