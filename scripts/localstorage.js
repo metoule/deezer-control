@@ -111,6 +111,12 @@ var LOCSTO = LOCSTO || {
 	   // set global variables
 	   COVER_SIZE = COVER_SIZES[this.popupStyle];
 	},
+
+	loadSession: function()
+	{		   
+	   // session data, needed for event page reload
+	   this.session = fillDictWithDefaults(this.get('session'), { deezerData: null, jumpBackToActiveTab: { windowsId: 0, tabId: 0 }, notifData: null });
+	},
 	
 	updateModel: function()
 	{
@@ -185,6 +191,12 @@ var LOCSTO = LOCSTO || {
 		this.set('newOptionsToShow', this.newOptionsToShow);
 	}, 
 	
+	saveSession: function()
+	{
+		"use strict";
+		this.set('session', this.session);
+	}, 
+	
 	/*
 	 * generic methods
 	 */
@@ -223,4 +235,5 @@ var LOCSTO = LOCSTO || {
 	}
 };
 LOCSTO.loadOptions();
+LOCSTO.loadSession();
 

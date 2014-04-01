@@ -1,11 +1,12 @@
 
-var gNowPlayingData = null;
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
 var gActionOnNotifButton = false; // this boolean will be used to show the notifs on notifs button click
-var gJumpBackToActiveTab = { windowsId: 0, tabId: 0 }; // remember active tab on which jump to Deezer was called
 
 // actions to perform when the extension is loaded
 $(window).load(setUpPopup);
+
+// when the event page goes to sleep, remember session
+chrome.runtime.onSuspend.addListener(function() { LOCSTO.saveSession(); });
 
 // install, update, or chrome update
 chrome.runtime.onInstalled.addListener(function(details)
@@ -122,8 +123,8 @@ function tabsOnActivatedListener(iActiveTabInfo)
 		// ignore active tab if deezer: we don't want to go back to deezer tab!
 		if (!matchDeezerUrl(aActiveTab.url))
 		{
-			gJumpBackToActiveTab.windowsId = aActiveTab.windowId;
-			gJumpBackToActiveTab.tabId = aActiveTab.id;
+			LOCSTO.session.jumpBackToActiveTab.windowsId = aActiveTab.windowId;
+			LOCSTO.session.jumpBackToActiveTab.tabId = aActiveTab.id;
 		}
 	});
 }
@@ -220,7 +221,7 @@ function onFindDeezerTabForPopupSetup(iDeezerTabId)
 	
 	if (iDeezerTabId === null)
 	{
-		gNowPlayingData = null; // reset playing data
+		LOCSTO.session.deezerData = null; // reset playing data
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
 		chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
 		NOTIFS.destroyNotif();
@@ -239,7 +240,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 	switch (request.type)
 	{
 	case "now_playing_updated":
-		gNowPlayingData = request.nowPlayingData;
+		LOCSTO.session.deezerData = request.nowPlayingData;
 
 		// update the button's tooltip only if no update should be shown
 		if (!LOCSTO.newOptionsToShow)
@@ -277,10 +278,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		break;
 		
 	case "showNotif":
-		ensureRefreshedDeezerData(function()
-		{
-			showNotif(true);
-		});
+		showNotif(true);
 		break;
 		
 	case "jumpToDeezer":
@@ -300,8 +298,8 @@ function extensionOnMessageListener(request, sender, sendResponse)
 					// we're on the Deezer tab, go back to previous tab
 					if (request.source !== 'notif' && matchDeezerUrl(window.tabs[j].url))
 					{
-						chrome.windows.update(gJumpBackToActiveTab.windowsId, { focused: true });
-						chrome.tabs.update(gJumpBackToActiveTab.tabId, { selected: true });
+						chrome.windows.update(LOCSTO.session.jumpBackToActiveTab.windowsId, { focused: true });
+						chrome.tabs.update(LOCSTO.session.jumpBackToActiveTab.tabId, { selected: true });
 					}
 	
 					// not on the Deezer tab, find it and set it to active
@@ -320,7 +318,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		return true;
 		
 	case "getDeezerData":
-		ensureRefreshedDeezerData(sendResponse);
+		sendResponse(LOCSTO.session.deezerData);
 		return true;
 		
 	case "injectHotKeysJsOnAllTabs":
@@ -351,31 +349,14 @@ function extensionOnMessageListener(request, sender, sendResponse)
 	return false;
 }
 
-function ensureRefreshedDeezerData(sendResponse)
-{
-	// event page might have been unloaded
-	if (gNowPlayingData === null)
-	{
-		// get deezer data from tab
-		findDeezerTab(function(iDeezerTabId) 
-		{
-			chrome.tabs.sendMessage(iDeezerTabId, { name: "getDeezerData" }, function(deezerData) 
-			{
-				gNowPlayingData = deezerData;
-				sendResponse(gNowPlayingData);
-			});
-		});
-		return;
-	}
-	
-	sendResponse(gNowPlayingData);
-}
-
 function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId) 
 {
 	"use strict";
 	
 	// we found a Deezer tab, switch to it
+	if (iDeezerTabId === null || iDeezerWindowId === null)
+		return;
+	
 	chrome.windows.update(iDeezerWindowId, { focused: true });
 	chrome.tabs.update(iDeezerTabId, { selected: true });
 }
@@ -385,7 +366,7 @@ function showNotif(iForceRedisplay)
 	"use strict";
 	
 	// if no deezer data, close notif, otherwise show it
-	if (gNowPlayingData === null)
+	if (LOCSTO.session.deezerData === null)
 	{
 		NOTIFS.destroyNotif();
 	}
@@ -425,9 +406,9 @@ function updateButtonTooltip()
 {
 	"use strict";
 	
-	if (gNowPlayingData !== null)
+	if (LOCSTO.session.deezerData !== null)
 	{
-		chrome.browserAction.setTitle({ title: gNowPlayingData.dz_track + ' - ' + gNowPlayingData.dz_artist });
+		chrome.browserAction.setTitle({ title: LOCSTO.session.deezerData.dz_track + ' - ' + LOCSTO.session.deezerData.dz_artist });
 	}
 	else
 	{
@@ -446,20 +427,20 @@ function propagatePlayingDataToAllTabs()
 	// show / hide notif if needed
 	showNotif();
 	
-	if (gNowPlayingData !== null)
+	if (LOCSTO.session.deezerData !== null)
 	{		
 		// load notification size image if needed
 		if (!LOCSTO.notifications.never)
 		{
-			$('#prev_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
-			$('#cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
-			$('#next_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
+			$('#prev_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_prev_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
+			$('#cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
+			$('#next_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_next_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
 		}
 		
 		// load full image (might be the same size)
-		$('#prev_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
-		$('#cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
-		$('#next_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + gNowPlayingData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+		$('#prev_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+		$('#cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+		$('#next_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
 	}
 }
 

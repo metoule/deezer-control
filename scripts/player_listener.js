@@ -91,11 +91,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 			
 			executeDoAction(request.action);
 			break;
-			
-
-		case "getDeezerData":
-			sendResponse(getDeezerData());
-			return true;
 	}
 	
 	// no callback is used, return false

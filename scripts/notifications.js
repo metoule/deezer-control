@@ -1,7 +1,6 @@
 
 var NEW_NOTIFS = NEW_NOTIFS || {
 		
-	currentData: null,
 	buttonPrev:  { title: chrome.i18n.getMessage('playback_prev'),  iconUrl: 'imgs/notifs/prev.png'  },
 	buttonPlay:  { title: chrome.i18n.getMessage('playback_play'),  iconUrl: 'imgs/notifs/play.png'  },
 	buttonPause: { title: chrome.i18n.getMessage('playback_pause'), iconUrl: 'imgs/notifs/pause.png' },
@@ -14,14 +13,14 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 		
 		// we're only allowed two buttons: display play/pause, and next
 		notifButtons = [];
-		notifButtons.push(gNowPlayingData.dz_playing === 'true' ? this.buttonPause : this.buttonPlay);
-		notifButtons.push(gNowPlayingData.dz_is_next_active === 'true' ? this.buttonNext : this.buttonPrev);
+		notifButtons.push(LOCSTO.session.deezerData.dz_playing === 'true' ? this.buttonPause : this.buttonPlay);
+		notifButtons.push(LOCSTO.session.deezerData.dz_is_next_active === 'true' ? this.buttonNext : this.buttonPrev);
 		
 		content = {
 				type: 'basic', 
-				title:   gNowPlayingData.dz_track, 
-				message: gNowPlayingData.dz_artist,
-				iconUrl: 'http://cdn-images.deezer.com/images/cover/' + gNowPlayingData.dz_cover + '/80x80-000000-80-0-0.jpg',
+				title:   LOCSTO.session.deezerData.dz_track, 
+				message: LOCSTO.session.deezerData.dz_artist,
+				iconUrl: 'http://cdn-images.deezer.com/images/cover/' + LOCSTO.session.deezerData.dz_cover + '/80x80-000000-80-0-0.jpg',
 				buttons: notifButtons,
 				priority: 0
 		};
@@ -30,21 +29,21 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 
 		if (forceRedisplay === true)
 		{
-			this.destroyNotif(function(me) 
+			this.destroyNotif(function() 
 			{
-				me.currentData = newData;
+				LOCSTO.session.notifData = newData;
 				chrome.notifications.create('deezer_control', content, function(/*notifId*/) {/*NOP*/});
 			});
 		}
 		else
 		{
 			// don't update notification if same data
-			if (newData === this.currentData)
+			if (newData === LOCSTO.session.notifData)
 			{
 				return;	
 			}
 			
-			this.currentData = newData;
+			LOCSTO.session.notifData = newData;
 			chrome.notifications.create('deezer_control', content, function(/*notifId*/) {/*NOP*/});
 		}
 	}, 
@@ -53,13 +52,12 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 	{
 		"use strict";
 		
-		var me = this;
 		chrome.notifications.clear('deezer_control', function(/*wasCleared*/) 
 		{
-			me.resetCurrentData(); 
+			LOCSTO.session.notifData = null;
 			if (callback)
 			{
-				callback(me);
+				callback();
 			}
 		});
 	}, 
@@ -68,7 +66,7 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 	{
 		"use strict";
 		
-		var notifButton = JSON.parse(this.currentData).buttons[buttonIndex];
+		var notifButton = JSON.parse(LOCSTO.session.notifData).buttons[buttonIndex];
 		if (notifButton.title === this.buttonPrev.title)
 		{
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "notif" });
@@ -85,12 +83,6 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 		{
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "notif" });
 		}
-	}, 
-	
-	resetCurrentData: function()
-	{
-		"use strict";
-		this.currentData = null; 
 	}
 	
 };
@@ -104,7 +96,7 @@ if (chrome.notifications !== undefined)
 		"use strict";
 		if (notificationId === 'deezer_control')
 		{
-			NOTIFS.resetCurrentData();
+			LOCSTO.session.notifData = null;
 		}
 	});
 	
