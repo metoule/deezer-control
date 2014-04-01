@@ -81,7 +81,6 @@ function refreshPopup()
 	// get now playing info from background page
 	chrome.runtime.sendMessage({ type: "getDeezerData" }, function(aNowPlayingData) 
 	{ 
-		console.log(aNowPlayingData);
 		if (aNowPlayingData !== null)
 		{	
 			// show pause or play button 
