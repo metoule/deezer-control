@@ -336,7 +336,7 @@ function showSection(id)
 	$('#' + id + '_nav').addClass('currentone');
 
 	aNewLeft = $('#' + id + '_nav').position().left - $('#tab_chooser > nav > a:first').position().left + 73;
-	$('#arrow_line > img').css('left', aNewLeft + 'px');
+	$('#arrow_line > span').css('left', aNewLeft + 'px');
 }
 
 
