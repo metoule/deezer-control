@@ -16,16 +16,17 @@
 
 #controls a 
 { 
-	height: 16px;
-	margin-right: 6px;
+	height: 10px;
+	margin-right: 5px;
+	background-image: url(/imgs/small.png);
 }
 
 #controls a:hover { opacity: 1; }
-#control-settings { background: url(/imgs/large/settings.png);	width: 16px; }
-#control-prev	  { background: url(/imgs/large/prev.png);		width: 24px; }
-#control-next	  { background: url(/imgs/large/next.png);		width: 24px; }
-#control-pause	  { background: url(/imgs/large/pause.png);		width: 16px; }
-#control-play	  { background: url(/imgs/large/play.png);		width: 16px; }
+#control-settings { width: 10px; margin-left: 5px; }
+#control-prev	  { background-position: -10px; width: 15px; }
+#control-pause	  { background-position: -25px; width: 10px; }
+#control-play	  { background-position: -35px; width: 10px; }
+#control-next	  { background-position: -45px; width: 15px; }
 
 #now_playing { height: 80px; }
 #now_playing_info

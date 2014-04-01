@@ -18,14 +18,15 @@
 { 
 	height: 16px;
 	margin-right: 6px;
+	background-image: url(/imgs/large.png);
 }
 
 #controls a:hover { opacity: 1; }
-#control-settings { background: url(/imgs/large/settings.png);	width: 16px; margin-left: 6px; }
-#control-prev	  { background: url(/imgs/large/prev.png);	 	width: 24px; }
-#control-next	  { background: url(/imgs/large/next.png);	 	width: 24px; }
-#control-pause	  { background: url(/imgs/large/pause.png);		width: 16px; }
-#control-play	  { background: url(/imgs/large/play.png);	 	width: 16px; }
+#control-settings { width: 16px; margin-left: 6px; }
+#control-prev	  { background-position: -16px; width: 24px; }
+#control-pause	  { background-position: -40px; width: 16px; }
+#control-play	  { background-position: -56px; width: 16px; }
+#control-next	  { background-position: -72px; width: 24px; }
 
 #now_playing { height: 250px; }
 #now_playing_info

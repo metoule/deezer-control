@@ -123,8 +123,9 @@ section
 	width: 800px;
 }
 	
-#arrow_line img
+#arrow_line span
 {
+	background: url(/imgs/options.png);
 	display: block;
 	left: 73px;
 	height: 7px;
@@ -257,8 +258,8 @@ select:hover, #remember_to a:hover, .button_cancel:hover
 	top: -1px;
 	vertical-align: middle;
 }
-#world_icon { background: url(/imgs/omnibox_http.png) no-repeat; margin-left: 5px; }
-#star_icon { background: url(/imgs/omnibox_star_dark.png) no-repeat; }
+#world_icon { background: url(/imgs/options.png) 0px -16px; margin-left: 5px; }
+#star_icon { background: url(/imgs/options.png) 0px -35px; }
 
 #extension_icon
 {
@@ -280,7 +281,7 @@ select:hover, #remember_to a:hover, .button_cancel:hover
 
 #arrow_preview 
 {
-	background: url(/imgs/arrow_preview.png) no-repeat;
+	background: url(/imgs/options.png) 0px -7px;
 	display: block;
 	float: right;
 	height: 9px;
