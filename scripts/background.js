@@ -337,7 +337,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 					// ignore all chrome internal urls
 					if (aTab.url.lastIndexOf("chrome", 0) !== 0)
 					{
-						chrome.tabs.executeScript(aTab.id, { file: "/scripts/hotkeys.js" });
+						chrome.tabs.executeScript(aTab.id, { file: "/scripts/hotkeys.js", runAt: "document_start" });
 					}
 				}
 			}
