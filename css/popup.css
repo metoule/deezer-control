@@ -21,6 +21,8 @@
 	vertical-align: middle;
 }
 
+#control-play { display: none; }
+
 div.controls-left  { float: left;  }
 div.controls-right { float: right; }
 
