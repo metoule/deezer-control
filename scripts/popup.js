@@ -32,7 +32,7 @@ function preparePopup()
 	});
 	
 	// reset popup
-	setTimer(refreshPopup(), 0);
+	setTimeout(refreshPopup, 0);
 }
 
 function loadStyle(iPopupStyle)

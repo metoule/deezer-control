@@ -1,17 +1,17 @@
 body
 {
-	background-color: #F0F0F0;
-	color: black;
-	font: 13px Arial, Helvetica, Verdana, sans-serif;
-	margin: 0px;
+    background-color: #F0F0F0;
+    color: black;
+    font: 13px Arial, Helvetica, Verdana, sans-serif;
+    margin: 0px;
 }
 
 h1
 {
-	color: #202020;
-	font-size: 24px;
-	margin: 0px -15px 10px -15px;
-	text-transform: uppercase;
+    color: #202020;
+    font-size: 24px;
+    margin: 0px -15px 10px -15px;
+    text-transform: uppercase;
 }
 
 .emphasis, h2
@@ -21,61 +21,84 @@ h1
    font-weight: bold;
    text-shadow: #EFEFEF 0px 1px 0px;
 }
-h2
-{
-	margin: 15px 0px 5px 0px;
-}
 
-#center_block
-{
-	background-color: white;
-	border: 1px solid #E9E9E9;
-	height: 525px;
-	margin: 20px auto 0 auto;
-	padding: 20px;
-	width: 760px;
-}
-
-#tab_chooser
-{
-	background: #DBDBDB;
-	height: 29px;
-	line-height: 28px;
-}
-	
-#tab_chooser nav
-{
-	margin: 0px auto 0 auto;
-	padding: 0px;
-	text-shadow: #EFEFEF 0px 1px 0px;
-	text-transform: uppercase;
-	width: 800px;
-}
+h2 { margin: 15px 0px 5px 0px; }
 
 a 
 {
-	color: #3c3c3c;
-	text-decoration: none; 
+    color: #3c3c3c;
+    text-decoration: none; 
+}
+
+
+/* ***********************************************************************
+ *                            Navigation bar      
+ * ********************************************************************** */
+#tab_chooser
+{
+    background: #DBDBDB;
+    height: 29px;
+    line-height: 28px;
+}
+    
+nav
+{
+    margin: 0px auto 0 auto;
+    text-shadow: #EFEFEF 0px 1px 0px;
+    text-transform: uppercase;
+    width: 800px;
 }
 
 nav a
 {
-	border-right: 1px solid #D0D0D0;
-	color: #919191;
-	cursor: pointer;	
-	display: inline-block;
-	height: 29px;
-	text-align: center;
-	font-weight: bold;
-	width: 159px;
-	-webkit-transition: all 0.3s;
+    border-right: 1px solid #D0D0D0;
+    color: #919191;
+    display: inline-block;
+    height: 29px;
+    text-align: center;
+    font-weight: bold;
+    width: 159px;
+    -webkit-transition: all 0.3s;
 }
+
+nav a:last-child { border-right: 0; }
+nav a:hover { color: #666; }
+
+nav a.currentone, nav a.currentone:hover
+{
+    background-color: #444;
+    color: white;
+    text-shadow: 0 -1px black;
+}
+
+#arrow_line
+{
+    display: block;
+    margin: 0px auto 0 auto;
+    width: 800px;
+}
+    
+#arrow_line span
+{
+    background: url(/imgs/options.png);
+    display: block;
+    left: 73px;
+    height: 7px;
+    position: relative;
+    width: 13px;
+    -webkit-transition: all 0.3s;
+}
+
+
+/* ***********************************************************************
+ *                            New items      
+ * ********************************************************************** */
 
 a.new_item
 {
-	background: url(/imgs/new.png) no-repeat 5px 9px;
-	padding-left: 10px; /* we want a left padding of 5px; double it to account for centerness */
-	width: 149px; /* normal size (159px) minus left padding */
+    background: url(/imgs/new.png) no-repeat 5px 9px;
+    padding-left: 10px; /* we want a left padding of 5px; double it to account for centerness */
+    width: 149px; /* normal size (159px) minus left padding */
 }
 
 h2.new_item
@@ -90,283 +113,243 @@ span.new_item
    padding-left: 30px;
 }
 
+
+/* ***********************************************************************
+ *                            Center block      
+ * ********************************************************************** */
+
+#center_block
+{
+    background-color: white;
+    border: 1px solid #E9E9E9;
+    height: 525px;
+    width: 760px;
+    margin: 20px auto 0 auto;
+    padding: 20px;
+}
+
 section
 {
-	display: none;
-   line-height: 1.5;
-	margin: 0px 15px;
-	text-align: justify;
+    display: none;
+    line-height: 1.5;
+    margin: 0px 15px;
+    text-align: justify;
 }
 
-#tab_chooser nav a:hover
+fieldset
 {
-	color: #666;
+    border: 0;
+    padding: 0;
+    margin: 10px 0px 0px 0px;
 }
 
-#tab_chooser nav a.currentone, #tab_chooser nav a.currentone:hover
+fieldset div
 {
-	background-color: #444;
-	color: white;
-	text-shadow: 0 -1px black;
-	-webkit-gradient(linear,left top,right top,color-stop(0, #262626),color-stop(0.02, #444),color-stop(0.98, #444),color-stop(1, #262626));
+    height: 30px;
+    line-height: 30px;
 }
 
-#tab_chooser nav a:last-child 
+fieldset * { vertical-align: middle; }
+    
+footer
 {
-	border-right: 0;
+    background: #DBDBDB;
+    border-top: 1px solid #C4C4C5;
+    color: #666;
+    font-weight: normal;
+    margin: 20px auto 0 auto;
+    padding: 10px 15px 15px 15px;
+    text-align: center;
+    text-shadow: 0 1px white;
+    width: 770px;
 }
-
-#arrow_line
-{
-	display: block;
-	margin: 0px auto 0 auto;
-	width: 800px;
-}
-	
-#arrow_line span
-{
-	background: url(/imgs/options.png);
-	display: block;
-	left: 73px;
-	height: 7px;
-	position: relative;
-	width: 13px;
-	-webkit-transition: all 0.3s;
-}
-
-input
-{
-	border: 1px solid #D0D0D0;
-}
-
-select, #remember_to a, .button_cancel
-{
-	background: #F0F0F0;
-	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #E6E6E6),color-stop(1, #FEFEFE));
-	border: 1px solid #D0D0D0;
-	color: gray;
-	cursor: pointer;
-	text-align: center;
-	font-weight: bold;
-	padding: 5px 10px 5px 10px;
-	text-shadow: 0 1px white;	
-}
-
-select { color: #191919; }
-#remember_to a { display: inline-block; line-height: 16px; margin: -5px 0px -5px 0px; }
-
-/* TODO implement cancel buttons correctly */
-.button_cancel { display: none; }
-
-button, #remember_to a
-{
-	border-radius: 3px;
-}
-
-button
-{
-	background: #62A3D5;
-	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #3B739E),color-stop(1, #63A4D6));
-	border: 1px solid #447ABE;
-	color: white;
-	cursor: pointer;
-	font-weight: bold;
-	padding: 5px 10px 5px 10px;
-	text-shadow: 0 1px #386B92;
-}
-
-button.two_state_unselected, button.two_state_unselected:hover
-{
-	background: #F0F0F0;
-	border: 1px solid #D0D0D0;
-	color: gray;
-	text-shadow: 0 1px white;
-} 
-
-button.two_state_selected, button.two_state_selected:hover
-{
-	background: #F0F0F0;
-	border: 1px solid black;
-	color: black;
-	text-shadow: 0 1px white;
-}
-
-button:hover
-{
-	background:#5387ac;
-	background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0, rgb(46,91,123)),color-stop(1, rgb(84,136,173)));
-}
+    
+footer a:hover, .mail_me:hover { text-decoration: underline; }
 
 
-
-select:hover, #remember_to a:hover, .button_cancel:hover
-{
-	color: black;
-}
-
-#remember_to a:hover, .button_cancel:hover
-{
-	background:#404040;
-	background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0, rgb(205,205,205)),color-stop(1, rgb(255,255,255)));
-}
+/* ***********************************************************************
+ *                            Welcome page      
+ * ********************************************************************** */
 
 #remember_to
 {
-	border: 1px dashed #BEBEBE;
-	margin: 25px 0px;
-	padding: 10px;
+    border: 1px dashed #BEBEBE;
+    margin: 25px 0px;
+    padding: 10px;
 }
 
-#remember_to h2
+#remember_to h2  { margin: 0px 0px 10px 0px;  }
+#remember_to div { margin: 0px 0px 15px 10px; }
+
+#remember_to_buttons {
+    display: block;
+    float: left;
+}
+
+#remember_to a  
 {
-	margin: 0px 0px 10px 0px;
+	display: block; 
+	line-height: 16px;
+	position: relative;
+	top: -5px;
+    margin: 0px 8px 6px 0px;
 }
 
-#remember_to div
-{
-	margin: 0px 0px 15px 10px;
-}
 
-#remember_to a
-{
-	margin-right: 8px;	
-}
-
+/* ***********************************************************************
+ *                            Popup page      
+ * ********************************************************************** */
+ 
 #fake_omnibar
 {
-	border: 1px solid #ada9a5;
-	border-radius: 3px;
-	color: #3c3c3c;
-	display: inline-block;
-	height: 25px;
-	line-height: 25px;
-	font-weight: normal;
-	font-size: 15px;
-	margin-top: 10px;
-	padding: 0;
-	width: 685px;
+    border: 1px solid #ada9a5;
+    border-radius: 3px;
+    color: #3c3c3c;
+    display: inline-block;
+    line-height: 25px;
+    font-size: 15px;
+    margin-top: 10px;
+    width: 685px;
 }
 
 #world_icon, #star_icon
 {
-	background: no-repeat;
-	display: inline-block;
-	height: 19px;
-	width: 19px;
-	margin-right: 5px;
-	position: relative;
-	top: -1px;
-	vertical-align: middle;
+    background: no-repeat;
+    display: inline-block;
+    height: 19px;
+    width: 19px;
+    margin-right: 5px;
+    position: relative;
+    top: -2px;
+    vertical-align: middle;
 }
 #world_icon { background: url(/imgs/options.png) 0px -16px; margin-left: 5px; }
 #star_icon { background: url(/imgs/options.png) 0px -35px; }
 
 #extension_icon
 {
-	display: inline-block;
-	float: right;
-	background: url(/imgs/icons/deezer_19x19.png) no-repeat 4px 4px;
-	margin-right: 13px;
-	margin-top: 10px;
-	height: 25px;
-	width: 25px;
+    display: inline-block;
+    float: right;
+    background: url(/imgs/icons/deezer_19x19.png) no-repeat 4px 4px;
+    margin-right: 13px;
+    margin-top: 10px;
+    height: 25px;
+    width: 25px;
 }
 
 #preview 
 { 
-	text-align: right;
-	margin-top: 5px;
-	height: 300px;
+    text-align: right;
+    margin-top: 5px;
+    height: 300px;
 }
 
 #arrow_preview 
 {
-	background: url(/imgs/options.png) 0px -7px;
-	display: block;
-	float: right;
-	height: 9px;
-	position: relative;
-	right: 17px;
-	bottom: 8px;
-	width: 17px;
-	z-index: 500;
+    background: url(/imgs/options.png) 0px -7px;
+    display: block;
+    float: right;
+    height: 9px;
+    position: relative;
+    right: 17px;
+    bottom: 8px;
+    width: 17px;
+    z-index: 500;
 }
 
 #preview_outer_border
 {
-	border: solid 1px #636363;
-	border-radius: 4px; 
-	display: inline-block;
-	font-size: 0px;
-	position: relative;
-	left: 17px;
-	z-index: 400;
+    border: solid 1px #636363;
+    border-radius: 4px; 
+    display: inline-block;
+    font-size: 0px;
+    position: relative;
+    left: 17px;
+    z-index: 400;
 }
 
 #preview_inner_border
 {
-	background-color: black;
-	border: solid 1px white; 
+    background-color: black;
+    border: solid 1px white; 
    border-radius: 2px;
 }
-	
-footer
-{
-	background: #DBDBDB;
-	border-top: 1px solid #C4C4C5;
-	color: #666;
-	font-weight: normal;
-	margin: 20px auto 0 auto;
-	padding: 10px 15px 15px 15px;
-	text-align: center;
-	text-shadow: 0 1px white;
-	width: 770px;
-}
 
-	
-footer a:hover
-{
-	text-decoration: underline;
-}
 
-fieldset
-{
-	border: 0;
-	padding: 0;
-	margin: 10px 0px 0px 0px;
-}
-
-fieldset div
-{
-	height: 30px;
-	line-height: 30px;
-}
-
-fieldset *
-{
-	vertical-align: middle;	
-}
+/* ***********************************************************************
+ *                            Notifications / hotkeys     
+ * ********************************************************************** */
 
 #notifications input[type="radio"]
 {
-	height: 25px;
-	margin-right: 1px; 
+    height: 25px;
+    margin-right: 1px; 
 }
 
 #notifications input[type="radio"] + label
 {
-	position: relative;
-	top: 3px;
+    position: relative;
+    top: 3px;
 }
 
 .warning
 {
-	margin-left: 20px;
-	color: red;
-	font-style: italic;
-	font-weight: bold;	
-	visibility: hidden;
+    margin-left: 20px;
+    color: red;
+    font-style: italic;
+    font-weight: bold;    
+    visibility: hidden;
 }
+
+#hotkey_permission_ko, #hotkey_permission_ok { display: none; }
+#hotkey_permission_ko > * { margin-top: 10px; }
+
+
+
+/* ***********************************************************************
+ *                    		Inputs     
+ * ********************************************************************** */
+
+.btn_unselected, .btn_selected, .btn_blue, select
+{
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+}
+
+.btn_unselected, .btn_selected { background: #F0F0F0; text-shadow: 0 1px white; }
+.btn_unselected:hover, .btn_selected:hover { background: white; color: black; }
+
+.btn_unselected
+{
+    border: 1px solid #D0D0D0;
+    color: gray;
+    text-shadow: 0 1px white;
+}
+	
+.btn_selected
+{
+    background: #F0F0F0;
+    border: 1px solid black;
+    color: black;
+}
+
+.btn_blue
+{
+    background: #3B739E;
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #3B739E),color-stop(1, #63A4D6));
+    border: 1px solid #173C52;
+    color: white;
+}
+
+.btn_blue:hover { background: #63A4D6; }
+
+input { border: 1px solid #D0D0D0; }
+select { background-color: #FCFCFC; color: #191919; }
+
+
 
 div.yes_no_bar
 {
@@ -376,17 +359,10 @@ div.yes_no_bar
 
 div.save_cancel_bar
 {
-	border-top: 1px solid lightgray;
-	padding: 5px; 
-	margin: 15px 0px 0px -5px; 
+    border-top: 1px solid lightgray;
+    padding: 5px; 
+    margin: 15px 0px 0px -5px; 
 }
 
-#hotkey_permission_ko, #hotkey_permission_ok
-{
-	display: none;
-}
+.button_cancel { display: none; }
 
-#hotkey_permission_ko > *
-{
-	margin-top: 10px;
-}
