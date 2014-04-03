@@ -2,6 +2,7 @@
 {
 	background-color: black;
 	color: white;
+	font-size: 0px;
 	padding: 0px;
 }
 
@@ -12,6 +13,7 @@
 	z-index: 600;
 }
 
+#controls a#control-play { display: none; }
 #controls a 
 { 
 	cursor: pointer;
@@ -20,8 +22,6 @@
 	position: relative;
 	vertical-align: middle;
 }
-
-#control-play { display: none; }
 
 div.controls-left  { float: left;  }
 div.controls-right { float: right; }

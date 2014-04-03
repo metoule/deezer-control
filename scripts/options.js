@@ -21,15 +21,6 @@ function preparePage_welcome()
 {
 	"use strict";
 	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
-
-	// set two buttons to the same size for better look and feel
-	// note: if the buttons are not visible, the width is 0; use default widths in that case
-	var aWidth = Math.max($("#button_rate_extension").width(), $("#button_donate").width());
-	if (aWidth !== 0)
-	{
-		$("#button_rate_extension").width(aWidth);
-		$("#button_donate").width(aWidth);
-	}
 }
 
 
@@ -94,9 +85,9 @@ function preparePage_misc()
 	// create interactivity
 	$('#miscLimitDeezerToOneTab > .yes_no_bar').children('button').click(function() 
 	{
-		if (!$(this).hasClass('two_state_selected')) 
+		if (!$(this).hasClass('btn_selected')) 
 		{
-			$(this).parent().children('button').toggleClass('two_state_selected two_state_unselected');
+			$(this).parent().children('button').toggleClass('btn_selected btn_unselected');
 		}
 	});
 	$("#button_save_misc").click(saveMiscOptions);
@@ -141,7 +132,7 @@ function restoreHotkey(iHotKeyName)
 	var aHotKeySelect = $("#" + iHotKeyName);
 
 	// on click, all button are selected
-	aHotKeySelect.children('button').click(function() { $(this).toggleClass('two_state_selected two_state_unselected'); });
+	aHotKeySelect.children('button').click(function() { $(this).toggleClass('btn_selected btn_unselected'); });
 	aHotKeySelect.children('span').css('visibility', 'visible');
 
 	// last button: click reveals the textbox to enter new key
@@ -179,9 +170,9 @@ function restoreHotkey(iHotKeyName)
 
 
 	// create display
-	aHotKeySelect.children('button:eq(0)').toggleClass('two_state_unselected', !LOCSTO[iHotKeyName].shiftKey).toggleClass('two_state_selected', LOCSTO[iHotKeyName].shiftKey);
-	aHotKeySelect.children('button:eq(1)').toggleClass('two_state_unselected', !LOCSTO[iHotKeyName].ctrlKey).toggleClass('two_state_selected', LOCSTO[iHotKeyName].ctrlKey);
-	aHotKeySelect.children('button:eq(2)').toggleClass('two_state_unselected', !LOCSTO[iHotKeyName].altKey).toggleClass('two_state_selected', LOCSTO[iHotKeyName].altKey);
+	aHotKeySelect.children('button:eq(0)').toggleClass('btn_unselected', !LOCSTO[iHotKeyName].shiftKey).toggleClass('btn_selected', LOCSTO[iHotKeyName].shiftKey);
+	aHotKeySelect.children('button:eq(1)').toggleClass('btn_unselected', !LOCSTO[iHotKeyName].ctrlKey).toggleClass('btn_selected', LOCSTO[iHotKeyName].ctrlKey);
+	aHotKeySelect.children('button:eq(2)').toggleClass('btn_unselected', !LOCSTO[iHotKeyName].altKey).toggleClass('btn_selected', LOCSTO[iHotKeyName].altKey);
 	aHotKeySelect.children('button:eq(3)').text(convertKeyCode(LOCSTO[iHotKeyName].keyCode));
 
 	aHotKeySelect.children('input').attr('size', '3').css('display', 'none');
@@ -194,8 +185,8 @@ function refreshMiscOptions()
 	"use strict";
 	
 	// limit deezer to one tab
-	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').toggleClass('two_state_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
-	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(1)').toggleClass('two_state_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('two_state_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
+	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').toggleClass('btn_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('btn_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
+	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(1)').toggleClass('btn_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('btn_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
 }
 
 
@@ -233,9 +224,9 @@ function storeHotKey(iHotKeyName)
 	"use strict";
 	
 	var aHotKeyDiv = $("#" + iHotKeyName);
-	LOCSTO[iHotKeyName].shiftKey = aHotKeyDiv.children('button:eq(0)').hasClass('two_state_selected');
-	LOCSTO[iHotKeyName].ctrlKey  = aHotKeyDiv.children('button:eq(1)').hasClass('two_state_selected');
-	LOCSTO[iHotKeyName].altKey   = aHotKeyDiv.children('button:eq(2)').hasClass('two_state_selected');
+	LOCSTO[iHotKeyName].shiftKey = aHotKeyDiv.children('button:eq(0)').hasClass('btn_selected');
+	LOCSTO[iHotKeyName].ctrlKey  = aHotKeyDiv.children('button:eq(1)').hasClass('btn_selected');
+	LOCSTO[iHotKeyName].altKey   = aHotKeyDiv.children('button:eq(2)').hasClass('btn_selected');
 	LOCSTO[iHotKeyName].keyCode  = parseInt(aHotKeyDiv.children('input:eq(1)').val(), 10);
 }
 
@@ -278,7 +269,7 @@ function saveMiscOptions()
 	"use strict";
 	
 	// limit deezer to one tab
-	LOCSTO.miscOptions.limitDeezerToOneTab = $("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').hasClass('two_state_selected');
+	LOCSTO.miscOptions.limitDeezerToOneTab = $("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').hasClass('btn_selected');
 	LOCSTO.saveMiscOptions();
 
 	// Update status to let user know options were saved.

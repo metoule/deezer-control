@@ -34,10 +34,14 @@
 				</ul>
 				<div id="remember_to">
 					<h2 data-i18n-content="options_page_tab_welcome_remember_to"></h2>
-					<div><a id="button_rate_extension" data-i18n-content="options_page_tab_welcome_button_rate_extension" target="_blank"></a><span data-i18n-content="options_page_tab_welcome_rate_label"></span></div>
-					<div><a id="button_donate" data-i18n-content="options_page_tab_welcome_donate_button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a><span data-i18n-content="options_page_tab_welcome_donate_label"></span></div>
+					<div id="remember_to_buttons">
+						<a id="button_rate_extension" data-i18n-content="options_page_tab_welcome_button_rate_extension" target="_blank" class="btn_unselected"></a>
+						<a id="button_donate" data-i18n-content="options_page_tab_welcome_donate_button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank" class="btn_unselected"></a>
+					</div>
+					<div><span data-i18n-content="options_page_tab_welcome_rate_label"></span></div>
+					<div><span data-i18n-content="options_page_tab_welcome_donate_label"></span></div>
 				</div>
-				<div><span data-i18n-content="options_page_tab_welcome_contact_me_at"></span>: <a href="mailto:m520152112e@gmail.com" target="_blank">m520152112e@gmail.com</a></div>
+				<div><span data-i18n-content="options_page_tab_welcome_contact_me_at"></span>: <a href="mailto:m520152112e@gmail.com" target="_blank" class="mail_me">m520152112e@gmail.com</a></div>
 			</section>
 		
 		
@@ -52,7 +56,7 @@
 		 			<option value="small" data-i18n-content="options_page_tab_popup_style_style_small"></option>
 		 			<option value="sideways" data-i18n-content="options_page_tab_popup_style_style_sideways"></option>
 				</select>
-				<button id="button_save_style" data-i18n-content="options_page_button_save"></button>
+				<button id="button_save_style" data-i18n-content="options_page_button_save" class="btn_blue"></button>
 				<button id="button_cancel_style" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
 				<span id="status_style"></span>
 				<br/>
@@ -100,10 +104,10 @@
 				<fieldset id="hotkey_permission_ok">
 					<h2 data-i18n-content="options_page_tab_hotkeys_prevHotKey_h2"></h2>
 					<div id="prevHotKey">
-						<button class="two_state_unselected">SHIFT</button>
-						<button class="two_state_unselected">CTRL</button>
-						<button class="two_state_unselected">ALT</button>
-						<button class="two_state_selected"></button>
+						<button class="btn_unselected">SHIFT</button>
+						<button class="btn_unselected">CTRL</button>
+						<button class="btn_unselected">ALT</button>
+						<button class="btn_selected"></button>
 						<input type="text"></input> <!-- hint for the user to enter a key -->
 						<input type="text"></input> <!-- stores actual key code -->
 						<span class="warning"></span>
@@ -111,10 +115,10 @@
 					
 					<h2 data-i18n-content="options_page_tab_hotkeys_playPauseHotKey_h2"></h2>
 					<div id="playPauseHotKey">
-						<button class="two_state_unselected">SHIFT</button>
-						<button class="two_state_unselected">CTRL</button>
-						<button class="two_state_unselected">ALT</button>
-						<button class="two_state_selected"></button>
+						<button class="btn_unselected">SHIFT</button>
+						<button class="btn_unselected">CTRL</button>
+						<button class="btn_unselected">ALT</button>
+						<button class="btn_selected"></button>
 						<input type="text"></input>
 						<input type="text"></input>
 						<span class="warning"></span>
@@ -122,10 +126,10 @@
 										
 					<h2 data-i18n-content="options_page_tab_hotkeys_nextHotKey_h2"></h2>
 					<div id="nextHotKey">
-						<button class="two_state_unselected">SHIFT</button>
-						<button class="two_state_unselected">CTRL</button>
-						<button class="two_state_unselected">ALT</button>
-						<button class="two_state_selected"></button>
+						<button class="btn_unselected">SHIFT</button>
+						<button class="btn_unselected">CTRL</button>
+						<button class="btn_unselected">ALT</button>
+						<button class="btn_selected"></button>
 						<input type="text"></input>
 						<input type="text"></input>
 						<span class="warning"></span>
@@ -134,10 +138,10 @@
 					<h2 data-i18n-content="options_page_tab_hotkeys_whatZatSongHotKey_h2"></h2>
 					<div style="margin-top: -10px; font-style: italic;" data-i18n-content="options_page_tab_hotkeys_warning_whatZatSongHotKey"></div>
 					<div id="whatZatSongHotKey">
-						<button class="two_state_unselected">SHIFT</button>
-						<button class="two_state_unselected">CTRL</button>
-						<button class="two_state_unselected">ALT</button>
-						<button class="two_state_selected"></button>
+						<button class="btn_unselected">SHIFT</button>
+						<button class="btn_unselected">CTRL</button>
+						<button class="btn_unselected">ALT</button>
+						<button class="btn_selected"></button>
 						<input type="text"></input>
 						<input type="text"></input>
 						<span class="warning"></span>
@@ -146,17 +150,17 @@
 					<h2 data-i18n-content="options_page_tab_hotkeys_jumpToDeezerHotKey_h2"></h2>
 					<div style="margin-top: -10px; font-style: italic;" data-i18n-content="options_page_tab_hotkeys_warning_jumpToDeezerHotKey"></div>
 					<div id="jumpToDeezerHotKey">
-						<button class="two_state_unselected">SHIFT</button>
-						<button class="two_state_unselected">CTRL</button>
-						<button class="two_state_unselected">ALT</button>
-						<button class="two_state_selected"></button>
+						<button class="btn_unselected">SHIFT</button>
+						<button class="btn_unselected">CTRL</button>
+						<button class="btn_unselected">ALT</button>
+						<button class="btn_selected"></button>
 						<input type="text"></input>
 						<input type="text"></input>
 						<span class="warning"></span>
 					</div>
 
 					<div class="save_cancel_bar">
-						<button id="button_save_hotkeys" data-i18n-content="options_page_button_save"></button>
+						<button id="button_save_hotkeys" data-i18n-content="options_page_button_save" class="btn_blue"></button>
 						<button id="button_cancel_hotkeys" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
 						<span id="status_hotkeys"></span>
 					</div>
@@ -189,7 +193,7 @@
 				</fieldset>
 				
 				<div class="save_cancel_bar">
-					<button id="button_save_notifications" data-i18n-content="options_page_button_save"></button>
+					<button id="button_save_notifications" data-i18n-content="options_page_button_save" class="btn_blue"></button>
 					<button id="button_cancel_notifications" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
 					<span id="status_notifs"></span>
 				</div>
@@ -205,13 +209,13 @@
 				<div id="miscLimitDeezerToOneTab">
 					<div data-i18n-content="options_page_tab_misc_limit_deezer_to_one_tab_explanation"></div>
 					<div class="yes_no_bar">
-						<button class="two_state_unselected" data-i18n-content="yes"></button>
-						<button class="two_state_unselected" data-i18n-content="no"></button>
+						<button class="btn_unselected" data-i18n-content="yes"></button>
+						<button class="btn_unselected" data-i18n-content="no"></button>
 					</div>
 				</div>
 				
 				<div class="save_cancel_bar">
-					<button id="button_save_misc" data-i18n-content="options_page_button_save"></button>
+					<button id="button_save_misc" data-i18n-content="options_page_button_save" class="btn_blue"></button>
 					<button id="button_cancel_misc" data-i18n-content="options_page_button_cancel" class="button_cancel"></button>
 					<span id="status_misc"></span>
 				</div>
@@ -223,7 +227,7 @@
 		<!-- footer -->
 		<footer>
 			<div data-i18n-content="options_page_footer_not_endorsed"></div>
-			<div><a data-i18n-content="options_page_footer_contact" href="mailto:m520152112e@gmail.com" target="_blank"></a> | <a data-i18n-content="options_page_footer_donate" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a> <span data-i18n-content="options_page_footer_via_paypal"></span></div>
+			<div><a data-i18n-content="options_page_footer_contact" href="mailto:m520152112e@gmail.com" target="_blank" class="mail_me"></a> | <a data-i18n-content="options_page_footer_donate" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5THDKB5BN992" target="_blank"></a> <span data-i18n-content="options_page_footer_via_paypal"></span></div>
 		</footer>
 	</body>
 </html>
