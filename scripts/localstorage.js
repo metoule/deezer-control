@@ -30,10 +30,6 @@ function fillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues)
 }
 
 
-var COVER_SIZES = { large: '250x250', small: '120x120', sideways: '80x80', line: '25x25' };
-var COVER_SIZE = COVER_SIZES.large;
-var COVER_SIZE_NOTIFS = COVER_SIZES.sideways;
-
 //------------------------------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------------------------------
@@ -82,23 +78,50 @@ Version.prototype.compare = function(otherVersion)
 //------------------------------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------------------------------
+var COVER = COVER || {
+
+	sizes: { large: '250x250', small: '120x120', sideways: '80x80', line: '25x25' },
+	
+	getCoverUrl: function(size, albumId)
+	{
+		"use strict";
+		if (albumId === undefined || albumId === null)
+			return null;
+		
+		return "http://cdn-images.deezer.com/images/cover/" + albumId + "/" + size + "-000000-80-0-0.jpg";
+	}, 
+	
+	loadCover: function(img, size, albumId)
+	{
+		"use strict";
+		var coverUrl = this.getCoverUrl(size, albumId);
+		if (coverUrl !== null)
+		{
+			img.attr('src', coverUrl);
+		}
+	}
+}
+
+
+//------------------------------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------------------------------
 var LOCSTO = LOCSTO || {
 	
-	/*
-	 * restore values will try to load values from local storage
-	 */
 	loadOptions: function()
 	{
 		"use strict";
 		this.popupStyle = this.get('popup_style') || 'large';
+		this.coverSize = COVER.sizes[this.popupStyle];
+		this.coverSizeNotifs = COVER.sizes.sideways;
 		
 		// notifications
 		this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false });
 		
 		// hot keys
-				this.prevHotKey =		 fillDictWithDefaults(this.get('prevHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
-		   this.playPauseHotKey =	fillDictWithDefaults(this.get('playPauseHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
-		  		this.nextHotKey =		 fillDictWithDefaults(this.get('nextHotKey'), { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
+				this.prevHotKey =		 fillDictWithDefaults(this.get('prevHotKey'),  { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
+		   this.playPauseHotKey =	fillDictWithDefaults(this.get('playPauseHotKey'),  { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 179 });
+		  		this.nextHotKey =		 fillDictWithDefaults(this.get('nextHotKey'),  { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 176 });
 		 this.whatZatSongHotKey =  fillDictWithDefaults(this.get('whatZatSongHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 87  });
 		this.jumpToDeezerHotKey = fillDictWithDefaults(this.get('jumpToDeezerHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 74  });
 
@@ -107,13 +130,10 @@ var LOCSTO = LOCSTO || {
 	   
 	   // new options to show the user
 	   this.newOptionsToShow = this.get('newOptionsToShow') || false;
-	   
-	   // set global variables
-	   COVER_SIZE = COVER_SIZES[this.popupStyle];
 	},
 
 	loadSession: function()
-	{		   
+	{
 	   // session data, needed for event page reload
 	   this.session = fillDictWithDefaults(this.get('session'), { deezerData: null, jumpBackToActiveTab: { windowsId: 0, tabId: 0 }, notifData: null });
 	},
@@ -152,10 +172,6 @@ var LOCSTO = LOCSTO || {
 		// model update finished, store newly installed version
 		this.set('installedVersion', extensionVersion.toString());
 	},
-	
-	/*
-	 * store values will save values to local storage
-	 */
 	
 	savePopupStyle: function()
 	{
