@@ -1,23 +1,21 @@
 
-/* Note that we can use jQuery because Deezer uses jQuery! */
-
 // get data from JS object dzPlayer
 function updateDeezerControlData()
 {
 	"use strict";
-	var DeezerControlData = $('#DeezerControlData');
-	DeezerControlData.attr('dz_playing',	$('#player_control_play').css('display') === 'none');
-	DeezerControlData.attr('dz_artist',	  dzPlayer.getArtistName());
-	DeezerControlData.attr('dz_artist_id',  (dzPlayer.getCurrentSongInfo() !== null ? dzPlayer.getCurrentSongInfo().ART_ID : ''));
-	DeezerControlData.attr('dz_track',	   dzPlayer.getSongTitle());
-	DeezerControlData.attr('dz_album',	   dzPlayer.getAlbumTitle());
-	DeezerControlData.attr('dz_album_id',   (dzPlayer.getCurrentSongInfo() !== null ? dzPlayer.getCurrentSongInfo().ALB_ID : ''));
-	DeezerControlData.attr('dz_cover',	   dzPlayer.getCover());
-	DeezerControlData.attr('dz_prev_cover', (dzPlayer.getPrevSongInfo() !== null ? dzPlayer.getPrevSongInfo().ALB_PICTURE : ''));
-	DeezerControlData.attr('dz_next_cover', (dzPlayer.getNextSongInfo() !== null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));
-	DeezerControlData.attr('dz_is_prev_active',   playercontrol.prevButtonActive());
-	DeezerControlData.attr('dz_is_next_active',   playercontrol.nextButtonActive());
-	$('#lastUpdate').text(Math.floor(new Date().getTime())); 
+	var DeezerControlData = document.getElementById('DeezerControlData');
+	DeezerControlData.setAttribute('dz_playing',	 document.getElementById('player_control_play').style.display === 'none');
+	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
+	DeezerControlData.setAttribute('dz_artist_id',  (dzPlayer.getCurrentSongInfo() !== null ? dzPlayer.getCurrentSongInfo().ART_ID : ''));
+	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
+	DeezerControlData.setAttribute('dz_album',	     dzPlayer.getAlbumTitle());
+	DeezerControlData.setAttribute('dz_album_id',   (dzPlayer.getCurrentSongInfo() !== null ? dzPlayer.getCurrentSongInfo().ALB_ID : ''));
+	DeezerControlData.setAttribute('dz_cover',	     dzPlayer.getCover());
+	DeezerControlData.setAttribute('dz_prev_cover', (dzPlayer.getPrevSongInfo() !== null ? dzPlayer.getPrevSongInfo().ALB_PICTURE : ''));
+	DeezerControlData.setAttribute('dz_next_cover', (dzPlayer.getNextSongInfo() !== null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));
+	DeezerControlData.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());
+	DeezerControlData.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());
+	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 
 } 
 
 
