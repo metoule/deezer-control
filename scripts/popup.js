@@ -39,24 +39,11 @@ function loadStyle(iPopupStyle)
 {
 	"use strict";
 	
-	var aPopupStyle = iPopupStyle || LOCSTO.popupStyle;
-	if (aPopupStyle !== null)
+	var aPopupStyle = iPopupStyle || LOCSTO.popupStyle, 
+	    aPopupCss   = $("#popup_style_css");
+	if (aPopupStyle !== null && aPopupCss.length)
 	{
-		// set the style based on the preference
-		if ($("#popup_style_css").length)
-		{
-			$("#popup_style_css").attr('href', 'css/' + aPopupStyle + '/popup.css');
-		}
-		
-		// on resize, we want to fetch the new cover to avoid pixelisation 
-		// on size change from small to large
-		var aOldSize = COVER_SIZE;
-		
-		// set the size of the cover 
-		COVER_SIZE = COVER_SIZES[aPopupStyle];
-		
-		// replace img src to show new size
-		$('#cover').attr('src', function(index, oldSrc) { return oldSrc.replace(aOldSize, COVER_SIZE); });
+		aPopupCss.attr('href', 'css/' + aPopupStyle + '/popup.css');
 	}
 }
 
@@ -97,8 +84,8 @@ function refreshPopup()
 			$('#control-prev').visibilityToggle(aNowPlayingData.dz_is_prev_active === 'true');
 			$('#control-next').visibilityToggle(aNowPlayingData.dz_is_next_active === 'true');
 	
-			// get the cover (can be ANY SIZE WE WANT :))
-			$('#cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + aNowPlayingData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+			// get the cover
+			COVER.loadCover($('#cover'), LOCSTO.coverSize, aNowPlayingData.dz_cover);
 		} 
 		else 
 		{

@@ -416,6 +416,18 @@ function updateButtonTooltip()
 	}
 }
 
+function cacheCover(size, albumId)
+{
+	var coverUrl = COVER.getCoverUrl(size, albumId);
+	if (coverUrl === null)
+	{
+		return;
+	}
+	
+	var img = new Image();
+	img.src = coverUrl;
+}
+
 function propagatePlayingDataToAllTabs()
 {
 	"use strict";
@@ -426,21 +438,22 @@ function propagatePlayingDataToAllTabs()
 	
 	// show / hide notif if needed
 	showNotif();
-	
+
+	// precache covers
 	if (LOCSTO.session.deezerData !== null)
 	{		
-		// load notification size image if needed
+		// cache notification images if needed
 		if (!LOCSTO.notifications.never)
 		{
-			$('#prev_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_prev_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
-			$('#cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
-			$('#next_cover_small').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_next_cover + "/" + COVER_SIZE_NOTIFS + "-000000-80-0-0.jpg");
+			cacheCover(LOCSTO.coverSizeNotifs, LOCSTO.session.deezerData.dz_prev_cover);
+			cacheCover(LOCSTO.coverSizeNotifs, LOCSTO.session.deezerData.dz_cover);
+			cacheCover(LOCSTO.coverSizeNotifs, LOCSTO.session.deezerData.dz_next_cover);
 		}
 		
-		// load full image (might be the same size)
-		$('#prev_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_prev_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
-		$('#cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
-		$('#next_cover').attr('src', "http://cdn-images.deezer.com/images/cover/" + LOCSTO.session.deezerData.dz_next_cover + "/" + COVER_SIZE + "-000000-80-0-0.jpg");
+		// cache full images (might be the same size)
+		cacheCover(LOCSTO.coverSize, LOCSTO.session.deezerData.dz_prev_cover);
+		cacheCover(LOCSTO.coverSize, LOCSTO.session.deezerData.dz_cover);
+		cacheCover(LOCSTO.coverSize, LOCSTO.session.deezerData.dz_next_cover);
 	}
 }
 

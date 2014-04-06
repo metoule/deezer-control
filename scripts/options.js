@@ -23,13 +23,28 @@ function preparePage_welcome()
 	$("#button_rate_extension").attr('href', "https://chrome.google.com/webstore/detail/" + chrome.i18n.getMessage("@@extension_id"));
 }
 
+function changeStyle(iPopupStyle)
+{
+	"use strict";
+	loadStyle(iPopupStyle);
+	
+	// on resize, we want to fetch the new cover to avoid pixelisation 
+	// on size change from small to large
+	var aOldSize = LOCSTO.coverSize;
+	
+	// set the new size of the cover 
+	LOCSTO.coverSize = COVER.sizes[iPopupStyle];
+	
+	// replace img src to show new size
+	$('#cover').attr('src', function(index, oldSrc) { return oldSrc.replace(aOldSize, LOCSTO.coverSize); });
+}
 
 function preparePage_style()
 {
 	"use strict";
 	
 	// create interactivity
-	$("#popup_style_chooser").change(function () { loadStyle($("#popup_style_chooser").val()); });
+	$("#popup_style_chooser").change(function () { changeStyle($("#popup_style_chooser").val()); });
 	$("#button_save_style").click(savePopupStyle);
 
 	// restore value 
@@ -312,13 +327,8 @@ function showSection(id)
 	// move it to the needed place when needed!
 	if (id === 'popup_style')
 	{
-		loadStyle($("#popup_style_chooser").val());
+		changeStyle($("#popup_style_chooser").val());
 		$('#preview_inner_border').append($('#preview_content'));
-	}
-	else if (id === 'notifications')
-	{
-		loadStyle($("#notifs_style_chooser").val());
-		$('#preview_notifs').append($('#preview_content'));
 	}
 	
 	$('#tab_chooser > nav > a').removeClass('currentone');
