@@ -55,6 +55,7 @@
 	"options_page_tab_hotkeys_what_are_hotkeys": { "message": "Control Deezer straight from you keyboard with hot keys! You can choose any combination of keys to match your preference: the default are the media keys, but don't let that stop you!" },
 	"options_page_tab_hotkeys_activation_hot_keys":  { "message": "To activate this feature, Deezer Control needs to be able to listen to key combination on any web site you visit, thus the warning given by Chrome. Deezer Control doesn't read any of your data." }, 
 	"options_page_tab_hotkeys_button_activate":  { "message": "Activate hot keys" }, 
+	"options_page_tab_hotkeys_button_disable":  { "message": "Disable hot keys" },
 	"options_page_tab_hotkeys_prevHotKey_h2": { "message": "Hot key for 'previous song'" }, 
 	"options_page_tab_hotkeys_playPauseHotKey_h2": { "message": "Hot key for 'play/pause'" }, 
 	"options_page_tab_hotkeys_nextHotKey_h2": { "message": "Hot key for 'next song'" }, 

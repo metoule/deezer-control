@@ -310,7 +310,7 @@ footer a:hover, .mail_me:hover { text-decoration: underline; }
  *                    		Inputs     
  * ********************************************************************** */
 
-.btn_unselected, .btn_selected, .btn_blue, select
+.btn_unselected, .btn_selected, .btn_blue, .btn_red, select
 {
     border-radius: 3px;
     cursor: pointer;
@@ -338,13 +338,23 @@ footer a:hover, .mail_me:hover { text-decoration: underline; }
 
 .btn_blue
 {
-    background: #3B739E;
-    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #3B739E),color-stop(1, #63A4D6));
-    border: 1px solid #173C52;
+    background: #3B6280;
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #3B6280),color-stop(1, #63A4D6));
+    border: 1px solid #1E3140;
     color: white;
 }
 
 .btn_blue:hover { background: #63A4D6; }
+
+.btn_red
+{
+    background: #832E2E;
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #832E2E),color-stop(1, #DB4D4D));
+    border: 1px solid #421717;
+    color: white;
+}
+
+.btn_red:hover { background: #DB4D4D; }
 
 input { border: 1px solid #D0D0D0; }
 select { background-color: #FCFCFC; color: #191919; }
