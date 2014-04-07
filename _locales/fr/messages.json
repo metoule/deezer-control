@@ -55,6 +55,7 @@
 	"options_page_tab_hotkeys_what_are_hotkeys": { "message": "Utilisez votre clavier pour contrôler Deezer avec les raccourcis clavier ! Vous pouvez choisir n'importe quelle combinaison de touches: les touches multimédia sont pré-configurées, mais ne vous limitez pas !" },
 	"options_page_tab_hotkeys_activation_hot_keys":  { "message": "Pour pouvoir activer cette fonctionnalité, Deezer Control a besoin d'écouter toute combinaison de touches entrée sur n'importe quel site que vous visitez, d'où l'avertissement de Chrome. Deezer Control ne lit aucune de vos données." }, 
 	"options_page_tab_hotkeys_button_activate":  { "message": "Activer les raccourcis clavier" }, 
+	"options_page_tab_hotkeys_button_disable":  { "message": "Désactiver les raccourcis clavier" }, 
 	"options_page_tab_hotkeys_prevHotKey_h2": { "message": "Raccourci clavier pour 'chanson précédente'" }, 
 	"options_page_tab_hotkeys_playPauseHotKey_h2": { "message": "Raccourci clavier pour 'lecture/pause'" }, 
 	"options_page_tab_hotkeys_nextHotKey_h2": { "message": "Raccourci clavier pour 'chanson suivante'" }, 
