@@ -11,6 +11,9 @@ function keyboardNavigation(e)
 	"use strict";
 	chrome.runtime.sendMessage({ type: "getLOCSTO" }, function(LOCSTO) 
 	{ 
+		if (!LOCSTO.miscOptions.hasHotkeysPermission)
+			return;
+		
 		if (eventMatchHotKey(e, LOCSTO.prevHotKey))
 		{
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: "prev", source: "hotkey" });

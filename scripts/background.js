@@ -313,13 +313,16 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		break;
 		
 	case "getLOCSTO":
-		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		sendResponse(LOCSTO);
 		return true;
 		
 	case "getDeezerData":
 		sendResponse(LOCSTO.session.deezerData);
 		return true;
+
+	case "optionsChanged":
+		LOCSTO.loadOptions();
+		break;
 		
 	case "injectHotKeysJsOnAllTabs":
 		chrome.windows.getAll(
@@ -374,7 +377,6 @@ function showNotif(iForceRedisplay)
 	else
 	{
 		// update or create notification
-		LOCSTO.loadOptions(); // otherwise options might not be up to date
 		if (LOCSTO.notifications.never)
 		{
 			NOTIFS.destroyNotif();

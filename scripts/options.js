@@ -2,6 +2,12 @@
 window.addEventListener('hashchange', function(/*e*/) { "use strict"; showSection(location.hash.replace(/^\#/,'')); });
 window.addEventListener('load', preparePage);
 
+
+function sendOptionsChangedMessage()
+{
+	chrome.runtime.sendMessage({ type: "optionsChanged" }); 
+}
+
 function preparePage()
 {
 	"use strict";
@@ -58,6 +64,7 @@ function preparePage_hotKeys()
 	
 	// create interactivity
 	$("#button_activate_hotkeys").click(activateHotKeys);
+	$("#button_disable_hotkeys").click(disableHotKeys);
 	$("#button_save_hotkeys").click(saveHotKeys);
 
 	// hot keys are activated only if we have permission on all tabs
@@ -212,7 +219,8 @@ function savePopupStyle()
 	
 	LOCSTO.popupStyle = $("#popup_style_chooser").val();
 	LOCSTO.savePopupStyle();
-
+	sendOptionsChangedMessage();
+	
 	// Update status to let user know options were saved.
 	$("#status_style").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
 }
@@ -228,6 +236,7 @@ function saveHotKeys()
 	storeHotKey('whatZatSongHotKey');
 	storeHotKey('jumpToDeezerHotKey');
 	LOCSTO.saveHotKeys();
+	sendOptionsChangedMessage();
 
 	// Update status to let user know options were saved.
 	$("#status_hotkeys").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
@@ -245,6 +254,15 @@ function storeHotKey(iHotKeyName)
 	LOCSTO[iHotKeyName].keyCode  = parseInt(aHotKeyDiv.children('input:eq(1)').val(), 10);
 }
 
+function saveHotkeysPermission()
+{
+	chrome.permissions.contains({ origins: [ "<all_urls>" ] },function(granted) 
+	{
+		LOCSTO.miscOptions.hasHotkeysPermission = granted;
+		LOCSTO.saveMiscOptions();
+		sendOptionsChangedMessage();
+	});
+}
 
 function saveNotifications()
 {
@@ -270,6 +288,7 @@ function saveNotifications()
 	}
 	
 	LOCSTO.saveNotifications();
+	sendOptionsChangedMessage();
 
 	// Update status_style to let user know options were saved.
 	$("#status_notifs").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
@@ -286,6 +305,7 @@ function saveMiscOptions()
 	// limit deezer to one tab
 	LOCSTO.miscOptions.limitDeezerToOneTab = $("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').hasClass('btn_selected');
 	LOCSTO.saveMiscOptions();
+	sendOptionsChangedMessage();
 
 	// Update status to let user know options were saved.
 	$("#status_misc").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
@@ -300,9 +320,23 @@ function activateHotKeys()
 	{
 		refreshHotKeysOptions();
 		chrome.runtime.sendMessage({ type: "injectHotKeysJsOnAllTabs" }); 
+		saveHotkeysPermission();
 	});
 }
 
+function disableHotKeys()
+{
+	"use strict";
+	chrome.permissions.remove({ origins: [ '<all_urls>' ] }, function(removed)
+	{
+		if (removed)
+		{
+			$("#hotkey_permission_ko").css('display', 'block');
+			$("#hotkey_permission_ok").css('display', 'none'); 
+			saveHotkeysPermission();
+		}
+	});
+}
 
 // navigation bar
 function resetSections()
@@ -322,14 +356,6 @@ function showSection(id)
 {
 	"use strict";
 	var aNewLeft;
-	
-	// since we use ids to fill the popup content, we can't have several previews in the same page;
-	// move it to the needed place when needed!
-	if (id === 'popup_style')
-	{
-		changeStyle($("#popup_style_chooser").val());
-		$('#preview_inner_border').append($('#preview_content'));
-	}
 	
 	$('#tab_chooser > nav > a').removeClass('currentone');
 	$('#center_block > section:not(#' + id + ')').css('display', 'none');

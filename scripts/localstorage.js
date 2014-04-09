@@ -126,7 +126,7 @@ var LOCSTO = LOCSTO || {
 		this.jumpToDeezerHotKey = fillDictWithDefaults(this.get('jumpToDeezerHotKey'), { ctrlKey: false, altKey: true,  shiftKey: false, keyCode: 74  });
 
 	   // misc options
-	   this.miscOptions = fillDictWithDefaults(this.get('miscOptions'), { limitDeezerToOneTab: true });
+	   this.miscOptions = fillDictWithDefaults(this.get('miscOptions'), { limitDeezerToOneTab: true, hasHotkeysPermission: false });
 	   
 	   // new options to show the user
 	   this.newOptionsToShow = this.get('newOptionsToShow') || false;
@@ -142,7 +142,8 @@ var LOCSTO = LOCSTO || {
 	{
 		"use strict";
 		var installedVersion = new Version(this.get('installedVersion')), 
-			extensionVersion = new Version(chrome.app.getDetails().version);
+			extensionVersion = new Version(chrome.app.getDetails().version),
+			this_ = this; // for async function calls
 		
 		// new in version 1.9
 		//  * keyCode for hotkeys are integers rather than strings
@@ -163,6 +164,12 @@ var LOCSTO = LOCSTO || {
 			delete this.notifications.alwaysOn;
 			delete this.notifications.visible;
 			this.saveNotifications();
+			
+			chrome.permissions.contains({ origins: [ "<all_urls>" ] }, function(granted) 
+			{
+				this_.miscOptions.hasHotkeysPermission = granted;
+				this_.saveMiscOptions();
+			});
 			
 			// new options to show in 1.9
 			this.newOptionsToShow = true;
