@@ -27,13 +27,9 @@ chrome.runtime.onInstalled.addListener(function(details)
 		});
 		
 		// re-inject hotkeys on all opened tabs
-		chrome.permissions.contains(
+		chrome.permissions.contains({ origins: [ "<all_urls>" ] }, function(granted) 
 		{
-			origins: [ "<all_urls>" ] 
-		}, 
-		function(result) 
-		{
-			if (result)
+			if (granted)
 			{
 				extensionOnMessageListener({ type: 'injectHotKeysJsOnAllTabs' });
 			}
@@ -89,13 +85,9 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
 	checkLimitToOneDeezerTab(data.tabId, data.url);
 	
-	chrome.permissions.contains(
+	chrome.permissions.contains({ origins: [ "<all_urls>" ] }, function(granted) 
 	{
-		origins: [ "<all_urls>" ] 
-	}, 
-	function(result) 
-	{
-		if (result)
+		if (granted)
 		{
 			chrome.tabs.executeScript(data.tabId, { file: "/scripts/hotkeys.js", runAt: "document_start" });
 		}
@@ -390,9 +382,9 @@ function showNotif(iForceRedisplay)
 							 ||  iForceRedisplay === true;
 		
 		// if we don't have permission to display notifications, close notif if present
-		chrome.permissions.contains({ permissions: ['notifications'] }, function(iPermissionGranted)
+		chrome.permissions.contains({ permissions: ['notifications'] }, function(granted)
 		{
-			if (iPermissionGranted)
+			if (granted)
 			{
 				NOTIFS.createNotif(forceRedisplay);
 			}

@@ -8,6 +8,11 @@ function sendOptionsChangedMessage()
 	chrome.runtime.sendMessage({ type: "optionsChanged" }); 
 }
 
+function showSaveStatus(statusId)
+{
+	$("#" + statusId).stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
+}
+
 function preparePage()
 {
 	"use strict";
@@ -67,9 +72,19 @@ function preparePage_hotKeys()
 	$("#button_disable_hotkeys").click(disableHotKeys);
 	$("#button_save_hotkeys").click(saveHotKeys);
 
+	// restore value
+	restoreHotkey('prevHotKey');
+	restoreHotkey('playPauseHotKey');
+	restoreHotkey('nextHotKey');
+	restoreHotkey('whatZatSongHotKey');
+	restoreHotkey('jumpToDeezerHotKey');
+
 	// hot keys are activated only if we have permission on all tabs
 	// if we don't permission, show an explanation
-	refreshHotKeysOptions();
+	chrome.permissions.contains({ origins: ['<all_urls>'] }, function(granted)
+	{
+		displayHotKeysOptions(granted);
+	});
 }
 
 
@@ -115,35 +130,17 @@ function preparePage_misc()
 	$("#button_save_misc").click(saveMiscOptions);
 
 	// restore value 
-	refreshMiscOptions();
+	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').toggleClass('btn_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('btn_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
+	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(1)').toggleClass('btn_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('btn_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
 }
 
 
-function refreshHotKeysOptions()
+function displayHotKeysOptions(granted)
 {
 	"use strict";
-	
-	chrome.permissions.contains(
-	{ origins: ['<all_urls>'] },
-	function(result)
-	{
-		if (result)
-		{
-			$("#hotkey_permission_ko").css('display', 'none');
-			$("#hotkey_permission_ok").css('display', 'block');
 
-			restoreHotkey('prevHotKey');
-			restoreHotkey('playPauseHotKey');
-			restoreHotkey('nextHotKey');
-			restoreHotkey('whatZatSongHotKey');
-			restoreHotkey('jumpToDeezerHotKey');
-		}
-		else
-		{
-			$("#hotkey_permission_ko").css('display', 'block');
-			$("#hotkey_permission_ok").css('display', 'none');
-		}
-	});
+	$("#hotkey_permission_ko").toggle(!granted);
+	$("#hotkey_permission_ok").toggle(granted);
 }
 
 
@@ -202,17 +199,6 @@ function restoreHotkey(iHotKeyName)
 }
 
 
-function refreshMiscOptions()
-{
-	"use strict";
-	
-	// limit deezer to one tab
-	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(0)').toggleClass('btn_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('btn_selected',  LOCSTO.miscOptions.limitDeezerToOneTab);
-	$("#miscLimitDeezerToOneTab > .yes_no_bar").children('button:eq(1)').toggleClass('btn_unselected',  LOCSTO.miscOptions.limitDeezerToOneTab).toggleClass('btn_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
-}
-
-
-// Saves options to localStorage.
 function savePopupStyle()
 {
 	"use strict";
@@ -222,7 +208,7 @@ function savePopupStyle()
 	sendOptionsChangedMessage();
 	
 	// Update status to let user know options were saved.
-	$("#status_style").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
+	showSaveStatus("status_style");
 }
 
 
@@ -239,7 +225,7 @@ function saveHotKeys()
 	sendOptionsChangedMessage();
 
 	// Update status to let user know options were saved.
-	$("#status_hotkeys").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
+	showSaveStatus("status_hotkeys");
 }
 
 
@@ -254,15 +240,14 @@ function storeHotKey(iHotKeyName)
 	LOCSTO[iHotKeyName].keyCode  = parseInt(aHotKeyDiv.children('input:eq(1)').val(), 10);
 }
 
-function saveHotkeysPermission()
+
+function saveHotkeysPermission(granted)
 {
-	chrome.permissions.contains({ origins: [ "<all_urls>" ] },function(granted) 
-	{
-		LOCSTO.miscOptions.hasHotkeysPermission = granted;
-		LOCSTO.saveMiscOptions();
-		sendOptionsChangedMessage();
-	});
+	LOCSTO.miscOptions.hasHotkeysPermission = granted;
+	LOCSTO.saveMiscOptions();
+	sendOptionsChangedMessage();
 }
+
 
 function saveNotifications()
 {
@@ -291,7 +276,7 @@ function saveNotifications()
 	sendOptionsChangedMessage();
 
 	// Update status_style to let user know options were saved.
-	$("#status_notifs").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
+	showSaveStatus("status_notifs");
 
 	// reshow notifs so that the user sees the change straight away
 	chrome.runtime.sendMessage({ type: "showNotif" });
@@ -308,7 +293,7 @@ function saveMiscOptions()
 	sendOptionsChangedMessage();
 
 	// Update status to let user know options were saved.
-	$("#status_misc").stop(true, true).text(chrome.i18n.getMessage("options_page_options_saved")).show().fadeOut(1500);
+	showSaveStatus("status_misc");
 }
 
 
@@ -316,25 +301,25 @@ function saveMiscOptions()
 function activateHotKeys()
 {
 	"use strict";
-	chrome.permissions.request({ origins: [ '<all_urls>' ] }, function(/*granted*/)
+	chrome.permissions.request({ origins: [ '<all_urls>' ] }, function(granted)
 	{
-		refreshHotKeysOptions();
-		chrome.runtime.sendMessage({ type: "injectHotKeysJsOnAllTabs" }); 
-		saveHotkeysPermission();
+		if (granted)
+		{
+			chrome.runtime.sendMessage({ type: "injectHotKeysJsOnAllTabs" }); 
+		}
+		displayHotKeysOptions(granted);
+		saveHotkeysPermission(granted);
 	});
 }
+
 
 function disableHotKeys()
 {
 	"use strict";
 	chrome.permissions.remove({ origins: [ '<all_urls>' ] }, function(removed)
 	{
-		if (removed)
-		{
-			$("#hotkey_permission_ko").css('display', 'block');
-			$("#hotkey_permission_ok").css('display', 'none'); 
-			saveHotkeysPermission();
-		}
+		displayHotKeysOptions(!removed);
+		saveHotkeysPermission(!removed);
 	});
 }
 

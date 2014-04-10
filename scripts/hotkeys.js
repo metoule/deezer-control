@@ -6,7 +6,12 @@ function eventMatchHotKey(e, iHotKey)
 	return e.shiftKey === iHotKey.shiftKey && e.altKey === iHotKey.altKey && e.ctrlKey === iHotKey.ctrlKey && e.keyCode === iHotKey.keyCode;
 }
 
-function keyboardNavigation(e) 
+var HotKeysListener = function HotKeysListener()
+{
+	window.addEventListener("keydown", this, false);
+};
+
+HotKeysListener.prototype.handleEvent = function (e) 
 {
 	"use strict";
 	chrome.runtime.sendMessage({ type: "getLOCSTO" }, function(LOCSTO) 
@@ -35,6 +40,6 @@ function keyboardNavigation(e)
 			chrome.runtime.sendMessage({ type: "jumpToDeezer", source: "hotkey" });
 		}
 	}); 
-}
+};
 
-window.addEventListener("keydown", keyboardNavigation, false);
+var HOTKEYS = HOTKEYS || new HotKeysListener();
