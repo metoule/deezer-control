@@ -4,7 +4,7 @@
 {
 	min-height: 140px;
 	min-width: 120px;
-	margin: 0px 10px 10px 10px;
+	margin: 0px 1px 1px 1px;
 }
 
 #controls
@@ -32,16 +32,11 @@
 {
 	padding: 5px 3px 0px 3px;
 	height: 35px;
-	width: 114px;
-}
-
-#now_playing_info_track
-{
 	font-size: 14px;
-	margin-bottom: 2px;
+	line-height: 15px;
 }
-#now_playing_info_artist { font-size: 14px; }
 
+#now_playing_info_track { margin-bottom: 2px; }
 #cover 
 {
 	height: 120px;

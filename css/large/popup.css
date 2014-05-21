@@ -4,14 +4,13 @@
 {
 	min-height: 278px;
 	min-width: 250px;
-	margin: 0px 12px 12px 12px;
+	margin: 0px 1px 1px 1px;
 }
 
 #controls
 {
 	height: 28px;
 	line-height: 28px;
-	padding: 0px 3px;
 }
 
 #controls a 
@@ -31,18 +30,13 @@
 #now_playing { height: 250px; }
 #now_playing_info
 {
-	padding: 11px 9px 0px 9px;
-	height: 45px;
-	width: 232px;
-}
-
-#now_playing_info_track
-{
+	padding: 0px 9px 0px 9px;
+	height: 43px;
 	font-size: 16px;
-	margin-bottom: 2px;
+	line-height: 17px;
 }
-#now_playing_info_artist { font-size: 16px; }
 
+#now_playing_info_track { margin-bottom: 2px; }
 #cover 
 {
 	height: 250px;
