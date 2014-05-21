@@ -52,6 +52,7 @@ function executePlayerAction(iCommand)
 {
 	"use strict";
 	chrome.runtime.sendMessage({ type: "controlPlayer", command: iCommand, source: "popup" });
+	return false;
 }
 
 // change focus to Deezer tab, and execute wanted action

@@ -4,7 +4,7 @@
 {
 	min-height: 16px;
 	min-width: 290px;
-	margin: 5px;
+	margin: 5px 6px 5px 6px;
 }
 
 #controls
@@ -12,6 +12,7 @@
 	float: right;
 	height: 16px;
 	line-height: 16px;
+	padding-top: 1px;
 }
 
 #controls a 
@@ -28,28 +29,28 @@
 #control-play	  { background-position: -35px; width: 10px; }
 #control-next	  { background-position: -45px; width: 15px; }
 
-#now_playing { height: 16px; line-height: 14px; }
+#now_playing { height: 16px; }
 #now_playing_info
 {
 	margin-left: 26px;
 	height: 16px;
 	width: 182px;
 	text-align: left;
+	font-size: 14px;
+	line-height: 15px;
 }
 
 #now_playing_info span 
 {
 	display: inline-block;
 	max-width: 86px;
-	padding-top: 1px;
+	padding-top: 2px;
 }
 
 #now_playing_info_track
 {
-	font-size: 14px;
 	margin-right: 5px;
 }
-#now_playing_info_artist { font-size: 14px; }
 
 #cover 
 {
@@ -59,3 +60,5 @@
 	top: -4px;
 	left: -5px;
 }
+
+#shadow_top, #shadow_bottom { display: none; }

@@ -339,7 +339,7 @@ footer a:hover, .mail_me:hover { text-decoration: underline; }
 .btn_blue
 {
     background: #3B6280;
-    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #3B6280),color-stop(1, #63A4D6));
+    background: -webkit-linear-gradient(bottom, #3B6280, #63A4D6);
     border: 1px solid #1E3140;
     color: white;
 }
@@ -349,7 +349,7 @@ footer a:hover, .mail_me:hover { text-decoration: underline; }
 .btn_red
 {
     background: #832E2E;
-    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #832E2E),color-stop(1, #DB4D4D));
+    background: -webkit-linear-gradient(bottom, #832E2E, #DB4D4D);
     border: 1px solid #421717;
     color: white;
 }
