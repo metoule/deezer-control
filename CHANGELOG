@@ -1,7 +1,13 @@
-1.9 -
+2.0 - 02 Jun 2014
  * New, flatter, icons
  * Fix: prevent hotkeys from being seen twice
+ * Fix: orange.deezer.com users can now use the extension as expected
  * Improvement: hotkeys can be used even if the page isn't fully loaded
+ * Improvement: hotkeys can now be disabled
+ * Improvement: use less memory
+ * Style: keep in sync with Deezer style
+ * Style: buttons are now more consistent across the extension
+ * Cleanup: old notification system completely removed
  
 1.8 - 
  * Extension keeps working after update (no longer requires a page refresh)

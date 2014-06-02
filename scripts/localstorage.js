@@ -145,11 +145,11 @@ var LOCSTO = LOCSTO || {
 			extensionVersion = new Version(chrome.app.getDetails().version),
 			this_ = this; // for async function calls
 		
-		// new in version 1.9
+		// new in version 2.0
 		//  * keyCode for hotkeys are integers rather than strings
 		//  * renamed notifications keys
 		//  * removed notifs fade away delay and notifs style (irrelevant with the new notifs)
-		if (installedVersion.compare(new Version("1.9")) < 0)
+		if (installedVersion.compare(new Version("2.0")) < 0)
 		{
 			this.prevHotKey.keyCode 		= parseInt(this.prevHotKey.keyCode, 10);
 			this.playPauseHotKey.keyCode 	= parseInt(this.playPauseHotKey.keyCode, 10);
@@ -171,7 +171,7 @@ var LOCSTO = LOCSTO || {
 				this_.saveMiscOptions();
 			});
 			
-			// new options to show in 1.9
+			// new options to show in 2.0
 			this.newOptionsToShow = true;
 			this.saveNewOptionsToShow();
 		}
