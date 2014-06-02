@@ -4,7 +4,7 @@
 {
 	min-height: 278px;
 	min-width: 250px;
-	margin: 0px 1px 1px 1px;
+	margin: 0px 4px 4px 4px;
 }
 
 #controls
@@ -34,6 +34,7 @@
 	height: 43px;
 	font-size: 16px;
 	line-height: 17px;
+	width: 232px;
 }
 
 #now_playing_info_track { margin-bottom: 2px; }
