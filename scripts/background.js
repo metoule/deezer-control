@@ -34,11 +34,8 @@ chrome.runtime.onInstalled.addListener(function(details)
 				extensionOnMessageListener({ type: 'injectHotKeysJsOnAllTabs' });
 			}
 		});
-	}
 	
-	// update local storage if needed
-	if (details.reason === "update")
-	{
+		// update local storage if needed
 		LOCSTO.updateModel();
 	}
 });

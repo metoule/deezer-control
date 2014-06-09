@@ -4,15 +4,34 @@ function updateDeezerControlData()
 {
 	"use strict";
 	var DeezerControlData = document.getElementById('DeezerControlData');
+	var dzCurrentSong = { ART_ID: '', ALB_ID: '' };
+	var dzPrevSong = { ALB_PICTURE: '' };
+	var dzNextSong = { ALB_PICTURE: '' };
+	
+	try 
+	{
+		dzCurrentSong = dzPlayer.getCurrentSong() || { ART_ID: '', ALB_ID: '' };;
+	} catch(e) {}
+
+	try 
+	{
+		dzPrevSong = dzPlayer.getPrevSong() || { ALB_PICTURE: '' };
+	} catch(e) {}
+
+	try 
+	{
+		dzNextSong = dzPlayer.getNextSong() || { ALB_PICTURE: '' };
+	} catch(e) {}
+	
 	DeezerControlData.setAttribute('dz_playing',	 document.getElementById('player_control_play').style.display === 'none');
 	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
-	DeezerControlData.setAttribute('dz_artist_id',  (dzPlayer.getCurrentSongInfo() !== null ? dzPlayer.getCurrentSongInfo().ART_ID : ''));
 	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
 	DeezerControlData.setAttribute('dz_album',	     dzPlayer.getAlbumTitle());
-	DeezerControlData.setAttribute('dz_album_id',   (dzPlayer.getCurrentSongInfo() !== null ? dzPlayer.getCurrentSongInfo().ALB_ID : ''));
 	DeezerControlData.setAttribute('dz_cover',	     dzPlayer.getCover());
-	DeezerControlData.setAttribute('dz_prev_cover', (dzPlayer.getPrevSongInfo() !== null ? dzPlayer.getPrevSongInfo().ALB_PICTURE : ''));
-	DeezerControlData.setAttribute('dz_next_cover', (dzPlayer.getNextSongInfo() !== null ? dzPlayer.getNextSongInfo().ALB_PICTURE : ''));
+	DeezerControlData.setAttribute('dz_artist_id',   dzCurrentSong.ART_ID);
+	DeezerControlData.setAttribute('dz_album_id',    dzCurrentSong.ALB_ID);
+	DeezerControlData.setAttribute('dz_prev_cover',  dzPrevSong.ALB_PICTURE);
+	DeezerControlData.setAttribute('dz_next_cover',  dzNextSong.ALB_PICTURE);
 	DeezerControlData.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());
 	DeezerControlData.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());
 	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 
