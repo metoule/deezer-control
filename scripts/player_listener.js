@@ -1,6 +1,12 @@
  
 
 // create an invisible fake div
+if (document.getElementById('DeezerControlData') !== null)
+{
+	var toRemove = document.getElementById('DeezerControlData');
+	toRemove.parentNode.removeChild(toRemove);
+}
+
 if (document.getElementById('DeezerControlData') === null)
 {
 	var aDeezerControlDataDom = document.createElement('div');

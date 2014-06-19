@@ -78,42 +78,12 @@ Version.prototype.compare = function(otherVersion)
 //------------------------------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------------------------------
-var COVER = COVER || {
-
-	sizes: { large: '250x250', small: '120x120', sideways: '80x80', line: '25x25' },
-	
-	getCoverUrl: function(size, albumId)
-	{
-		"use strict";
-		if (albumId === undefined || albumId === null)
-			return null;
-		
-		return "http://cdn-images.deezer.com/images/cover/" + albumId + "/" + size + "-000000-80-0-0.jpg";
-	}, 
-	
-	loadCover: function(img, size, albumId)
-	{
-		"use strict";
-		var coverUrl = this.getCoverUrl(size, albumId);
-		if (coverUrl !== null)
-		{
-			img.attr('src', coverUrl);
-		}
-	}
-}
-
-
-//------------------------------------------------------------------------------------------------------
-//
-//------------------------------------------------------------------------------------------------------
 var LOCSTO = LOCSTO || {
 	
 	loadOptions: function()
 	{
 		"use strict";
 		this.popupStyle = this.get('popup_style') || 'large';
-		this.coverSize = COVER.sizes[this.popupStyle];
-		this.coverSizeNotifs = COVER.sizes.sideways;
 		
 		// notifications
 		this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false });

@@ -8,21 +8,28 @@
 						"default_title": "__MSG_defaultTitle__"
 					},
   "background": { 
-  					"scripts": [ "scripts/jquery-2.1.0.min.js", "scripts/localstorage.js", "scripts/notifications.js", "scripts/background.js" ], 
+  					"scripts": [ 
+  						"scripts/jquery-2.1.0.min.js", 
+  						"scripts/localstorage.js", 
+  						"scripts/notifications.js", 
+  						"scripts/background.js" 
+					], 
   					"persistent": false 
 				},
   "options_page": "options.html",
   "content_scripts":	[
 							{
 								"all_frames": false,
-								"matches": [ "http://*.deezer.com/*" ],
+								"matches": [ 
+									"*://*.deezer.com/*" 
+								],
 								"js": [ "scripts/player_listener.js" ],
 								"run_at": "document_idle"
 							}
 						],
   "default_locale": "en", 
   "permissions":	[ 
-						"http://*.deezer.com/*", 
+						"*://*.deezer.com/*",  
 						"notifications", 
 						"tabs",
 		  				"webNavigation"
@@ -33,5 +40,7 @@
 				"48": "imgs/icons/deezer_48x48.png",
 				"128": "imgs/icons/deezer_128x128.png" 
 			  }, 
-  "web_accessible_resources": ["scripts/player_observer_deezer.js"]
+  "web_accessible_resources": [
+  						"scripts/player_observer_deezer.js"
+					]
 }
