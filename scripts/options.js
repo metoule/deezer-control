@@ -38,16 +38,6 @@ function changeStyle(iPopupStyle)
 {
 	"use strict";
 	loadStyle(iPopupStyle);
-	
-	// on resize, we want to fetch the new cover to avoid pixelisation 
-	// on size change from small to large
-	var aOldSize = LOCSTO.coverSize;
-	
-	// set the new size of the cover 
-	LOCSTO.coverSize = COVER.sizes[iPopupStyle];
-	
-	// replace img src to show new size
-	$('#cover').attr('src', function(index, oldSrc) { return oldSrc.replace(aOldSize, LOCSTO.coverSize); });
 }
 
 function preparePage_style()

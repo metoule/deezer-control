@@ -86,7 +86,7 @@ function refreshPopup()
 			$('#control-next').visibilityToggle(aNowPlayingData.dz_is_next_active === 'true');
 	
 			// get the cover
-			COVER.loadCover($('#cover'), LOCSTO.coverSize, aNowPlayingData.dz_cover);
+			$('#cover').attr('src', aNowPlayingData.dz_cover);
 		} 
 		else 
 		{

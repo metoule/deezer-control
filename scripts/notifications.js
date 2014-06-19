@@ -20,7 +20,7 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 				type: 'basic', 
 				title:   LOCSTO.session.deezerData.dz_track, 
 				message: LOCSTO.session.deezerData.dz_artist,
-				iconUrl: COVER.getCoverUrl('80x80', LOCSTO.session.deezerData.dz_cover),
+				iconUrl: LOCSTO.session.deezerData.dz_cover,
 				buttons: notifButtons,
 				priority: 0
 		};

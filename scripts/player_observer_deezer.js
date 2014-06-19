@@ -1,4 +1,13 @@
 
+function GetCoverFromAlbumId(albumId)
+{
+	"use strict";
+	if (albumId === undefined || albumId === null)
+		albumId = "";
+	
+	return "http://cdn-images.deezer.com/images/cover/" + albumId + "/250x250-000000-80-0-0.jpg";
+}
+
 // get data from JS object dzPlayer
 function updateDeezerControlData()
 {
@@ -27,11 +36,11 @@ function updateDeezerControlData()
 	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
 	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
 	DeezerControlData.setAttribute('dz_album',	     dzPlayer.getAlbumTitle());
-	DeezerControlData.setAttribute('dz_cover',	     dzPlayer.getCover());
+	DeezerControlData.setAttribute('dz_cover',	     GetCoverFromAlbumId(dzPlayer.getCover()));
 	DeezerControlData.setAttribute('dz_artist_id',   dzCurrentSong.ART_ID);
 	DeezerControlData.setAttribute('dz_album_id',    dzCurrentSong.ALB_ID);
-	DeezerControlData.setAttribute('dz_prev_cover',  dzPrevSong.ALB_PICTURE);
-	DeezerControlData.setAttribute('dz_next_cover',  dzNextSong.ALB_PICTURE);
+	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverFromAlbumId(dzPrevSong.ALB_PICTURE));
+	DeezerControlData.setAttribute('dz_next_cover',  GetCoverFromAlbumId(dzNextSong.ALB_PICTURE));
 	DeezerControlData.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());
 	DeezerControlData.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());
 	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 

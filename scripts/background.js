@@ -13,18 +13,21 @@ chrome.runtime.onInstalled.addListener(function(details)
 {
 	"use strict";
 	
-	// inject content script on Deezer tab
+	// inject content script on player tabs
 	if (details.reason === "install" || details.reason === "update")
 	{
-		findDeezerTab(function(iDeezerTabId)
+		// insert a player listener script on all the urls supported in the manifest
+		var patterns = chrome.runtime.getManifest().content_scripts[0].matches;
+		for(var i = 0; i < patterns.length; i++) 
 		{
-			if (iDeezerTabId === null)
+			chrome.tabs.query({ url: patterns[i] }, function(tabs)
 			{
-				return;
-			}
-
-			chrome.tabs.executeScript(iDeezerTabId, { file: "/scripts/player_listener.js" });
-		});
+				for(var j = 0; j < tabs.length; j++) 
+				{
+					chrome.tabs.executeScript(tabs[j].id, { file: "/scripts/player_listener.js" });
+				}
+			});
+		}
 		
 		// re-inject hotkeys on all opened tabs
 		chrome.permissions.contains({ origins: [ "<all_urls>" ] }, function(granted) 
@@ -40,7 +43,7 @@ chrome.runtime.onInstalled.addListener(function(details)
 	}
 });
 
-// if no popup is set, it means that we should open a new Deezer tab
+// if no popup is set, it means that we should open a new tab with default player
 chrome.browserAction.onClicked.addListener(browserActionOnClickListener);
 function browserActionOnClickListener(/*iTab*/) 
 {
@@ -64,6 +67,7 @@ function browserActionOnClickListener(/*iTab*/)
 	// else: normal use case
 	else 
 	{
+		// TODO add default player
 		chrome.tabs.create({ url: 'http://www.deezer.com' });
 	}
 }
@@ -79,8 +83,8 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 		return;
 	}
 	
-	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
-	checkLimitToOneDeezerTab(data.tabId, data.url);
+	// if user wants to limit players to one instance, ensure no other page from that player is opened
+	checkLimitToOnePlayerTab(data.tabId, data.url);
 	
 	chrome.permissions.contains({ origins: [ "<all_urls>" ] }, function(granted) 
 	{
@@ -90,7 +94,7 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 		}
 	});
 
-	// recount number of opened deezer tabs
+	// recount number of opened player tabs
 	setUpPopup();
 });
 
@@ -109,7 +113,8 @@ function tabsOnActivatedListener(iActiveTabInfo)
 			return;
 		}
 		
-		// ignore active tab if deezer: we don't want to go back to deezer tab!
+		// ignore active tab if current active player: we don't want to go back to it!
+		// TODO implement stack
 		if (!matchDeezerUrl(aActiveTab.url))
 		{
 			LOCSTO.session.jumpBackToActiveTab.windowsId = aActiveTab.windowId;
@@ -118,12 +123,12 @@ function tabsOnActivatedListener(iActiveTabInfo)
 	});
 }
 
-// check whether we want to limit deezer to one tab
-function checkLimitToOneDeezerTab(iTabId, iNewUrl)
+// check whether we want to limit players to one tab each
+function checkLimitToOnePlayerTab(iTabId, iNewUrl)
 {
 	"use strict";
 	
-	// if user wants to limit Deezer to one tab, prevents any new Deezer tab from being opened
+	// if user wants to limit players to one tab, prevents any new tab with this player from being opened
 	if (LOCSTO.miscOptions.limitDeezerToOneTab === true)
 	{
 		if (iNewUrl && matchDeezerUrl(iNewUrl))
@@ -139,7 +144,7 @@ function checkLimitToOneDeezerTab(iTabId, iNewUrl)
 				// close opening tab
 				chrome.tabs.remove(iTabId);
 				
-				// switch to Deezer tab and update url to wanted url
+				// switch to player tab and update url to wanted url
 				chrome.windows.update(iDeezerWindowId, { focused: true });
 				chrome.tabs.update(iDeezerTabId, { selected: true });
 			}, iTabId);
@@ -407,18 +412,6 @@ function updateButtonTooltip()
 	}
 }
 
-function cacheCover(size, albumId)
-{
-	var coverUrl = COVER.getCoverUrl(size, albumId);
-	if (coverUrl === null)
-	{
-		return;
-	}
-	
-	var img = new Image();
-	img.src = coverUrl;
-}
-
 function propagatePlayingDataToAllTabs()
 {
 	"use strict";
@@ -432,19 +425,10 @@ function propagatePlayingDataToAllTabs()
 
 	// precache covers
 	if (LOCSTO.session.deezerData !== null)
-	{		
-		// cache notification images if needed
-		if (!LOCSTO.notifications.never)
-		{
-			cacheCover(LOCSTO.coverSizeNotifs, LOCSTO.session.deezerData.dz_prev_cover);
-			cacheCover(LOCSTO.coverSizeNotifs, LOCSTO.session.deezerData.dz_cover);
-			cacheCover(LOCSTO.coverSizeNotifs, LOCSTO.session.deezerData.dz_next_cover);
-		}
-		
-		// cache full images (might be the same size)
-		cacheCover(LOCSTO.coverSize, LOCSTO.session.deezerData.dz_prev_cover);
-		cacheCover(LOCSTO.coverSize, LOCSTO.session.deezerData.dz_cover);
-		cacheCover(LOCSTO.coverSize, LOCSTO.session.deezerData.dz_next_cover);
+	{
+		new Image().src = LOCSTO.session.deezerData.dz_prev_cover;
+		new Image().src = LOCSTO.session.deezerData.dz_cover;
+		new Image().src = LOCSTO.session.deezerData.dz_next_cover;
 	}
 }
 
