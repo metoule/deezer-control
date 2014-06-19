@@ -70,6 +70,49 @@ var observerPlay = new MutationObserver(function(mutations)
 observerPlay.observe(document.getElementById('player_track_title'),  { childList: true, characterData: true });  
 observerPlay.observe(document.getElementById("player_control_play"), { attributes: true, attributeOldValue: true, attributeFilter: ['style'] });
 
+// process actions
+function executeAction(action)
+{
+	"use strict";
+	if (typeof(playercontrol) != 'undefined') 
+		playercontrol.doAction(action);
+}
+
+function deezerControlMethod_pause()
+{
+	"use strict";
+	executeAction('pause');
+}
+
+function deezerControlMethod_play()
+{
+	"use strict";
+	executeAction('play');
+}
+
+function deezerControlMethod_prev()
+{
+	"use strict";
+	executeAction('prev');
+}
+
+function deezerControlMethod_next()
+{
+	"use strict";
+	executeAction('next');
+}
+
+function deezerControlMethod_linkCurrentSong()
+{
+	"use strict";
+	executeAction('linkCurrentSong');
+}
+
+function deezerControlMethod_linkCurrentArtist()
+{
+	"use strict";
+	loadBox('artist/' + document.getElementById('DeezerControlData').getAttribute('dz_artist_id'));
+}
 
 // update content on first load
 updateDeezerControlData();
