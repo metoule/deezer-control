@@ -15,7 +15,7 @@ if (document.getElementById('DeezerControlData') === null)
 	
 	// inject a new JS script that can interact with the JS objects of the page
 	var s = document.createElement('script');
-	s.src = chrome.extension.getURL('scripts/player_observer.js');
+	s.src = chrome.extension.getURL('scripts/player_observer_deezer.js');
 	(document.head||document.documentElement).appendChild(s);
 	s.onload = function() { "use strict"; s.parentNode.removeChild(s); };
 	
@@ -64,42 +64,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 {
 	"use strict";
 	
-	var aAction, aDzPlaying;
-	switch (request.name)
+	var aAction = request.action, 
+		aDzPlaying;
+
+	// in case of media keys, we don't know if it's pause or play
+	if (request.name === "controlPlayer" && aAction === "playpause")
 	{
-		case "controlPlayer":
-			// in case of media keys, we don't know if it's pause or play
-			// compute !
-			aAction = request.action;
-			if (aAction === 'playpause')
-			{
-				aDzPlaying = document.getElementById('DeezerControlData').getAttribute('dz_playing');
-				aAction = aDzPlaying === "true" ? "pause" : "play";
-			}
-						
-			executeDoAction(aAction);
-			break;
-			
-			
-		case "doAction":			
-			// special action linkCurrentArtist (doesn't exist on Deezer)
-			if (request.action === 'linkCurrentArtist')
-			{
-				location.href = "javascript: loadBox('artist/" + document.getElementById('DeezerControlData').getAttribute('dz_artist_id') + "')";
-				break;
-			}		
-			
-			executeDoAction(request.action);
-			break;
+		aDzPlaying = document.getElementById('DeezerControlData').getAttribute('dz_playing');
+		aAction = aDzPlaying === "true" ? "pause" : "play";
 	}
+
+	// possible action: play, pause, prev, next, linkCurrentSong, linkCurrentArtist
+	location.href = "javascript: deezerControlMethod_" + aAction + "()";
 	
 	// no callback is used, return false
 	return false;
 });
-
-function executeDoAction(action)
-{
-	"use strict";
-	location.href = "javascript: if (typeof(playercontrol) != 'undefined') playercontrol.doAction('" + action + "');";	
-}
-
