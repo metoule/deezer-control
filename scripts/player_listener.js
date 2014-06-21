@@ -7,29 +7,20 @@ if (document.getElementById('DeezerControlData') !== null)
 	toRemove.parentNode.removeChild(toRemove);
 }
 
-if (document.getElementById('DeezerControlData') === null)
-{
-	var aDeezerControlDataDom = document.createElement('div');
-	aDeezerControlDataDom.id = "DeezerControlData";
-	aDeezerControlDataDom.style.display = 'none';
-	
-	// create a child to monitor and help force the info update
-	var aLastUpdateDom = document.createElement('div');
-	aLastUpdateDom.id = "lastUpdate";
-	aDeezerControlDataDom.appendChild(aLastUpdateDom);
-	document.body.appendChild(aDeezerControlDataDom);
-	
-	// inject a new JS script that can interact with the JS objects of the page
-	var s = document.createElement('script');
-	s.src = chrome.extension.getURL('scripts/player_observer_deezer.js');
-	(document.head||document.documentElement).appendChild(s);
-	s.onload = function() { "use strict"; s.parentNode.removeChild(s); };
-	
-	// add a listener for events on our new DIV, and post it to our extension
-	var observer = new MutationObserver(sendJsonPlayerInfo);
-	var config = { attributes: false, childList: true, characterData: true }; 
-	observer.observe(document.getElementById('lastUpdate'), config);
-}
+var aDeezerControlDataDom = document.createElement('div');
+aDeezerControlDataDom.id = "DeezerControlData";
+aDeezerControlDataDom.style.display = 'none';
+
+// create a child to monitor and help force the info update
+var aLastUpdateDom = document.createElement('div');
+aLastUpdateDom.id = "lastUpdate";
+aDeezerControlDataDom.appendChild(aLastUpdateDom);
+document.body.appendChild(aDeezerControlDataDom);
+
+// add a listener for events on our new DIV, and post it to our extension
+var observer = new MutationObserver(sendJsonPlayerInfo);
+var config = { attributes: false, childList: true, characterData: true }; 
+observer.observe(document.getElementById('lastUpdate'), config);
 
 // extract Deezer data
 function getDeezerData()

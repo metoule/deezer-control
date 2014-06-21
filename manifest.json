@@ -19,12 +19,8 @@
   "options_page": "options.html",
   "content_scripts":	[
 							{
-								"all_frames": false,
-								"matches": [ 
-									"*://*.deezer.com/*" 
-								],
-								"js": [ "scripts/player_listener.js" ],
-								"run_at": "document_idle"
+								"matches": [ "*://*.deezer.com/*" ],
+								"js": [ "scripts/player_listener.js", "scripts/deezer/bootstrap.js" ]
 							}
 						],
   "default_locale": "en", 
@@ -41,6 +37,6 @@
 				"128": "imgs/icons/deezer_128x128.png" 
 			  }, 
   "web_accessible_resources": [
-  						"scripts/player_observer_deezer.js"
+  						"scripts/deezer/player_observer.js"
 					]
 }

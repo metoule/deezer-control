@@ -16,15 +16,20 @@ chrome.runtime.onInstalled.addListener(function(details)
 	// inject content script on player tabs
 	if (details.reason === "install" || details.reason === "update")
 	{
-		// insert a player listener script on all the urls supported in the manifest
-		var patterns = chrome.runtime.getManifest().content_scripts[0].matches;
-		for(var i = 0; i < patterns.length; i++) 
+		// insert expected scripts on all pages matching the patterns in the manifest
+		var content_scripts = chrome.runtime.getManifest().content_scripts;
+		for (var i = 0; i < content_scripts.length; i++)
 		{
-			chrome.tabs.query({ url: patterns[i] }, function(tabs)
+			var content_script = content_scripts[i];
+			chrome.tabs.query({ url: content_script.matches[0] }, function(tabs)
 			{
-				for(var j = 0; j < tabs.length; j++) 
+				var js_to_inject = content_script.js; 
+				for (var j = 0; j < tabs.length; j++) 
 				{
-					chrome.tabs.executeScript(tabs[j].id, { file: "/scripts/player_listener.js" });
+					for (var k = 0; k < js_to_inject.length; k++)
+					{
+						chrome.tabs.executeScript(tabs[j].id, { file: js_to_inject[k] });
+					}
 				}
 			});
 		}
@@ -82,10 +87,7 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 	{
 		return;
 	}
-	
-	// if user wants to limit players to one instance, ensure no other page from that player is opened
-	checkLimitToOnePlayerTab(data.tabId, data.url);
-	
+
 	chrome.permissions.contains({ origins: [ "<all_urls>" ] }, function(granted) 
 	{
 		if (granted)
@@ -98,12 +100,33 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 	setUpPopup();
 });
 
-// when a tab is removed, check that the popup is still needed
-chrome.tabs.onRemoved.addListener(setUpPopup);
+// remove closing tab id from players tabs
+chrome.tabs.onRemoved.addListener(function(tabId)
+{
+	var index = LOCSTO.session.playersTabs.indexOf(tabId);
+	if (index > -1)
+	{
+		LOCSTO.session.playersTabs.splice(index, 1);
+
+		// current player is closed, move to the next and resume playing
+		if (index === 0 && LOCSTO.session.playersTabs.length > 0)
+		{
+			// TODO check playing status
+			LOCSTO.session.deezerData = LOCSTO.session.playersData[LOCSTO.session.playersTabs[0]];
+			updateButtonTooltip();
+			propagatePlayingDataToAllTabs();
+		}
+	}
+	
+	if (LOCSTO.session.playersData.hasOwnProperty(tabId))
+		delete LOCSTO.session.playersData[tabId];
+
+	// recount number of opened player tabs
+	setUpPopup();
+});
 
 // save active tab any time it changes to be able to go back to it 
-chrome.tabs.onActivated.addListener(tabsOnActivatedListener);
-function tabsOnActivatedListener(iActiveTabInfo) 
+chrome.tabs.onActivated.addListener(function (iActiveTabInfo) 
 {
 	"use strict";
 	chrome.tabs.get(iActiveTabInfo.tabId, function(aActiveTab)
@@ -114,78 +137,13 @@ function tabsOnActivatedListener(iActiveTabInfo)
 		}
 		
 		// ignore active tab if current active player: we don't want to go back to it!
-		// TODO implement stack
-		if (!matchDeezerUrl(aActiveTab.url))
+		if (LOCSTO.session.playersTabs.indexOf(aActiveTab.id) !== 0)
 		{
-			LOCSTO.session.jumpBackToActiveTab.windowsId = aActiveTab.windowId;
+			LOCSTO.session.jumpBackToActiveTab.windowId = aActiveTab.windowId;
 			LOCSTO.session.jumpBackToActiveTab.tabId = aActiveTab.id;
 		}
 	});
-}
-
-// check whether we want to limit players to one tab each
-function checkLimitToOnePlayerTab(iTabId, iNewUrl)
-{
-	"use strict";
-	
-	// if user wants to limit players to one tab, prevents any new tab with this player from being opened
-	if (LOCSTO.miscOptions.limitDeezerToOneTab === true)
-	{
-		if (iNewUrl && matchDeezerUrl(iNewUrl))
-		{
-			// find any Deezer tab that's not this one
-			findDeezerTab(function(iDeezerTabId, iDeezerWindowId)
-			{
-				if (iDeezerTabId === null)
-				{
-					return;
-				}
-
-				// close opening tab
-				chrome.tabs.remove(iTabId);
-				
-				// switch to player tab and update url to wanted url
-				chrome.windows.update(iDeezerWindowId, { focused: true });
-				chrome.tabs.update(iDeezerTabId, { selected: true });
-			}, iTabId);
-		}
-	}
-} 
-
-// find any Deezer tab not matching iIgnoreTabId, and call the callback with its tab and window id
-function findDeezerTab(iCallback, iIgnoreTabId)
-{
-	"use strict";
-	
-	chrome.windows.getAll(
-	{ populate : true },
-	function(windows) 
-	{
-		var i, aWindow, j, aTab;
-		for(i = 0; i < windows.length; i++) 
-		{
-			aWindow = windows[i];
-			for(j = 0; j < aWindow.tabs.length; j++) 
-			{
-				aTab = aWindow.tabs[j];
-				if (matchDeezerUrl(aTab.url))
-				{
-					if (aTab.id !== iIgnoreTabId)
-					{
-						iCallback(aTab.id, aWindow.id);
-						return;
-					}
-				}
-			}
-		}
-		
-		// no deezer tab found, pass null as arguments of the callback
-		if (iCallback)
-		{
-			iCallback(null, null);
-		}
-	});
-}
+});
 
 
 // set up the popup: if at least one deezer tab is opened, we'll show the popup
@@ -203,17 +161,7 @@ function setUpPopup()
 		chrome.browserAction.setPopup({ popup: '' }); // don't create a popup, we want to open the options page
 	} 
 	// else: normal use case
-	else
-	{
-		findDeezerTab(onFindDeezerTabForPopupSetup);
-	}
-}
-
-function onFindDeezerTabForPopupSetup(iDeezerTabId)
-{
-	"use strict";
-	
-	if (iDeezerTabId === null)
+	else if (LOCSTO.session.playersTabs.length == 0)
 	{
 		LOCSTO.session.deezerData = null; // reset playing data
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
@@ -234,7 +182,55 @@ function extensionOnMessageListener(request, sender, sendResponse)
 	switch (request.type)
 	{
 	case "now_playing_updated":
-		LOCSTO.session.deezerData = request.nowPlayingData;
+		// player has just been loaded
+		var playerTabId = sender.tab.id;
+		if (LOCSTO.session.playersTabs.indexOf(playerTabId) === -1)
+		{
+			// check limit one page per player
+			if (LOCSTO.miscOptions.limitDeezerToOneTab === true)
+			{
+				for(var key in LOCSTO.session.playersData)
+				{
+					if (request.nowPlayingData.name === LOCSTO.session.playersData[key].name)
+					{
+						// close opening tab
+						chrome.tabs.remove(playerTabId);
+						
+						// move to already opened tab
+						jumpToTab(parseInt(key, 10));
+						return false;
+					}
+				}
+			}
+			
+			LOCSTO.session.playersTabs.push(playerTabId);
+		}
+		
+		// update player info
+		LOCSTO.session.playersData[playerTabId] = request.nowPlayingData;
+		
+		// change of player?
+		if (playerTabId !== LOCSTO.session.playersTabs[0])
+		{
+			// new player is playing
+			if (request.nowPlayingData.dz_playing === 'true')
+			{
+				// stops current player
+				extensionOnMessageListener({ type: "controlPlayer", command: "pause" });
+				
+				// reorder tabs order
+				var index = LOCSTO.session.playersTabs.indexOf(playerTabId);
+				LOCSTO.session.playersTabs.splice(index, 1);
+				LOCSTO.session.playersTabs.splice(0, 0, playerTabId);
+				
+				LOCSTO.session.deezerData = request.nowPlayingData;
+			}
+		}
+		else
+		{
+			// same player
+			LOCSTO.session.deezerData = request.nowPlayingData;
+		}
 
 		// update the button's tooltip only if no update should be shown
 		if (!LOCSTO.newOptionsToShow)
@@ -255,20 +251,16 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		gActionOnNotifButton = request.source === 'notif';
 		
 		// send the wanted action to the deezer tab
-		findDeezerTab(function(iDeezerTabId) 
-		{
-			chrome.tabs.sendMessage(iDeezerTabId, { name: request.type, action: request.command });
-		});
-		
+		if (LOCSTO.session.playersTabs.length > 0)
+			chrome.tabs.sendMessage(LOCSTO.session.playersTabs[0], { name: request.type, action: request.command });
 		break;
 
-	case "doAction":		
-		findDeezerTab(function(iDeezerTabId, iDeezerWindowId) 
+	case "doAction":
+		if (LOCSTO.session.playersTabs.length > 0)
 		{
-			chrome.tabs.sendMessage(iDeezerTabId, { name: request.type, action: request.action });
-			onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId);
-		});
-		
+			chrome.tabs.sendMessage(LOCSTO.session.playersTabs[0], { name: request.type, action: request.action });
+			jumpToTab(LOCSTO.session.playersTabs[0]);
+		}
 		break;
 		
 	case "showNotif":
@@ -279,31 +271,23 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		// find current active tab
 		// if not deezer tab, jump to the deezer tab
 		// if deezer tab, jump back to saved tab
-		chrome.windows.getLastFocused(
-		{ populate : true },
-		function(window) 
+		if (LOCSTO.session.playersTabs.length > 0)
 		{
-			// find the active tab
-			var j;
-			for(j = 0; j < window.tabs.length; j++) 
+			chrome.tabs.query({ currentWindow: true, active: true }, function (tabs)
 			{
-				if (window.tabs[j].active)
+				// we're on the Deezer tab, go back to previous tab
+				if (tabs[0].id === LOCSTO.session.playersTabs[0])
 				{
-					// we're on the Deezer tab, go back to previous tab
-					if (request.source !== 'notif' && matchDeezerUrl(window.tabs[j].url))
-					{
-						chrome.windows.update(LOCSTO.session.jumpBackToActiveTab.windowsId, { focused: true });
-						chrome.tabs.update(LOCSTO.session.jumpBackToActiveTab.tabId, { selected: true });
-					}
-	
-					// not on the Deezer tab, find it and set it to active
-					else
-					{
-						findDeezerTab(onFindDeezerTabForJumpToDeezer);
-					}
+					chrome.windows.update(LOCSTO.session.jumpBackToActiveTab.windowId, { focused: true });
+					chrome.tabs.update(LOCSTO.session.jumpBackToActiveTab.tabId, { selected: true });
 				}
-			}
-		});
+				// not on the Deezer tab, find it and set it to active
+				else
+				{
+					jumpToTab(LOCSTO.session.playersTabs[0]);
+				}
+			});
+		}
 		break;
 		
 	case "getLOCSTO":
@@ -346,16 +330,13 @@ function extensionOnMessageListener(request, sender, sendResponse)
 	return false;
 }
 
-function onFindDeezerTabForJumpToDeezer(iDeezerTabId, iDeezerWindowId) 
+function jumpToTab(iTabId)
 {
-	"use strict";
-	
-	// we found a Deezer tab, switch to it
-	if (iDeezerTabId === null || iDeezerWindowId === null)
-		return;
-	
-	chrome.windows.update(iDeezerWindowId, { focused: true });
-	chrome.tabs.update(iDeezerTabId, { selected: true });
+	chrome.tabs.get(iTabId, function(tab) 
+	{
+		chrome.windows.update(tab.windowId, { focused: true });
+		chrome.tabs.update(tab.id, { selected: true });	
+	});
 }
 
 function showNotif(iForceRedisplay)
