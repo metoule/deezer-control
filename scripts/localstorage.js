@@ -75,6 +75,7 @@ Version.prototype.compare = function(otherVersion)
 };
 
 
+
 //------------------------------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------------------------------
@@ -104,8 +105,17 @@ var LOCSTO = LOCSTO || {
 
 	loadSession: function()
 	{
-	   // session data, needed for event page reload
-	   this.session = fillDictWithDefaults(this.get('session'), { deezerData: null, jumpBackToActiveTab: { windowsId: 0, tabId: 0 }, notifData: null });
+		// session data, needed for event page reload
+		// playersTabs: tab id of all opened players, ordered by playing order
+		// playersData: infos on all opened players
+		// deezerData: currently playing info
+	   this.session = fillDictWithDefaults(this.get('session'), { 
+		   playersTabs: [], 
+		   playersData: {}, 
+		   deezerData: null, 
+		   notifData: null, 
+		   jumpBackToActiveTab: { windowId: 0, tabId: 0 } 
+	   });
 	},
 	
 	updateModel: function()
