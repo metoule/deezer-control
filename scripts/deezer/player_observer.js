@@ -35,10 +35,8 @@ function updateDeezerControlData()
 	DeezerControlData.setAttribute('dz_playing',	 document.getElementById('player_control_play').style.display === 'none');
 	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
 	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
-	DeezerControlData.setAttribute('dz_album',	     dzPlayer.getAlbumTitle());
 	DeezerControlData.setAttribute('dz_cover',	     GetCoverFromAlbumId(dzPlayer.getCover()));
 	DeezerControlData.setAttribute('dz_artist_id',   dzCurrentSong.ART_ID);
-	DeezerControlData.setAttribute('dz_album_id',    dzCurrentSong.ALB_ID);
 	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverFromAlbumId(dzPrevSong.ALB_PICTURE));
 	DeezerControlData.setAttribute('dz_next_cover',  GetCoverFromAlbumId(dzNextSong.ALB_PICTURE));
 	DeezerControlData.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());
