@@ -2,9 +2,6 @@
 var gActionOnHotKey = false; // this boolean will be used to show the notifs only on hotkey event
 var gActionOnNotifButton = false; // this boolean will be used to show the notifs on notifs button click
 
-// actions to perform when the extension is loaded
-$(window).load(setUpPopup);
-
 // when the event page goes to sleep, remember session
 chrome.runtime.onSuspend.addListener(function() { LOCSTO.saveSession(); });
 
@@ -12,7 +9,7 @@ chrome.runtime.onSuspend.addListener(function() { LOCSTO.saveSession(); });
 chrome.runtime.onInstalled.addListener(function(details)
 {
 	"use strict";
-	
+
 	// inject content script on player tabs
 	if (details.reason === "install" || details.reason === "update")
 	{
@@ -49,8 +46,7 @@ chrome.runtime.onInstalled.addListener(function(details)
 });
 
 // if no popup is set, it means that we should open a new tab with default player
-chrome.browserAction.onClicked.addListener(browserActionOnClickListener);
-function browserActionOnClickListener(/*iTab*/) 
+chrome.browserAction.onClicked.addListener(function() 
 {
 	"use strict";
 	
@@ -66,7 +62,6 @@ function browserActionOnClickListener(/*iTab*/)
 		chrome.browserAction.setBadgeText({ text: "" });
 		setUpPopup();
 		
-		updateButtonTooltip();
 		propagatePlayingDataToAllTabs();
 	}
 	// else: normal use case
@@ -75,15 +70,15 @@ function browserActionOnClickListener(/*iTab*/)
 		// TODO add default player
 		chrome.tabs.create({ url: 'http://www.deezer.com' });
 	}
-}
+});
 
 // inject hotkeys.js on any page if user allowed it
 chrome.webNavigation.onCommitted.addListener(function(data) 
 {
 	"use strict";
 	
-	// ignore sub frames
-	if (data.frameId !== 0)
+	// ignore sub frames and chrome urls
+	if (data.frameId !== 0 || data.url.lastIndexOf("chrome", 0) === 0)
 	{
 		return;
 	}
@@ -111,9 +106,11 @@ chrome.tabs.onRemoved.addListener(function(tabId)
 		// current player is closed, move to the next and resume playing
 		if (index === 0 && LOCSTO.session.playersTabs.length > 0)
 		{
-			// TODO check playing status
+			var isPlaying = LOCSTO.session.deezerData.dz_playing;
+			if (isPlaying === 'true')
+				extensionOnMessageListener({ type: "controlPlayer", command: "play" });
 			LOCSTO.session.deezerData = LOCSTO.session.playersData[LOCSTO.session.playersTabs[0]];
-			updateButtonTooltip();
+			LOCSTO.session.deezerData.dz_playing = isPlaying;
 			propagatePlayingDataToAllTabs();
 		}
 	}
@@ -212,8 +209,8 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		// change of player?
 		if (playerTabId !== LOCSTO.session.playersTabs[0])
 		{
-			// new player is playing
-			if (request.nowPlayingData.dz_playing === 'true')
+			// current player is not playing / new player is playing
+			if (LOCSTO.session.deezerData.dz_playing !== 'true' || request.nowPlayingData.dz_playing === 'true')
 			{
 				// stops current player
 				extensionOnMessageListener({ type: "controlPlayer", command: "pause" });
@@ -230,12 +227,6 @@ function extensionOnMessageListener(request, sender, sendResponse)
 		{
 			// same player
 			LOCSTO.session.deezerData = request.nowPlayingData;
-		}
-
-		// update the button's tooltip only if no update should be shown
-		if (!LOCSTO.newOptionsToShow)
-		{
-			updateButtonTooltip();
 		}
 		
 		propagatePlayingDataToAllTabs();
@@ -379,20 +370,6 @@ function showNotif(iForceRedisplay)
 	}
 }
 
-function updateButtonTooltip()
-{
-	"use strict";
-	
-	if (LOCSTO.session.deezerData !== null)
-	{
-		chrome.browserAction.setTitle({ title: LOCSTO.session.deezerData.dz_track + ' - ' + LOCSTO.session.deezerData.dz_artist });
-	}
-	else
-	{
-		chrome.browserAction.setTitle({ title: '' });
-	}
-}
-
 function propagatePlayingDataToAllTabs()
 {
 	"use strict";
@@ -403,6 +380,15 @@ function propagatePlayingDataToAllTabs()
 	
 	// show / hide notif if needed
 	showNotif();
+
+	// update the button's tooltip only if no update should be shown
+	if (!LOCSTO.newOptionsToShow)
+	{
+		var newTitle = '';
+		if (LOCSTO.session.deezerData !== null)
+			newTitle = LOCSTO.session.deezerData.dz_track + ' - ' + LOCSTO.session.deezerData.dz_artist;
+		chrome.browserAction.setTitle({ title: newTitle });
+	}
 
 	// precache covers
 	if (LOCSTO.session.deezerData !== null)
@@ -419,8 +405,31 @@ function refreshPopupOnWindow(win)
 	win.refreshPopup(); 
 }
 
-function matchDeezerUrl(iUrl)
+// actions to perform when the event page is loaded
+(function()
 {
 	"use strict";
-	return new RegExp("^http[s]?:\/\/.*deezer\.com.*","gi").test(iUrl);
-}
+	console.log("On load ?");
+	setUpPopup();
+
+	// clean up current players queue
+	var len = LOCSTO.session.playersTabs.length, 
+		tabId;
+	
+	while(len--)
+	{
+		tabId = LOCSTO.session.playersTabs[len];
+		try
+		{
+			chrome.tabs.get(tabId, function() {})
+		} 
+		catch(e)
+		{
+			LOCSTO.session.playersTabs.splice(len, 1);
+			if (LOCSTO.session.playersData.hasOwnProperty(tabId))
+				delete LOCSTO.session.playersData[tabId];
+		}
+	}
+	
+	LOCSTO.saveSession();
+})();
