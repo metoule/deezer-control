@@ -5,6 +5,22 @@ var gActionOnNotifButton = false; // this boolean will be used to show the notif
 // when the event page goes to sleep, remember session
 chrome.runtime.onSuspend.addListener(function() { LOCSTO.saveSession(); });
 
+// return a function that will execute all scripts in js_to_inject
+// on each tabs of the function's argument 'tabs'
+function executeAllScripts(js_to_inject)
+{
+	return function(tabs)
+	{
+		for (var j = 0; j < tabs.length; j++) 
+		{
+			for (var k = 0; k < js_to_inject.length; k++)
+			{
+				chrome.tabs.executeScript(tabs[j].id, { file: js_to_inject[k] }, ignoreLastError);
+			}
+		}
+	};
+}
+
 // install, update, or chrome update
 chrome.runtime.onInstalled.addListener(function(details)
 {
@@ -18,17 +34,7 @@ chrome.runtime.onInstalled.addListener(function(details)
 		for (var i = 0; i < content_scripts.length; i++)
 		{
 			var content_script = content_scripts[i];
-			chrome.tabs.query({ url: content_script.matches[0] }, function(tabs)
-			{
-				var js_to_inject = content_script.js; 
-				for (var j = 0; j < tabs.length; j++) 
-				{
-					for (var k = 0; k < js_to_inject.length; k++)
-					{
-						chrome.tabs.executeScript(tabs[j].id, { file: js_to_inject[k] });
-					}
-				}
-			});
+			chrome.tabs.query({ url: content_script.matches[0] }, executeAllScripts(content_script.js));
 		}
 		
 		// re-inject hotkeys on all opened tabs
@@ -72,13 +78,22 @@ chrome.browserAction.onClicked.addListener(function()
 	}
 });
 
+function ignoreLastError()
+{
+	var lastError = chrome.runtime.lastError;
+	if (lastError !== undefined && lastError.message !== undefined)
+	{
+		//console.log(lastError.message);
+	}
+}
+
 // inject hotkeys.js on any page if user allowed it
 chrome.webNavigation.onCommitted.addListener(function(data) 
 {
 	"use strict";
 	
 	// ignore sub frames and chrome urls
-	if (data.frameId !== 0 || data.url.lastIndexOf("chrome", 0) === 0)
+	if (data.frameId !== 0 || data.url.indexOf("chrome", 0) === 0)
 	{
 		return;
 	}
@@ -87,7 +102,7 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 	{
 		if (granted)
 		{
-			chrome.tabs.executeScript(data.tabId, { file: "/scripts/hotkeys.js", runAt: "document_start" });
+			chrome.tabs.executeScript(data.tabId, { file: "/scripts/hotkeys.js", runAt: "document_start" }, ignoreLastError);
 		}
 	});
 
@@ -96,7 +111,8 @@ chrome.webNavigation.onCommitted.addListener(function(data)
 });
 
 // remove closing tab id from players tabs
-chrome.tabs.onRemoved.addListener(function(tabId)
+chrome.tabs.onRemoved.addListener(removePlayerTabId);
+function removePlayerTabId(tabId)
 {
 	var index = LOCSTO.session.playersTabs.indexOf(tabId);
 	if (index > -1)
@@ -107,11 +123,12 @@ chrome.tabs.onRemoved.addListener(function(tabId)
 		if (index === 0 && LOCSTO.session.playersTabs.length > 0)
 		{
 			var isPlaying = LOCSTO.session.deezerData.dz_playing;
-			if (isPlaying === 'true')
-				extensionOnMessageListener({ type: "controlPlayer", command: "play" });
 			LOCSTO.session.deezerData = LOCSTO.session.playersData[LOCSTO.session.playersTabs[0]];
 			LOCSTO.session.deezerData.dz_playing = isPlaying;
 			propagatePlayingDataToAllTabs();
+			
+			if (isPlaying === 'true')
+				extensionOnMessageListener({ type: "controlPlayer", command: "play" });
 		}
 	}
 	
@@ -120,7 +137,7 @@ chrome.tabs.onRemoved.addListener(function(tabId)
 
 	// recount number of opened player tabs
 	setUpPopup();
-});
+}
 
 // save active tab any time it changes to be able to go back to it 
 chrome.tabs.onActivated.addListener(function (iActiveTabInfo) 
@@ -158,7 +175,7 @@ function setUpPopup()
 		chrome.browserAction.setPopup({ popup: '' }); // don't create a popup, we want to open the options page
 	} 
 	// else: normal use case
-	else if (LOCSTO.session.playersTabs.length == 0)
+	else if (LOCSTO.session.playersTabs.length === 0)
 	{
 		LOCSTO.session.deezerData = null; // reset playing data
 		chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
@@ -178,6 +195,10 @@ function extensionOnMessageListener(request, sender, sendResponse)
 	"use strict";
 	switch (request.type)
 	{
+	case "remove_me":
+		removePlayerTabId(sender.tab.id);
+		break;
+		
 	case "now_playing_updated":
 		// player has just been loaded
 		var playerTabId = sender.tab.id;
@@ -188,7 +209,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 			{
 				for(var key in LOCSTO.session.playersData)
 				{
-					if (request.nowPlayingData.name === LOCSTO.session.playersData[key].name)
+					if (request.nowPlayingData.dz_name === LOCSTO.session.playersData[key].dz_name)
 					{
 						// close opening tab
 						chrome.tabs.remove(playerTabId);
@@ -201,6 +222,13 @@ function extensionOnMessageListener(request, sender, sendResponse)
 			}
 			
 			LOCSTO.session.playersTabs.push(playerTabId);
+		}
+		
+		// player is inactive, remove it
+		if (request.nowPlayingData.dz_is_active !== 'true')
+		{
+			removePlayerTabId(playerTabId);
+			return false;
 		}
 		
 		// update player info
@@ -309,7 +337,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 					// ignore all chrome internal urls
 					if (aTab.url.lastIndexOf("chrome", 0) !== 0)
 					{
-						chrome.tabs.executeScript(aTab.id, { file: "/scripts/hotkeys.js", runAt: "document_start" });
+						chrome.tabs.executeScript(aTab.id, { file: "/scripts/hotkeys.js", runAt: "document_start" }, ignoreLastError);
 					}
 				}
 			}
@@ -409,27 +437,26 @@ function refreshPopupOnWindow(win)
 (function()
 {
 	"use strict";
-	console.log("On load ?");
-	setUpPopup();
 
 	// clean up current players queue
 	var len = LOCSTO.session.playersTabs.length, 
 		tabId;
 	
+	// TODO beware of closure
 	while(len--)
 	{
 		tabId = LOCSTO.session.playersTabs[len];
-		try
+		chrome.tabs.get(tabId, function() 
 		{
-			chrome.tabs.get(tabId, function() {})
-		} 
-		catch(e)
-		{
-			LOCSTO.session.playersTabs.splice(len, 1);
-			if (LOCSTO.session.playersData.hasOwnProperty(tabId))
-				delete LOCSTO.session.playersData[tabId];
-		}
+			if (chrome.runtime.lastError !== undefined)
+			{
+				LOCSTO.session.playersTabs.splice(len, 1);
+				if (LOCSTO.session.playersData.hasOwnProperty(tabId))
+					delete LOCSTO.session.playersData[tabId];
+			}
+		});
 	}
-	
+
+	setUpPopup();	
 	LOCSTO.saveSession();
 })();
