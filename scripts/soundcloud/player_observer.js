@@ -1,7 +1,12 @@
 
-function GetCoverFromArtworkUrl(artworkUrl)
+function GetCoverForSound(sound)
 {
 	"use strict";
+	var artworkUrl = sound.artwork_url;
+	if (artworkUrl === null)
+	{
+		artworkUrl = sound.user.avatar_url;
+	}
 	return artworkUrl.replace("large.jpg", "t200x200.jpg");
 }
 
@@ -33,9 +38,9 @@ function updateDeezerControlData()
 	    	DeezerControlData.setAttribute('dz_playing',	 $(".playControl.sc-ir").hasClass("playing"));
 	    	DeezerControlData.setAttribute('dz_artist',	     dzCurrentSong.user.username);
 	    	DeezerControlData.setAttribute('dz_track',	     dzCurrentSong.title);
-	    	DeezerControlData.setAttribute('dz_cover',	     GetCoverFromArtworkUrl(dzCurrentSong.artwork_url));
-	    	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverFromArtworkUrl(dzPrevSong.artwork_url));
-	    	DeezerControlData.setAttribute('dz_next_cover',  GetCoverFromArtworkUrl(dzNextSong.artwork_url));
+	    	DeezerControlData.setAttribute('dz_cover',	     GetCoverForSound(dzCurrentSong));
+	    	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverForSound(dzPrevSong));
+	    	DeezerControlData.setAttribute('dz_next_cover',  GetCoverForSound(dzNextSong));
 	    	DeezerControlData.setAttribute('dz_is_prev_active',   playManager.hasPrevSound());
 	    	DeezerControlData.setAttribute('dz_is_next_active',   playManager.hasNextSound());
 	    	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime());
