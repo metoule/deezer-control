@@ -31,7 +31,8 @@ function updateDeezerControlData()
 	{
 		dzNextSong = dzPlayer.getNextSong() || { ALB_PICTURE: '' };
 	} catch(e) {}
-	
+
+	DeezerControlData.setAttribute('dz_is_active',   true);
 	DeezerControlData.setAttribute('dz_playing',	 document.getElementById('player_control_play').style.display === 'none');
 	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
 	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
@@ -42,46 +43,13 @@ function updateDeezerControlData()
 	DeezerControlData.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());
 	DeezerControlData.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());
 	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 
-} 
-
-
-// observe the changes of style atttribute of #player_control_play, to track play / pause changes
-// (its style changes from hidden to display)
-// observe the changes of content of #player_track_title, to track song changes
-var observerPlay = new MutationObserver(function(mutations) 
-{
-	"use strict";
-	
-	var bUpdateInfo = false, i, mutation;
-	for (i = 0; i < mutations.length && !bUpdateInfo; i++)
-	{
-		mutation = mutations[i];
-		
-		// result of 'player_control_play' observer
-		if (mutation.type === "attributes")
-		{
-			bUpdateInfo  = mutation.oldValue !== mutation.target.getAttribute(mutation.attributeName);
-		}
-		// result of 'player_track_title' observer
-		else if (mutation.type === "characterData" || mutation.type === "childList")
-		{
-			bUpdateInfo = true;
-		}
-	}
-
-	if (bUpdateInfo)
-	{
-		updateDeezerControlData();
-	}
-});  
-observerPlay.observe(document.getElementById('player_track_title'),  { childList: true, characterData: true });  
-observerPlay.observe(document.getElementById("player_control_play"), { attributes: true, attributeOldValue: true, attributeFilter: ['style'] });
+}
 
 // process actions
 function executeAction(action)
 {
 	"use strict";
-	if (typeof(playercontrol) != 'undefined') 
+	if (playercontrol !== undefined) 
 		playercontrol.doAction(action);
 }
 
@@ -121,5 +89,59 @@ function deezerControlMethod_linkCurrentArtist()
 	loadBox('artist/' + document.getElementById('DeezerControlData').getAttribute('dz_artist_id'));
 }
 
-// update content on first load
-updateDeezerControlData();
+//trigger the observer on removeMe
+function triggerRemoveDeezerData()
+{
+	document.getElementById('removeMe').textContent = "now"; 
+}
+
+//update content on first load
+(function()
+{
+	"use strict";
+	
+	var player_track_title = document.getElementById('player_track_title');
+	var player_control_play = document.getElementById("player_control_play");
+	
+	// ensure the player is on the page
+	if (player_track_title !== null && player_control_play !== null && dzPlayer !== null)
+	{
+		// observe the changes of style atttribute of #player_control_play, to track play / pause changes
+		// (its style changes from hidden to display)
+		// observe the changes of content of #player_track_title, to track song changes
+		var observerPlay = new MutationObserver(function(mutations) 
+		{
+			"use strict";
+			
+			var bUpdateInfo = false, i, mutation;
+			for (i = 0; i < mutations.length && !bUpdateInfo; i++)
+			{
+				mutation = mutations[i];
+				
+				// result of 'player_control_play' observer
+				if (mutation.type === "attributes")
+				{
+					bUpdateInfo  = mutation.oldValue !== mutation.target.getAttribute(mutation.attributeName);
+				}
+				// result of 'player_track_title' observer
+				else if (mutation.type === "characterData" || mutation.type === "childList")
+				{
+					bUpdateInfo = true;
+				}
+			}
+
+			if (bUpdateInfo)
+			{
+				updateDeezerControlData();
+			}
+		});
+		
+		observerPlay.observe(player_track_title,  { childList: true, characterData: true });  
+		observerPlay.observe(player_control_play, { attributes: true, attributeOldValue: true, attributeFilter: ['style'] });
+		
+		updateDeezerControlData();
+	}
+	// failure to initialize
+	else 
+		triggerRemoveDeezerData();
+})();

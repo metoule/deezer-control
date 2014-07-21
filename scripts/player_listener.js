@@ -1,11 +1,15 @@
  
 
 // create an invisible fake div
-if (document.getElementById('DeezerControlData') !== null)
+function removeDeezerData()
 {
-	var toRemove = document.getElementById('DeezerControlData');
-	toRemove.parentNode.removeChild(toRemove);
+	if (document.getElementById('DeezerControlData') !== null)
+	{
+		var toRemove = document.getElementById('DeezerControlData');
+		toRemove.parentNode.removeChild(toRemove);
+	}
 }
+removeDeezerData();
 
 var aDeezerControlDataDom = document.createElement('div');
 aDeezerControlDataDom.id = "DeezerControlData";
@@ -15,12 +19,24 @@ aDeezerControlDataDom.style.display = 'none';
 var aLastUpdateDom = document.createElement('div');
 aLastUpdateDom.id = "lastUpdate";
 aDeezerControlDataDom.appendChild(aLastUpdateDom);
+
+var aRemoveMeDom = document.createElement('div');
+aRemoveMeDom.id = "removeMe";
+aDeezerControlDataDom.appendChild(aRemoveMeDom);
+
 document.body.appendChild(aDeezerControlDataDom);
 
 // add a listener for events on our new DIV, and post it to our extension
 var observer = new MutationObserver(sendJsonPlayerInfo);
-var config = { attributes: false, childList: true, characterData: true }; 
-observer.observe(document.getElementById('lastUpdate'), config);
+observer.observe(document.getElementById('lastUpdate'), { attributes: false, childList: true, characterData: true });
+
+// add a listener to remove deezer data if no player is present on the page
+var observer2 = new MutationObserver(function() 
+{ 
+	removeDeezerData();
+	chrome.runtime.sendMessage({ type: "remove_me" }); 
+});
+observer2.observe(document.getElementById('removeMe'), { attributes: false, childList: true, characterData: true });
 
 // extract Deezer data
 function getDeezerData()
