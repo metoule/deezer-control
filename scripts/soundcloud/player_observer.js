@@ -11,67 +11,62 @@ function GetCoverForSound(sound)
 }
 
 // get data from JS object dzPlayer
-function updateDeezerControlData()
+function getDeezerControlDataFromPlayManager(playManager)
 {
 	"use strict";
 	
-	$(function () 
-	{
-		"use strict";
-	    require(['lib/play-manager'], function (playManager) 
-		{
-	    	var DeezerControlData = document.getElementById('DeezerControlData');
-	    	
-	    	var dzCurrentSong = { title: '', artwork_url: '', user: { username: '' } };
-			if (playManager.hasCurrentSound() && playManager.getCurrentSound() !== undefined)
-				dzCurrentSong = playManager.getCurrentSound().attributes;
-	    	
-	    	var dzPrevSong = { artwork_url: '' };
-			if (playManager.hasPrevSound())
-				dzPrevSong = playManager.getPrevSound().attributes;
-	    	
-			// getNextSound doesn't exist :(
-	    	var dzNextSong = { artwork_url: '' };
-			//if (playManager.hasNextSound())
-			//	dzNextSong = playManager.getNextSound();
-	    	DeezerControlData.setAttribute('dz_is_active',   playManager.hasCurrentSound());
-	    	DeezerControlData.setAttribute('dz_playing',	 $(".playControl.sc-ir").hasClass("playing"));
-	    	DeezerControlData.setAttribute('dz_artist',	     dzCurrentSong.user.username);
-	    	DeezerControlData.setAttribute('dz_track',	     dzCurrentSong.title);
-	    	DeezerControlData.setAttribute('dz_cover',	     GetCoverForSound(dzCurrentSong));
-	    	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverForSound(dzPrevSong));
-	    	DeezerControlData.setAttribute('dz_next_cover',  GetCoverForSound(dzNextSong));
-	    	DeezerControlData.setAttribute('dz_is_prev_active',   playManager.hasPrevSound());
-	    	DeezerControlData.setAttribute('dz_is_next_active',   playManager.hasNextSound());
-	    	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime());
-		});
-	});
+	var DeezerControlData = document.getElementById('DeezerControlData');
+	
+	var dzCurrentSong = { title: '', artwork_url: '', user: { username: '' } };
+	if (playManager.hasCurrentSound() && playManager.getCurrentSound() !== undefined)
+		dzCurrentSong = playManager.getCurrentSound().attributes;
+	
+	var dzPrevSong = { artwork_url: '' };
+	if (playManager.hasPrevSound())
+		dzPrevSong = playManager.getPrevSound().attributes;
+	
+	// getNextSound doesn't exist :(
+	var dzNextSong = { artwork_url: '' };
+	//if (playManager.hasNextSound())
+	//	dzNextSong = playManager.getNextSound();
+	DeezerControlData.setAttribute('dz_is_active',   playManager.hasCurrentSound());
+	DeezerControlData.setAttribute('dz_playing',	 $(".playControl.sc-ir").hasClass("playing"));
+	DeezerControlData.setAttribute('dz_artist',	     dzCurrentSong.user.username);
+	DeezerControlData.setAttribute('dz_track',	     dzCurrentSong.title);
+	DeezerControlData.setAttribute('dz_cover',	     GetCoverForSound(dzCurrentSong));
+	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverForSound(dzPrevSong));
+	DeezerControlData.setAttribute('dz_next_cover',  GetCoverForSound(dzNextSong));
+	DeezerControlData.setAttribute('dz_is_prev_active',   playManager.hasPrevSound());
+	DeezerControlData.setAttribute('dz_is_next_active',   playManager.hasNextSound());
+	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime());
+}
+
+function updateDeezerControlData()
+{
+	"use strict";
+    require(['lib/play-manager'], getDeezerControlDataFromPlayManager);
 }
 
 // process actions
 function executeAction(action)
 {
 	"use strict";
-	$(function () 
+    require(['lib/play-manager'], function (playManager) 
 	{
-		"use strict";
-	    require(['lib/play-manager'], function (playManager) 
-		{
-	    	switch (action) {
-			case 'pause':
-				playManager.pauseCurrent();
-				break;
-			case 'play':
-				playManager.playCurrent();
-				break;
-			case 'prev':
-				playManager.playPrev();
-				break;
-			case 'next':
-				playManager.playNext();
-				break;
-			}
-		});
+    	switch (action) {
+		case 'pause':
+			playManager.pauseCurrent();
+			break;
+		case 'play':
+			playManager.playCurrent();
+			break;
+		case 'prev':
+			playManager.playPrev();
+			break;
+		case 'next':
+			playManager.playNext();
+			break;
+		}
 	});
 }
 
@@ -102,13 +97,33 @@ function deezerControlMethod_next()
 function deezerControlMethod_linkCurrentSong()
 {
 	"use strict";
-	// TODO
+    require(['lib/play-manager'], function (playManager) 
+	{
+		if (playManager.hasCurrentSound() && playManager.getCurrentSound() !== undefined)
+		{
+			require(['config'], function (config) 
+			{
+				config.get("router").navigate(playManager.getCurrentSound().attributes.permalink_url.replace(/^https?:\/\/.*?\//, "/"));
+				config.get("router").reload();
+			});
+		}
+	});
 }
 
 function deezerControlMethod_linkCurrentArtist()
 {
 	"use strict";
-	// TODO loadBox('artist/' + document.getElementById('DeezerControlData').getAttribute('dz_artist_id'));
+    require(['lib/play-manager'], function (playManager) 
+	{
+		if (playManager.hasCurrentSound() && playManager.getCurrentSound() !== undefined)
+		{
+			require(['config'], function (config) 
+			{
+				config.get("router").navigate(playManager.getCurrentSound().attributes.user.permalink_url.replace(/^https?:\/\/.*?\//, "/"));
+				config.get("router").reload();
+			});
+		}
+	});
 }
 
 // trigger the observer on removeMe

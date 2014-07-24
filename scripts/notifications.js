@@ -14,7 +14,14 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 		// we're only allowed two buttons: display play/pause, and next
 		notifButtons = [];
 		notifButtons.push(LOCSTO.session.deezerData.dz_playing === 'true' ? this.buttonPause : this.buttonPlay);
-		notifButtons.push(LOCSTO.session.deezerData.dz_is_next_active === 'true' ? this.buttonNext : this.buttonPrev);
+		if (LOCSTO.session.deezerData.dz_is_next_active === 'true')
+		{
+			notifButtons.push(this.buttonNext);
+		}
+		else if (LOCSTO.session.deezerData.dz_is_prev_active === 'true')
+		{
+			notifButtons.push(this.buttonPrev);
+		}
 		
 		content = {
 				type: 'basic', 
