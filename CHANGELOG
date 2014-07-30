@@ -1,7 +1,10 @@
-2.2 - 
+ - 
+ * Improvement: added support of SoundCloud.com
+
+2.2 - 30/07/2014
  * Fix: https://bitbucket.org/metoule/deezer_control/issue/3/deezer-control-causing-issues-with-chrome
  * Fix: no longer try to execute content script on chrome:// URLs
- * Improvement: added support of SoundCloud.com
+ * Improvement: multiple deezer tabs can be opened at the same time
  * Improvement: no longer rely on URLs to detect if another player is playing
  * Improvement: reloading the extension no longer makes the extension fail
 

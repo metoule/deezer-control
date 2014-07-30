@@ -21,11 +21,6 @@
 							{
 								"matches": [ "*://*.deezer.com/*" ],
 								"js": [ "scripts/player_listener.js", "scripts/deezer/bootstrap.js" ]
-							},
-							{
-								"matches": [ "*://*.soundcloud.com/*" ],
-								"js": [ "scripts/player_listener.js", "scripts/soundcloud/bootstrap.js" ], 
-								"run_at": "document_end"
 							}
 						],
   "default_locale": "en", 
