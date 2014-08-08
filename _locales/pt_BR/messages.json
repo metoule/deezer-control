@@ -1,6 +1,6 @@
 {
     "extName": { "message": "Deezer Control" },
-    "extDesc": { "message": "Esta extensão permite que você controle o Deezer do seu navegador: teclas de atalho, popup, notificações... está tudo lá!" },
+    "extDesc": { "message": "Esta extensão permite que você controle o Deezer do seu navegador: teclas de atalho, pop-up, notificações... está tudo lá!" },
     "defaultTitle": { "message": "Abrir uma nova aba Deezer" },
     "showNewItemsTitle": { "message": "Abra a página de opções para ver o que há de novo" },
 
@@ -13,7 +13,7 @@
     "no":  { "message": "Não" },
 
     "options_page_tab_title_welcome": { "message": "Bem-vindo" },
-    "options_page_tab_title_options": { "message": "Estilo do Popup" },
+    "options_page_tab_title_options": { "message": "Estilo do Pop-up" },
     "options_page_tab_title_notifications": { "message": "Notificações" },
     "options_page_tab_title_hotkeys": { "message": "Teclas de Atalho" },
     "options_page_tab_title_misc": { "message": "Diversos" },
@@ -22,8 +22,8 @@
     "options_page_options_saved": { "message": "Opções salvas." },
 
     "options_page_tab_welcome_h1": { "message": "Obrigado por escolher o Deezer Control!" },
-    "options_page_tab_welcome_content_present": { "message": "Com o Deezer Control você pode rapidamente pausar, reproduzir ou navegar através da música em reprodução no Deezer. Dentre as opções estão:" },
-    "options_page_tab_welcome_content_item_1": { "message": "Um popup que exibe a capa do álbum, título da música e o nome do artista" },
+    "options_page_tab_welcome_content_present": { "message": "Com o Deezer Control você pode rapidamente pausar, reproduzir ou navegar através da música em reprodução no Deezer. Entre as opções estão:" },
+    "options_page_tab_welcome_content_item_1": { "message": "Um pop-up que exibe a capa do álbum, título da música e o nome do artista" },
     "options_page_tab_welcome_content_item_2": { "message": "Teclas de atalhos" },
     "options_page_tab_welcome_content_item_3": { "message": "Notificações" },
     "options_page_tab_welcome_content_item_4": { "message": "Várias opções para tornar a sua vida mais fácil" },
@@ -32,23 +32,23 @@
     "options_page_tab_welcome_button_rate_extension": { "message": "Avaliar 5 estrelas" },
     "options_page_tab_welcome_rate_label": { "message": "no Chrome Web Store" },
     "options_page_tab_welcome_donate_button": { "message": "Doar" },
-    "options_page_tab_welcome_donate_label": { "message": "para o Deezer Control via Paypal" },
+    "options_page_tab_welcome_donate_label": { "message": "para o Deezer Control via PayPal" },
 
-    "options_page_tab_popup_style_h1": { "message": "Estilo do Popup" },
-    "options_page_tab_popup_what_are_popups": { "message": "O popup exibe a música em reprodução; Também permire fácil acesso aos controles mais usados." },
+    "options_page_tab_popup_style_h1": { "message": "Estilo do Pop-up" },
+    "options_page_tab_popup_what_are_popups": { "message": "O pop-up exibe a música em reprodução; Também permite fácil acesso aos controles mais usados." },
     "options_page_tab_popup_style_choose_style": { "message": "Escolher estilo" },
     "options_page_tab_popup_style_style_small": { "message": "Pequeno" },
     "options_page_tab_popup_style_style_large": { "message": "Grande" },
     "options_page_tab_popup_style_style_sideways" : { "message": "Lado a lado" },
 
     "options_page_tab_notifs_h1": { "message": "Notificações" },
-    "options_page_tab_notifs_what_are_notifications": { "message": "Veja que música esta tocando atualmente, controle o Deezer, tudo isto sem abrir o popup! Você pode escolher quando exibir as notificações, então isto nunca lhe atrapalhará." },
+    "options_page_tab_notifs_what_are_notifications": { "message": "Veja que música está tocando atualmente, controle o Deezer, tudo isto sem abrir o pop-up! Você pode escolher quando exibir as notificações, então isto nunca lhe atrapalhará." },
     "options_page_tab_notifs_chrome_permission_not_granted": { "message": "Permissão para exibir notificações negada!" },
     "options_page_tab_notifs_show_notifs_when_title": { "message": "Exibir notificações?" },
     "options_page_tab_notifs_show_never": { "message": "Nunca exibir notificações" },
     "options_page_tab_notifs_show_never_hides": { "message": "Manter notificações na barra de tarefas enquanto a aba do Deezer estiver aberta." },
     "options_page_tab_notifs_show_on_song_change": { "message": "Exibir notificações quando ocorrer algum evento (anterior, próximo, reproduzir/pausar)." },
-    "options_page_tab_notifs_show_on_hotkey_only": { "message": "Exibir notificações apenas em eventos de teclas de atalho (não exibirá quando clicar no popup do Deezer)." },
+    "options_page_tab_notifs_show_on_hotkey_only": { "message": "Exibir notificações apenas em eventos de teclas de atalho (não exibirá quando clicar no pop-up do Deezer)." },
     "options_page_tab_notifs_activate_explanation": { "message": "Quando ativado, as notificações irão permanecer na barra de tarefas. Você pode forçar a exibição usando a tecla de atalho para 'Exibir música atual'." },
 
     "options_page_tab_hotkeys_h1": { "message": "Teclas de atalho" },
@@ -62,13 +62,13 @@
     "options_page_tab_hotkeys_whatZatSongHotKey_h2": { "message": "Tecla de atalho para 'exibir música atual'" },
     "options_page_tab_hotkeys_warning_whatZatSongHotKey": { "message": "Funciona apenas se as notificações estiverem ativas." },
     "options_page_tab_hotkeys_jumpToDeezerHotKey_h2": { "message": "Tecla de atalho para 'ir para aba Deezer'" },
-    "options_page_tab_hotkeys_warning_jumpToDeezerHotKey": { "message": "Precione uma vez para ir à aba do Deezer, Precione duas vezes para voltar à aba ativa." },
+    "options_page_tab_hotkeys_warning_jumpToDeezerHotKey": { "message": "Pressione uma vez para ir à aba do Deezer, Pressione duas vezes para voltar à aba ativa." },
     "options_page_tab_hotkeys_warning_illegal_hotkey": { "message": "Por favor, use os botões fornecidos para definir as teclas de atalho" },
 
     "options_page_tab_misc_h1": { "message": "Diversos" },
     "options_page_tab_misc_what_are_misc_options": { "message": "Opções para ajustar o Chrome a tornar a sua vida no Deezer mais fácil." },
     "options_page_tab_misc_limit_deezer_to_one_tab_h2": { "message": "Limitar Deezer a uma aba." },
-    "options_page_tab_misc_limit_deezer_to_one_tab_explanation": { "message": "Se esta opção for definida como Sim, o Deezer poderá ser aberto em apenas uma aba por vez. Esta aba se tornará ativa sempre que você tentar navegar no Deezer em outro aba." },
+    "options_page_tab_misc_limit_deezer_to_one_tab_explanation": { "message": "Se esta opção for definida como Sim, o Deezer poderá ser aberto em apenas uma aba por vez. Esta aba se tornará ativa sempre que você tentar navegar no Deezer em outra aba." },
 
     "options_page_footer_not_endorsed": { "message": "O Deezer Control não possui nenhum vínculo com a Deezer" },
     "options_page_footer_contact": { "message": "Contato" },
