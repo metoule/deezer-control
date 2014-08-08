@@ -29,9 +29,9 @@
     "options_page_tab_welcome_content_item_4": { "message": "Várias opções para tornar a sua vida mais fácil" },
     "options_page_tab_welcome_contact_me_at": { "message": "Quer mais? Escreva para" },
     "options_page_tab_welcome_remember_to": { "message": "Lembre-se de..." },
-    "options_page_tab_welcome_button_rate_extension": { "message": "Avalie 5 estrelas" },
+    "options_page_tab_welcome_button_rate_extension": { "message": "Avaliar 5 estrelas" },
     "options_page_tab_welcome_rate_label": { "message": "no Chrome Web Store" },
-    "options_page_tab_welcome_donate_button": { "message": "Doe" },
+    "options_page_tab_welcome_donate_button": { "message": "Doar" },
     "options_page_tab_welcome_donate_label": { "message": "para o Deezer Control via Paypal" },
 
     "options_page_tab_popup_style_h1": { "message": "Estilo do Popup" },
