@@ -295,7 +295,7 @@ function extensionOnMessageListener(request, sender, sendResponse)
 			chrome.tabs.query({ currentWindow: true, active: true }, function (tabs)
 			{
 				// we're on the Deezer tab, go back to previous tab
-				if (tabs[0].id === LOCSTO.session.playersTabs[0])
+				if (request.source !== 'notif' && tabs[0].id === LOCSTO.session.playersTabs[0])
 				{
 					chrome.windows.update(LOCSTO.session.jumpBackToActiveTab.windowId, { focused: true });
 					chrome.tabs.update(LOCSTO.session.jumpBackToActiveTab.tabId, { selected: true });
