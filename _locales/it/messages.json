@@ -1,5 +1,6 @@
 {
     "extName": { "message": "Deezer Control" }, 
+	"extShortName": { "message": "DeezerCtrl" }, 
     "extDesc": { "message": "Questa estensione ti consente di controllare Deezer dal tuo browser: hot keys, popup, notifiche...é tutto li!" }, 
     "defaultTitle": { "message": "Apri una nuova scheda Deezer" }, 
     "showNewItemsTitle": { "message": "Apri la pagina delle opzioni per vedere le novitŕ" }, 
