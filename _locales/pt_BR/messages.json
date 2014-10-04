@@ -1,5 +1,6 @@
 {
     "extName": { "message": "Deezer Control" },
+	"extShortName": { "message": "DeezerCtrl" }, 
     "extDesc": { "message": "Esta extensão permite que você controle o Deezer do seu navegador: teclas de atalho, pop-up, notificações... está tudo lá!" },
     "defaultTitle": { "message": "Abrir uma nova aba Deezer" },
     "showNewItemsTitle": { "message": "Abra a página de opções para ver o que há de novo" },

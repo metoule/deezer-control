@@ -1,5 +1,6 @@
 {
 	"extName": { "message": "Deezer Control" }, 
+	"extShortName": { "message": "DeezerCtrl" }, 
 	"extDesc": { "message": "Cette extension vous permet de contrôler Deezer à partir de Chrome: raccourcis clavier, popup, notifications... tout est là !" },
 	"defaultTitle": { "message": "Ouvrir Deezer dans un nouvel onglet" }, 
 	"showNewItemsTitle": { "message": "Ouvrir la page d'options pour voir les nouveautés" }, 
