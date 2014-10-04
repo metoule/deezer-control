@@ -1,4 +1,6 @@
 
+var gIsNewDeezer = false;
+
 function GetCoverFromAlbumId(albumId)
 {
 	"use strict";
@@ -12,14 +14,17 @@ function GetCoverFromAlbumId(albumId)
 function updateDeezerControlData()
 {
 	"use strict";
-	var DeezerControlData = document.getElementById('DeezerControlData');
-	var dzCurrentSong = { ART_ID: '', ALB_ID: '' };
-	var dzPrevSong = { ALB_PICTURE: '' };
-	var dzNextSong = { ALB_PICTURE: '' };
+	var DeezerControlData = document.getElementById('DeezerControlData'),
+		dzCurrentSong = { ART_ID: '', ALB_ID: '' }, 
+		dzPrevSong = { ALB_PICTURE: '' }, 
+		dzNextSong = { ALB_PICTURE: '' },
+		isPlaying = true,
+		isPrevActive = dzPlayer.getPrevSong() !== null, 
+		isNextActive = dzPlayer.getNextSong() !== null;
 	
 	try 
 	{
-		dzCurrentSong = dzPlayer.getCurrentSong() || { ART_ID: '', ALB_ID: '' };;
+		dzCurrentSong = dzPlayer.getCurrentSong() || { ALB_PICTURE: '', ART_ID: '', ALB_ID: '' };;
 	} catch(e) {}
 
 	try 
@@ -31,17 +36,23 @@ function updateDeezerControlData()
 	{
 		dzNextSong = dzPlayer.getNextSong() || { ALB_PICTURE: '' };
 	} catch(e) {}
-
+	
+	if (gIsNewDeezer)
+		isPlaying = dzPlayer.isPlaying();
+	else
+		isPlaying = document.getElementById('player_control_play').style.display === 'none';
+	
 	DeezerControlData.setAttribute('dz_is_active',   true);
-	DeezerControlData.setAttribute('dz_playing',	 document.getElementById('player_control_play').style.display === 'none');
+	DeezerControlData.setAttribute('dz_playing',	 isPlaying);
 	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
 	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
-	DeezerControlData.setAttribute('dz_cover',	     GetCoverFromAlbumId(dzPlayer.getCover()));
 	DeezerControlData.setAttribute('dz_artist_id',   dzCurrentSong.ART_ID);
+	DeezerControlData.setAttribute('dz_album_id',    dzCurrentSong.ALB_ID);
+	DeezerControlData.setAttribute('dz_cover',	     GetCoverFromAlbumId(dzCurrentSong.ALB_PICTURE));
 	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverFromAlbumId(dzPrevSong.ALB_PICTURE));
 	DeezerControlData.setAttribute('dz_next_cover',  GetCoverFromAlbumId(dzNextSong.ALB_PICTURE));
-	DeezerControlData.setAttribute('dz_is_prev_active',   playercontrol.prevButtonActive());
-	DeezerControlData.setAttribute('dz_is_next_active',   playercontrol.nextButtonActive());
+	DeezerControlData.setAttribute('dz_is_prev_active', isPrevActive);
+	DeezerControlData.setAttribute('dz_is_next_active', isNextActive);
 	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 
 }
 
@@ -68,19 +79,19 @@ function deezerControlMethod_play()
 function deezerControlMethod_prev()
 {
 	"use strict";
-	executeAction('prev');
+	executeAction("prev" + (gIsNewDeezer ? "Song" : ""));
 }
 
 function deezerControlMethod_next()
 {
 	"use strict";
-	executeAction('next');
+	executeAction("next" + (gIsNewDeezer ? "Song" : ""));
 }
 
 function deezerControlMethod_linkCurrentSong()
 {
 	"use strict";
-	executeAction('linkCurrentSong');
+	loadBox('album/' + document.getElementById('DeezerControlData').getAttribute('dz_album_id'));
 }
 
 function deezerControlMethod_linkCurrentArtist()
@@ -95,16 +106,17 @@ function triggerRemoveDeezerData()
 	document.getElementById('removeMe').textContent = "now"; 
 }
 
-//update content on first load
+// update content on first load
 (function()
 {
 	"use strict";
 	
-	var player_track_title = document.getElementById('player_track_title');
-	var player_control_play = document.getElementById("player_control_play");
+	var player_track_title = $("#player_track_title, .player-track-title span");
+	var player_control_play = $("#player_control_play, .control-play, .control-pause");
+	gIsNewDeezer = document.getElementById("player_control_play") === null;
 	
 	// ensure the player is on the page
-	if (player_track_title !== null && player_control_play !== null && dzPlayer !== null)
+	if (player_track_title.length > 0 && player_control_play.length > 0 && dzPlayer !== null)
 	{
 		// observe the changes of style atttribute of #player_control_play, to track play / pause changes
 		// (its style changes from hidden to display)
@@ -136,9 +148,9 @@ function triggerRemoveDeezerData()
 			}
 		});
 		
-		observerPlay.observe(player_track_title,  { childList: true, characterData: true });  
-		observerPlay.observe(player_control_play, { attributes: true, attributeOldValue: true, attributeFilter: ['style'] });
-		
+		player_track_title.each(function ()  { observerPlay.observe(this, { childList: true, characterData: true }); });
+		player_control_play.each(function () { observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['style', 'data-action'] }); });
+
 		updateDeezerControlData();
 	}
 	// failure to initialize
