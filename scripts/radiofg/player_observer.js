@@ -1,4 +1,12 @@
 
+
+function GetCover(src)
+{
+	if (src.charAt(0) === '/')
+		return window.location.origin + src;
+	return src;
+}
+
 // get data from JS object dzPlayer
 function updateDeezerControlData()
 {
@@ -11,7 +19,7 @@ function updateDeezerControlData()
 	DeezerControlData.setAttribute('dz_track',	     $("#titleSong").text().trim());
 	DeezerControlData.setAttribute('dz_artist_id',   "");
 	DeezerControlData.setAttribute('dz_album_id',    "");
-	DeezerControlData.setAttribute('dz_cover',	     $('#coverimg').attr("src"));
+	DeezerControlData.setAttribute('dz_cover',	     GetCover($('#coverimg').attr("src")));
 	DeezerControlData.setAttribute('dz_prev_cover',  "");
 	DeezerControlData.setAttribute('dz_next_cover',  "");
 	DeezerControlData.setAttribute('dz_is_prev_active', false);

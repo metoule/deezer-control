@@ -46,7 +46,7 @@
 						"tabs",
 		  				"webNavigation"
 					],
-  "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' http://cdn-images.deezer.com/images/cover/ https://*.sndcdn.com/ http://*.last.fm/;",
+  "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' http://cdn-images.deezer.com/images/cover/ https://*.sndcdn.com/ http://*.radiofg.com/ http://*.last.fm/;",
   "optional_permissions": [ "<all_urls>" ],
   "web_accessible_resources": [
   						"scripts/deezer/player_observer.js",
