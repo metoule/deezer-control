@@ -110,14 +110,14 @@ function triggerRemoveDeezerData()
 (function()
 {
 	"use strict";
-	
-	var player_track_title = $("#player_track_title, .player-track-title span");
-	var player_control_play = $("#player_control_play, .control-play, .control-pause");
-	gIsNewDeezer = document.getElementById("player_control_play") === null;
-	
+		
 	// ensure the player is on the page
-	if (player_track_title.length > 0 && player_control_play.length > 0 && dzPlayer !== null)
+	if (dzPlayer !== null)
 	{
+		var player_track_title = $("#player_track_title, .player-track-title span");
+		var player_control_play = $("#player_control_play, .control-play, .control-pause");
+		gIsNewDeezer = document.getElementById("player_control_play") === null;
+		
 		// observe the changes of style atttribute of #player_control_play, to track play / pause changes
 		// (its style changes from hidden to display)
 		// observe the changes of content of #player_track_title, to track song changes
@@ -155,5 +155,7 @@ function triggerRemoveDeezerData()
 	}
 	// failure to initialize
 	else 
+	{
 		triggerRemoveDeezerData();
+	}
 })();
