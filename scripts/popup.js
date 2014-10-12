@@ -16,6 +16,7 @@ function preparePopup()
 	$("#control-pause").click(function () { executePlayerAction('pause'); return false; });
 	$("#control-play").click(function ()  { executePlayerAction('play');  return false; });
 	$("#control-next").click(function ()  { executePlayerAction('next');  return false; });
+	$("#control-like").click(function ()  { executePlayerAction('like');  return false; });
 	$('#now_playing_info_track').click(function ()  { executeDoAction('linkCurrentSong');   return false; });
 	$('#now_playing_info_artist').click(function () { executeDoAction('linkCurrentArtist'); return false; });
 	
@@ -70,7 +71,11 @@ function refreshPopup()
 	chrome.runtime.sendMessage({ type: "getDeezerData" }, function(aNowPlayingData) 
 	{ 
 		if (aNowPlayingData !== null)
-		{	
+		{
+			// is song liked?
+			var isLiked = aNowPlayingData.dz_is_liked === 'true';
+			$('#control-like').toggleClass('not_liked', !isLiked).toggleClass('is_liked', isLiked);
+			
 			// show pause or play button 
 			var showPause = aNowPlayingData.dz_playing === 'true';
 			$('#control-play').css('display', 'inline-block').toggle(!showPause);
@@ -92,6 +97,7 @@ function refreshPopup()
 		{
 			$('#now_playing_info').hide();
 			$('#control-pause').hide();
+			$('#control-like').removeClass('is_liked').addClass('not_liked');
 			$('#cover').attr('src', "imgs/unknown_cd.png");
 		}
 	});

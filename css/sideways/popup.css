@@ -9,8 +9,10 @@
 
 #controls
 {
-	float: right;
+	float: left;
+	margin-left: 95px;
 	height: 20px;
+	width: 190px;
 	line-height: 20px;
 }
 
@@ -27,6 +29,9 @@
 #control-pause	  { background-position: -25px; width: 10px; }
 #control-play	  { background-position: -35px; width: 10px; }
 #control-next	  { background-position: -45px; width: 15px; }
+#control-like	  { 							width: 10px; margin-left: 10px;}
+.not_liked { background-position: -60px; }
+.is_liked { background-position: -70px; }
 
 #now_playing { height: 80px; }
 #now_playing_info
