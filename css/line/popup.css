@@ -3,7 +3,7 @@
 .popup_display
 {
 	min-height: 16px;
-	min-width: 290px;
+	min-width: 390px;
 	margin: 5px 6px 5px 6px;
 }
 
@@ -28,13 +28,16 @@
 #control-pause	  { background-position: -25px; width: 10px; }
 #control-play	  { background-position: -35px; width: 10px; }
 #control-next	  { background-position: -45px; width: 15px; }
+#control-like	  { 							width: 10px; margin-left: 10px;}
+.not_liked { background-position: -60px; }
+.is_liked { background-position: -70px; }
 
 #now_playing { height: 16px; }
 #now_playing_info
 {
 	margin-left: 26px;
 	height: 16px;
-	width: 182px;
+	width: 262px;
 	text-align: left;
 	font-size: 14px;
 	line-height: 15px;
@@ -43,7 +46,7 @@
 #now_playing_info span 
 {
 	display: inline-block;
-	max-width: 86px;
+	max-width: 106px;
 	padding-top: 2px;
 }
 

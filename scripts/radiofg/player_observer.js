@@ -2,7 +2,7 @@
 
 function GetCover(src)
 {
-	if (src.charAt(0) === '/')
+	if (src !== undefined && src.charAt(0) === '/')
 		return window.location.origin + src;
 	return src;
 }
@@ -17,11 +17,8 @@ function updateDeezerControlData()
 	DeezerControlData.setAttribute('dz_playing',	 $('#playBtn').css('display') === 'none');
 	DeezerControlData.setAttribute('dz_artist',	     $("#artistSong").text().trim());
 	DeezerControlData.setAttribute('dz_track',	     $("#titleSong").text().trim());
-	DeezerControlData.setAttribute('dz_artist_id',   "");
-	DeezerControlData.setAttribute('dz_album_id',    "");
+	DeezerControlData.setAttribute('dz_is_liked',	 $(".voteaction i").hasClass("icon-heart"));
 	DeezerControlData.setAttribute('dz_cover',	     GetCover($('#coverimg').attr("src")));
-	DeezerControlData.setAttribute('dz_prev_cover',  "");
-	DeezerControlData.setAttribute('dz_next_cover',  "");
 	DeezerControlData.setAttribute('dz_is_prev_active', false);
 	DeezerControlData.setAttribute('dz_is_next_active', false);
 	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 
@@ -49,6 +46,12 @@ function deezerControlMethod_next()
 {
 	"use strict";
 	// NOP
+}
+
+function deezerControlMethod_like()
+{
+	"use strict";
+	$(".voteaction").click();
 }
 
 function deezerControlMethod_linkCurrentSong()
@@ -111,8 +114,11 @@ function triggerRemoveDeezerData()
 		});
 		
 		player_track_title.each(function ()  { observerPlay.observe(this, { childList: true, characterData: true }); });
-		player_control_play.each(function () { observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['style', 'data-action'] }); });
+		player_control_play.each(function () { observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['style'] }); });
 
+		// needed for like (the like button is added via jQuery on song change..)
+		$("#titleSong").each(function () { observerPlay.observe(this, { subtree: true, attributes: true, attributeOldValue: true, attributeFilter: ['class'] }); });;
+		
 		updateDeezerControlData();
 	}
 	// failure to initialize

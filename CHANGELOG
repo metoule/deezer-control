@@ -1,4 +1,9 @@
- 2.3 - 04/10/2014 
+  -  
+ * Fix: new Deezer is now properly supported
+ * Improvement: liking a song is now possible
+ * Improvement: added support of radiofg.com
+ 
+  2.3 - 04/10/2014 
  * Improvement: added Italian and Portuguese (Brazil) translations (thanks to Alexandre Vicenzi)
  * Improvement: added support of new Deezer 
  * Improvement: added support of SoundCloud.com

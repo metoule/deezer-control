@@ -26,6 +26,9 @@
 #control-pause	  { background-position: -40px; width: 16px; }
 #control-play	  { background-position: -56px; width: 16px; }
 #control-next	  { background-position: -72px; width: 24px; }
+#control-like	  { 							width: 16px; margin-left: 16px;}
+.not_liked { background-position: -96px; }
+.is_liked { background-position: -112px; }
 
 #now_playing { height: 250px; }
 #now_playing_info

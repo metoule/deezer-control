@@ -15,9 +15,7 @@ function updateDeezerControlData()
 {
 	"use strict";
 	var DeezerControlData = document.getElementById('DeezerControlData'),
-		dzCurrentSong = { ART_ID: '', ALB_ID: '' }, 
-		dzPrevSong = { ALB_PICTURE: '' }, 
-		dzNextSong = { ALB_PICTURE: '' },
+		dzCurrentSong, dzPrevSong, dzNextSong,
 		isPlaying = true,
 		isPrevActive = dzPlayer.getPrevSong() !== null, 
 		isNextActive = dzPlayer.getNextSong() !== null;
@@ -46,6 +44,7 @@ function updateDeezerControlData()
 	DeezerControlData.setAttribute('dz_playing',	 isPlaying);
 	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
 	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
+	DeezerControlData.setAttribute('dz_is_liked',	 userData.isFavorite('song', dzCurrentSong.SNG_ID));
 	DeezerControlData.setAttribute('dz_artist_id',   dzCurrentSong.ART_ID);
 	DeezerControlData.setAttribute('dz_album_id',    dzCurrentSong.ALB_ID);
 	DeezerControlData.setAttribute('dz_cover',	     GetCoverFromAlbumId(dzCurrentSong.ALB_PICTURE));
@@ -88,6 +87,18 @@ function deezerControlMethod_next()
 	executeAction("next" + (gIsNewDeezer ? "Song" : ""));
 }
 
+function deezerControlMethod_like()
+{
+	"use strict";
+	var songId = dzPlayer.getCurrentSong('SNG_ID'),
+		data = { type: 'song', id: songId };
+	
+	if (userData.isFavorite('song', songId))
+		favorite.remove(data);
+	else
+		favorite.add(data);
+}
+
 function deezerControlMethod_linkCurrentSong()
 {
 	"use strict";
@@ -115,7 +126,7 @@ function triggerRemoveDeezerData()
 	if (dzPlayer !== null)
 	{
 		var player_track_title = $("#player_track_title, .player-track-title span");
-		var player_control_play = $("#player_control_play, .control-play, .control-pause");
+		var player_control_play = $("#player_control_play, .control-play, .control-pause, #player_action_love, .icon-love-circle");
 		gIsNewDeezer = document.getElementById("player_control_play") === null;
 		
 		// observe the changes of style atttribute of #player_control_play, to track play / pause changes
@@ -149,7 +160,7 @@ function triggerRemoveDeezerData()
 		});
 		
 		player_track_title.each(function ()  { observerPlay.observe(this, { childList: true, characterData: true }); });
-		player_control_play.each(function () { observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['style', 'data-action'] }); });
+		player_control_play.each(function () { observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'style', 'data-action'] }); });
 
 		updateDeezerControlData();
 	}

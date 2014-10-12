@@ -11,13 +11,13 @@ function GetCoverForSound(sound)
 }
 
 // get data from JS object dzPlayer
-function getDeezerControlDataFromPlayManager(playManager)
+function getDeezerControlDataFromPlayManager(playManager, soundLikes)
 {
 	"use strict";
 	
 	var DeezerControlData = document.getElementById('DeezerControlData');
 	
-	var dzCurrentSong = { title: '', artwork_url: '', user: { username: '' } };
+	var dzCurrentSong = { id: '', title: '', artwork_url: '', user: { username: '' } };
 	if (playManager.hasCurrentSound() && playManager.getCurrentSound() !== undefined)
 		dzCurrentSong = playManager.getCurrentSound().attributes;
 	
@@ -33,6 +33,7 @@ function getDeezerControlDataFromPlayManager(playManager)
 	DeezerControlData.setAttribute('dz_playing',	 $(".playControl.sc-ir").hasClass("playing"));
 	DeezerControlData.setAttribute('dz_artist',	     dzCurrentSong.user.username);
 	DeezerControlData.setAttribute('dz_track',	     dzCurrentSong.title);
+	DeezerControlData.setAttribute('dz_is_liked',	 new soundLikes().get(dzCurrentSong.id));
 	DeezerControlData.setAttribute('dz_cover',	     GetCoverForSound(dzCurrentSong));
 	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverForSound(dzPrevSong));
 	DeezerControlData.setAttribute('dz_next_cover',  GetCoverForSound(dzNextSong));
@@ -44,14 +45,14 @@ function getDeezerControlDataFromPlayManager(playManager)
 function updateDeezerControlData()
 {
 	"use strict";
-    require(['lib/play-manager'], getDeezerControlDataFromPlayManager);
+    require(['lib/play-manager', 'models/sound-likes'], getDeezerControlDataFromPlayManager);
 }
 
 // process actions
 function executeAction(action)
 {
 	"use strict";
-    require(['lib/play-manager'], function (playManager) 
+    require(['lib/play-manager', 'lib/action-controller'], function (playManager, actionController) 
 	{
     	switch (action) {
 		case 'pause':
@@ -65,6 +66,9 @@ function executeAction(action)
 			break;
 		case 'next':
 			playManager.playNext();
+			break;
+		case 'like':
+			actionController.like(playManager.getCurrentSound().id);
 			break;
 		}
 	});
@@ -94,18 +98,21 @@ function deezerControlMethod_next()
 	executeAction('next');
 }
 
+function deezerControlMethod_like()
+{
+	"use strict";
+	executeAction('like');
+}
+
 function deezerControlMethod_linkCurrentSong()
 {
 	"use strict";
-    require(['lib/play-manager'], function (playManager) 
+    require(['lib/play-manager', 'config'], function (playManager, config) 
 	{
 		if (playManager.hasCurrentSound() && playManager.getCurrentSound() !== undefined)
 		{
-			require(['config'], function (config) 
-			{
-				config.get("router").navigate(playManager.getCurrentSound().attributes.permalink_url.replace(/^https?:\/\/.*?\//, "/"));
-				config.get("router").reload();
-			});
+			config.get("router").navigate(playManager.getCurrentSound().attributes.permalink_url.replace(/^https?:\/\/.*?\//, "/"));
+			config.get("router").reload();
 		}
 	});
 }
@@ -113,15 +120,12 @@ function deezerControlMethod_linkCurrentSong()
 function deezerControlMethod_linkCurrentArtist()
 {
 	"use strict";
-    require(['lib/play-manager'], function (playManager) 
+    require(['lib/play-manager', 'config'], function (playManager, config) 
 	{
 		if (playManager.hasCurrentSound() && playManager.getCurrentSound() !== undefined)
 		{
-			require(['config'], function (config) 
-			{
-				config.get("router").navigate(playManager.getCurrentSound().attributes.user.permalink_url.replace(/^https?:\/\/.*?\//, "/"));
-				config.get("router").reload();
-			});
+			config.get("router").navigate(playManager.getCurrentSound().attributes.user.permalink_url.replace(/^https?:\/\/.*?\//, "/"));
+			config.get("router").reload();
 		}
 	});
 }
@@ -136,10 +140,10 @@ function triggerRemoveDeezerData()
 (function()
 {
 	"use strict";
-	var playbackTitle = $(".playbackTitle")[0];
+	var player_track_title = $(".playbackTitle, .sc-button-like");
 
 	// ensure the player is on the page
-	if (playbackTitle !== null && require !== null)
+	if (player_track_title.length > 0 && require !== null)
 	{
 		// observe the changes of content of .playbackTitle, to track song changes and play / pause
 		// (class changingTitle or paused are added)
@@ -165,7 +169,7 @@ function triggerRemoveDeezerData()
 			}
 		});
 
-		observerPlay.observe(playbackTitle, { attributes: true, attributeOldValue: true, attributeFilter: ['class'] });
+		player_track_title.each(function ()  { observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['class'] }); });
 
 		updateDeezerControlData();
 	}

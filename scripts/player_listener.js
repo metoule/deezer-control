@@ -87,7 +87,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 		aAction = aDzPlaying === "true" ? "pause" : "play";
 	}
 
-	// possible action: play, pause, prev, next, linkCurrentSong, linkCurrentArtist
+	// possible action: play, pause, prev, next, like, linkCurrentSong, linkCurrentArtist
 	location.href = "javascript: deezerControlMethod_" + aAction + "()";
 	
 	// no callback is used, return false
