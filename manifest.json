@@ -27,21 +27,10 @@
 							{
 								"matches": [ "*://*.deezer.com/*" ],
 								"js": [ "scripts/player_listener.js", "scripts/deezer/bootstrap.js" ]
-							}, 
-							{
-								"matches": [ "*://*.soundcloud.com/*" ],
-								"js": [ "scripts/player_listener.js", "scripts/soundcloud/bootstrap.js" ], 
-								"load_at": "document_end"
-							},
-							{
-								"matches": [ "*://*.radiofg.com/*" ],
-								"js": [ "scripts/player_listener.js", "scripts/radiofg/bootstrap.js" ]
 							}
 						],
   "permissions":	[ 
-						"*://*.deezer.com/*",  
-						"*://*.soundcloud.com/*",
-						"*://*.radiofg.com/*",
+						"*://*.deezer.com/*", 
 						"notifications", 
 						"tabs",
 		  				"webNavigation"
