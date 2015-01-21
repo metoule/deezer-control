@@ -1,14 +1,17 @@
-  2.4 - 18/10/2014 
+  2.5 - 21 Jan 2015
+ * Fix: updated extension to match latest Deezer API
+ 
+  2.4 - 18 Oct 2014 
  * Fix: new Deezer is now properly supported
  * Improvement: liking a song is now possible
  * Improvement: added support of radiofg.com
  
-  2.3 - 04/10/2014 
+  2.3 - 04 Oct 2014 
  * Improvement: added Italian and Portuguese (Brazil) translations (thanks to Alexandre Vicenzi)
  * Improvement: added support of new Deezer 
  * Improvement: added support of SoundCloud.com
 
-2.2 - 30/07/2014
+2.2 - 30 Jul 2014
  * Fix: https://bitbucket.org/metoule/deezer_control/issue/3/deezer-control-causing-issues-with-chrome
  * Fix: no longer try to execute content script on chrome:// URLs
  * Improvement: multiple deezer tabs can be opened at the same time
