@@ -59,8 +59,24 @@ function updateDeezerControlData()
 function executeAction(action)
 {
 	"use strict";
-	if (playercontrol !== undefined) 
-		playercontrol.doAction(action);
+	if (dzPlayer === undefined || dzPlayer.control === undefined) 
+		return;
+	
+	switch (action) 
+	{
+		case 'pause':
+			dzPlayer.control.pause();
+			break;
+		case 'play':
+			dzPlayer.control.play();
+			break;
+		case 'prev':
+			dzPlayer.control.prevSong();
+			break;
+		case 'next':
+			dzPlayer.control.nextSong();
+			break;
+	}
 }
 
 function deezerControlMethod_pause()
@@ -78,13 +94,13 @@ function deezerControlMethod_play()
 function deezerControlMethod_prev()
 {
 	"use strict";
-	executeAction("prev" + (gIsNewDeezer ? "Song" : ""));
+	executeAction("prev");
 }
 
 function deezerControlMethod_next()
 {
 	"use strict";
-	executeAction("next" + (gIsNewDeezer ? "Song" : ""));
+	executeAction("next");
 }
 
 function deezerControlMethod_like()
