@@ -136,8 +136,8 @@ function triggerRemoveDeezerData()
 	// ensure the player is on the page
 	if (dzPlayer !== null)
 	{
-		var player_track_title = $("#player_track_title, .player-track-title span");
-		var player_control_play = $("#player_control_play, .control-play, .control-pause, #player_action_love, .icon-love-circle, .icon-love");
+		var player_track_title = $(".player-track-title span");
+		var player_control_play = $(".control-play, .control-pause, .icon-love-circle, .icon-love");
 		
 		// observe the changes of style attribute of #player_control_play, to track play / pause changes
 		// (its style changes from hidden to display)
@@ -150,6 +150,7 @@ function triggerRemoveDeezerData()
 			for (i = 0; i < mutations.length && !bUpdateInfo; i++)
 			{
 				mutation = mutations[i];
+				console.info(mutation);
 				
 				// result of 'player_control_play' observer
 				if (mutation.type === "attributes")
@@ -169,7 +170,7 @@ function triggerRemoveDeezerData()
 			}
 		});
 		
-		player_track_title.each(function ()  { observerPlay.observe(this, { childList: true, characterData: true }); });
+		player_track_title.each(function ()  { observerPlay.observe(this, { childList: true, characterData: true, subtree: true }); });
 		player_control_play.each(function () { observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'style', 'data-action'] }); });
 
 		// observe change in DOM, and attach observerPlay to all the "love" icons

@@ -1,6 +1,6 @@
 body
 {
-    background-color: #F0F0F0;
+    background-color: #F8F8F9;
     color: black;
     font: 13px Arial, Helvetica, Verdana, sans-serif;
     margin: 0px;
@@ -8,7 +8,7 @@ body
 
 h1
 {
-    color: #202020;
+    color: ##3b3b3b;
     font-size: 24px;
     margin: 0px -15px 10px -15px;
     text-transform: uppercase;
@@ -16,10 +16,9 @@ h1
 
 .emphasis, h2
 {
-   color: #202020;
+   color: ##3b3b3b;
    font-size: 14px;
    font-weight: bold;
-   text-shadow: #EFEFEF 0px 1px 0px;
 }
 
 h2 { margin: 15px 0px 5px 0px; }
@@ -36,59 +35,42 @@ a
  * ********************************************************************** */
 #tab_chooser
 {
-    background: #DBDBDB;
-    height: 29px;
-    line-height: 28px;
+    background: #FFFFFF;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #D1D1D7;
 }
     
 nav
 {
     margin: 0px auto 0 auto;
-    text-shadow: #EFEFEF 0px 1px 0px;
-    text-transform: uppercase;
     width: 800px;
 }
 
 nav a
 {
-    border-right: 1px solid #D0D0D0;
-    color: #919191;
+    border-bottom: 3px solid transparent;
+    color: #72727D;
     display: inline-block;
-    height: 29px;
+    font-family: "Open Sans",Arial,sans-serif;
+    font-size: 14px;
+    height: 47px;
     text-align: center;
     font-weight: bold;
-    width: 159px;
-    -webkit-transition: all 0.3s;
+    margin: 0 15px;
+    width: 129px;
+    letter-spacing: 0.5px;
+    -webkit-transition: border-color,color 0.15s;
 }
 
 nav a:last-child { border-right: 0; }
 nav a:hover { color: #666; }
 
-nav a.currentone, nav a.currentone:hover
+nav a.currentone, nav a:hover
 {
-    background-color: #444;
-    color: white;
-    text-shadow: 0 -1px black;
+	color: #32323D;
+    border-color: #007FEB;
 }
-
-#arrow_line
-{
-    display: block;
-    margin: 0px auto 0 auto;
-    width: 800px;
-}
-    
-#arrow_line span
-{
-    background: url(/imgs/options.png);
-    display: block;
-    left: 73px;
-    height: 7px;
-    position: relative;
-    width: 13px;
-    -webkit-transition: all 0.3s;
-}
-
 
 /* ***********************************************************************
  *                            New items      
@@ -120,9 +102,8 @@ span.new_item
 
 #center_block
 {
-    background-color: white;
-    border: 1px solid #E9E9E9;
-    height: 525px;
+    background-color: #FFFFFF;
+    min-height: 525px;
     width: 760px;
     margin: 20px auto 0 auto;
     padding: 20px;
@@ -153,15 +134,14 @@ fieldset * { vertical-align: middle; }
     
 footer
 {
-    background: #DBDBDB;
-    border-top: 1px solid #C4C4C5;
-    color: #666;
+    background: #e0e0e0;
+    border-top: 1px solid #ccc;
+    color: #72727D;
     font-weight: normal;
-    margin: 20px auto 0 auto;
-    padding: 10px 15px 15px 15px;
+    margin: 0px auto 0 auto;
+    padding: 20px;
     text-align: center;
-    text-shadow: 0 1px white;
-    width: 770px;
+    width: 760px;
 }
     
 footer a:hover, .mail_me:hover { text-decoration: underline; }
@@ -319,14 +299,13 @@ footer a:hover, .mail_me:hover { text-decoration: underline; }
     text-align: center;
 }
 
-.btn_unselected, .btn_selected { background: #F0F0F0; text-shadow: 0 1px white; }
+.btn_unselected, .btn_selected { background: #F0F0F0; }
 .btn_unselected:hover, .btn_selected:hover { background: white; color: black; }
 
 .btn_unselected
 {
     border: 1px solid #D0D0D0;
     color: gray;
-    text-shadow: 0 1px white;
 }
 	
 .btn_selected
@@ -338,23 +317,21 @@ footer a:hover, .mail_me:hover { text-decoration: underline; }
 
 .btn_blue
 {
-    background: #3B6280;
-    background: -webkit-linear-gradient(bottom, #3B6280, #63A4D6);
-    border: 1px solid #1E3140;
+    background: #007FEB;
+    border: 1px solid #007FEB;
     color: white;
 }
 
-.btn_blue:hover { background: #63A4D6; }
+.btn_blue:hover { background: #0B66CD; }
 
 .btn_red
 {
-    background: #832E2E;
-    background: -webkit-linear-gradient(bottom, #832E2E, #DB4D4D);
-    border: 1px solid #421717;
+    background: #DC3434;
+    border: 1px solid #DC3434;
     color: white;
 }
 
-.btn_red:hover { background: #DB4D4D; }
+.btn_red:hover { background: #BD2D2D; }
 
 input { border: 1px solid #D0D0D0; }
 select { background-color: #FCFCFC; color: #191919; }
@@ -369,8 +346,7 @@ div.yes_no_bar
 
 div.save_cancel_bar
 {
-    border-top: 1px solid lightgray;
-    padding: 5px; 
+    padding: 15px 5px 0px 5px; 
     margin: 15px 0px 0px -5px; 
 }
 

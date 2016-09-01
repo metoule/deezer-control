@@ -17,7 +17,6 @@
 			<nav>
 				<a id="welcome_nav" href="#welcome" data-i18n-content="options_page_tab_title_welcome"></a><a id="popup_style_nav" href="#popup_style" data-i18n-content="options_page_tab_title_options"></a><a id="hotkeys_nav" href="#hotkeys" data-i18n-content="options_page_tab_title_hotkeys"></a><a id="notifications_nav" href="#notifications" data-i18n-content="options_page_tab_title_notifications"></a><a id="misc_nav" href="#misc" data-i18n-content="options_page_tab_title_misc"></a>
 			</nav>
-			<span id="arrow_line"><span></span></span>
 		</div>
 			
 		<div id="center_block">
@@ -78,7 +77,6 @@
 									<div class="controls-right"><a id="control-prev"></a><a id="control-pause"></a><a id="control-play"></a><a id="control-next"></a></div>
 								</div>
 								<div id="now_playing">
-									<div id="shadow_top"></div>
 									<div id="shadow_bottom"></div>
 									<div id="now_playing_info">
 										<span id="now_playing_info_track"></span>
@@ -175,15 +173,11 @@
 				<h1 data-i18n-content="options_page_tab_notifs_h1"></h1>
 				<div data-i18n-content="options_page_tab_notifs_what_are_notifications"></div>
 				
-				<h2 class="new_item" data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
+				<h2 data-i18n-content="options_page_tab_notifs_show_notifs_when_title"></h2>
 				<fieldset>
 					<input type="radio" name="notifs_show_when" value="never" id="notifs_show_never"/>
 					<label for="notifs_show_never" data-i18n-content="options_page_tab_notifs_show_never"></label>
 					<span class="warning" id='chrome_permission_not_granted_old' data-i18n-content="options_page_tab_notifs_chrome_permission_not_granted"></span>
-					<br/>
-					
-					<input type="radio" name="notifs_show_when" value="never_hides" id="notifs_show_never_hides"/>
-					<label for="notifs_show_never_hides" data-i18n-content="options_page_tab_notifs_show_never_hides"></label>
 					<br/>
 					
 					<input type="radio" name="notifs_show_when" value="on_song_change" id="notifs_show_on_song_change"/>
