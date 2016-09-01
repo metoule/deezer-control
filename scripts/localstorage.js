@@ -87,7 +87,7 @@ var LOCSTO = LOCSTO || {
 		this.popupStyle = this.get('popup_style') || 'large';
 		
 		// notifications
-		this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false });
+		this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, onSongChange: false, onHotKeyOnly: false });
 		
 		// hot keys
 				this.prevHotKey =		 fillDictWithDefaults(this.get('prevHotKey'),  { ctrlKey: false, altKey: false, shiftKey: false, keyCode: 177 });
@@ -154,6 +154,17 @@ var LOCSTO = LOCSTO || {
 			// new options to show in 2.0
 			this.newOptionsToShow = true;
 			this.saveNewOptionsToShow();
+		}
+		
+		// new in version 2.7
+		//  * removed notifications neverHides, which doesn't work anymore
+		if (installedVersion.compare(new Version("2.7")) < 0)
+		{
+			this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false });
+			if (this.notifications.neverHides)
+				this.notifications.onSongChange = true;
+			delete this.notifications.neverHides;
+			this.saveNotifications();
 		}
 		
 		// model update finished, store newly installed version

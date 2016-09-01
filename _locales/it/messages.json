@@ -47,7 +47,6 @@
     "options_page_tab_notifs_chrome_permission_not_granted": { "message": "Permesso  per mostrare le notifiche negato!" },  
     "options_page_tab_notifs_show_notifs_when_title": { "message": "Mostra notifiche?"},  
     "options_page_tab_notifs_show_never": { "message": "Non mostrare mai le notifiche" },  
-    "options_page_tab_notifs_show_never_hides": { "message": "Mantieni le notifiche sul szstem tray finché una scheda Deezer é aperta" },  
     "options_page_tab_notifs_show_on_song_change": { "message": "Mostra le notifiche ogni volta accade un evento (precedente, successivo, play/pausa)." },  
     "options_page_tab_notifs_show_on_hotkey_only": { "message": "Mostra le notifiche solo su eventi chiave (es. non su ogni click nei popup o su Deezer)." }, 
     "options_page_tab_notifs_activate_explanation": { "message": "Quando attivate le notifiche rimarranno nel system tray. E' sempre possibile mostrarle nuovamente usando la hotkey 'Mostra il brano attuale'" },

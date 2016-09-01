@@ -40,7 +40,17 @@
 	width: 232px;
 }
 
-#now_playing_info_track { margin-bottom: 2px; }
+#now_playing_info_track 
+{ 
+	margin-bottom: 4px;
+	font-size: 20px;
+}
+
+#now_playing_info_artist
+{ 
+	font-size: 14px;
+}
+	
 #cover 
 {
 	height: 250px;

@@ -86,11 +86,7 @@ function preparePage_notifs()
 	$("#button_save_notifications").click(saveNotifications);
 
 	// restore value 
-	if (LOCSTO.notifications.neverHides)
-	{
-		$('input:radio[name="notifs_show_when"]').filter('[value="never_hides"]').prop('checked', true);
-	}
-	else if (LOCSTO.notifications.onSongChange)
+	if (LOCSTO.notifications.onSongChange)
 	{
 		$('input:radio[name="notifs_show_when"]').filter('[value="on_song_change"]').prop('checked', true);
 	}
@@ -245,21 +241,13 @@ function saveNotifications()
 	
 	var aNotifsShowWhen = $('input:radio[name="notifs_show_when"]:checked').val();
 	
-	if (aNotifsShowWhen === 'never')
+	if (aNotifsShowWhen === 'on_song_change')
 	{
-		LOCSTO.notifications = { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false };
-	}
-	else if (aNotifsShowWhen === 'never_hides')
-	{
-		LOCSTO.notifications = { never: false, neverHides: true, onSongChange: false, onHotKeyOnly: false };
-	}
-	else if (aNotifsShowWhen === 'on_song_change')
-	{
-		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: true, onHotKeyOnly: false };
+		LOCSTO.notifications = { never: false, onSongChange: true, onHotKeyOnly: false };
 	}
 	else if (aNotifsShowWhen === 'on_hotkey_only')
 	{
-		LOCSTO.notifications = { never: false, neverHides: false, onSongChange: false, onHotKeyOnly: true };
+		LOCSTO.notifications = { never: false, onSongChange: false, onHotKeyOnly: true };
 	}
 	
 	LOCSTO.saveNotifications();

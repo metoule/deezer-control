@@ -39,7 +39,7 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 			this.destroyNotif(function() 
 			{
 				LOCSTO.session.notifData = newData;
-				chrome.notifications.create('deezer_control', content, function(/*notifId*/) {/*NOP*/});
+				chrome.notifications.create('deezer_control', content);
 			});
 		}
 		else
@@ -51,7 +51,7 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 			}
 			
 			LOCSTO.session.notifData = newData;
-			chrome.notifications.create('deezer_control', content, function(/*notifId*/) {/*NOP*/});
+			chrome.notifications.update('deezer_control', content);
 		}
 	}, 
 	
