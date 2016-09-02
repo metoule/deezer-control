@@ -1,3 +1,8 @@
+2.7 - 01/09/2016
+ * Removed obsolete notifications option "never hides" (obsolete, because the notification center no longer exists)
+ * Updated options style to match new Deezer CSS
+ * Fixed broken info update on track change 
+
 2.6 - 06/11/2015
  * Improvement: love icon is now correctly updated in real time
 
