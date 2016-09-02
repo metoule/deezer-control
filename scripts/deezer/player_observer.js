@@ -150,7 +150,6 @@ function triggerRemoveDeezerData()
 			for (i = 0; i < mutations.length && !bUpdateInfo; i++)
 			{
 				mutation = mutations[i];
-				console.info(mutation);
 				
 				// result of 'player_control_play' observer
 				if (mutation.type === "attributes")
