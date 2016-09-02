@@ -1,5 +1,5 @@
 Redim options page in Chrome to 67%
 Take screenshot with the Gimp
-Cut to 693,118 => 534x378
-Set bakground color to f0f0f0
+Cut to 574,109 => 532x385
+Set bakground color to #F8F8F9
 Canvas to 640x400, resize layers
