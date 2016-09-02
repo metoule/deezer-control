@@ -1,3 +1,9 @@
+2.9 - 02/09/2016
+ * Fixed CSS for large theme that prevented letters from being fully displayed 
+ 
+ 2.8 - 02/09/2016
+ * Removed accidental logging of MutationRecords 
+ 
 2.7 - 01/09/2016
  * Removed obsolete notifications option "never hides" (obsolete, because the notification center no longer exists)
  * Updated options style to match new Deezer CSS
