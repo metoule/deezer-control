@@ -136,7 +136,7 @@ function triggerRemoveDeezerData()
 	// ensure the player is on the page
 	if (dzPlayer !== null)
 	{
-		var player_track_title = $(".player-track-title span");
+		var player_track_title = $(".player-track-title a");
 		var player_control_play = $(".control-play, .control-pause, .icon-love-circle, .icon-love");
 		
 		// observe the changes of style attribute of #player_control_play, to track play / pause changes
