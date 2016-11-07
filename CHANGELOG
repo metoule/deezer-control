@@ -1,3 +1,6 @@
+2.9 - 07/11/2016
+ * Fixed issue that prevented extension from loading
+
 2.9 - 02/09/2016
  * Fixed CSS for large theme that prevented letters from being fully displayed 
  
