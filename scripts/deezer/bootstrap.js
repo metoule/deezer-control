@@ -26,7 +26,7 @@ function loadObserver()
 // do we have the elements needed to work?
 function okForLoad()
 {
-	return document.querySelector(".player-track-title span") !== null;
+	return document.querySelector(".player-track-title a") !== null;
 }
 
 function bootstrap()
