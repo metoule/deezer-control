@@ -1,4 +1,7 @@
-2.9 - 07/11/2016
+2.11 - 07/11/2016
+ * Fixed issue that prevented extension from reading the track title
+
+2.10 - 07/11/2016
  * Fixed issue that prevented extension from loading
 
 2.9 - 02/09/2016
