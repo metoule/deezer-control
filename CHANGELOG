@@ -1,3 +1,6 @@
+2.12 - 28/11/2016
+ * Fixed issue that prevented extension from tracking the play / pause button
+ 
 2.11 - 07/11/2016
  * Fixed issue that prevented extension from reading the track title
 
