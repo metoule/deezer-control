@@ -82,7 +82,7 @@ if __name__ == '__main__':
 			
 	# Commit new version
 	print bcolors.BLUE + "3. Commit manifest.json with message 'Bumped version'" + bcolors.ENDC
-	commands.commit(ui.ui(), aHgRepo, 'manifest.json', message='Bumped version')
+	commands.commit(ui.ui(), aHgRepo, 'manifest.json', message='Bumped version', user='metoule')
 	
 	# Tag repository
 	aTagName = 'DEEZER_CONTROL_%s' % aNewVersion
