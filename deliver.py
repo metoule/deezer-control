@@ -87,7 +87,7 @@ if __name__ == '__main__':
 	# Tag repository
 	aTagName = 'DEEZER_CONTROL_%s' % aNewVersion
 	print bcolors.BLUE + "4. Tag repository with name %s" % aTagName  + bcolors.ENDC
-	commands.tag(ui.ui(), aHgRepo, aTagName)
+	commands.tag(ui.ui(), aHgRepo, aTagName, user='metoule)
 	
 	# Create .zip file
 	aZipName = 'deezer_control_%s.zip' % aNewVersion
