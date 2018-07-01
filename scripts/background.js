@@ -193,6 +193,7 @@ chrome.runtime.onMessage.addListener(extensionOnMessageListener);
 function extensionOnMessageListener(request, sender, sendResponse) 
 {
 	"use strict";
+
 	switch (request.type)
 	{
 	case "remove_me":
@@ -268,10 +269,11 @@ function extensionOnMessageListener(request, sender, sendResponse)
 	case "controlPlayer":
 		gActionOnHotKey = request.source === 'hotkey';
 		gActionOnNotifButton = request.source === 'notif';
-		
+
 		// send the wanted action to the deezer tab
-		if (LOCSTO.session.playersTabs.length > 0)
+		if (LOCSTO.session.playersTabs.length > 0) {
 			chrome.tabs.sendMessage(LOCSTO.session.playersTabs[0], { name: request.type, action: request.command });
+		}
 		break;
 
 	case "doAction":

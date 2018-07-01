@@ -31,8 +31,9 @@ function okForLoad()
 
 function bootstrap()
 {
-	if (document.readyState !== "complete")
+	if (document.readyState !== "complete") {
 		return;
+	}
 	
 	// everything might already be loaded
 	if (okForLoad())
@@ -42,15 +43,7 @@ function bootstrap()
 	}	
 
 	// delay insertion until the elements we want are added
-	var sidebar = document.getElementById("page_sidebar");
-	if (sidebar === null)
-	{
-		// can't find the sidebar to monitor load - abort
-		document.getElementById('removeMe').textContent = "now";
-		return;
-	}
-		
-	gCheckIfReady.observe(sidebar, { subtree: true, childList: true });
+	gCheckIfReady.observe(document, { subtree: true, childList: true });
 }
 
 document.addEventListener("readystatechange", bootstrap);

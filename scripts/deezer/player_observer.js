@@ -172,7 +172,7 @@ function triggerRemoveDeezerData()
 		// observe change in DOM, and attach observerPlay to all the "love" icons
 		var oberserLoveIcons = new MutationObserver(function(mutations) 
 		{
-			$(".icon-love").each(function(){ observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'style', 'data-action'] }); });
+			$(".svg-icon-love-outline").each(function(){ observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'style', 'data-action'] }); });
 		});
 		oberserLoveIcons.observe(document, { childList: true, subtree: true });
 		
