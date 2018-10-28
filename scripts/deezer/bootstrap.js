@@ -1,16 +1,4 @@
 
-var gCheckIfReady = new MutationObserver(function(mutations) 
-{
-	"use strict";
-	
-	if (!okForLoad())
-		return;
-
-	loadObserver();
-	this.disconnect(); // stop observing
-});
-
-
 function loadObserver()
 {
 	// inject a new JS script that can interact with the JS objects of the page
@@ -23,27 +11,13 @@ function loadObserver()
 	document.getElementById('DeezerControlData').setAttribute('dz_name', 'deezer');
 }
 
-// do we have the elements needed to work?
-function okForLoad()
-{
-	return document.querySelector(".player-track-title a") !== null;
-}
-
 function bootstrap()
 {
 	if (document.readyState !== "complete") {
 		return;
 	}
-	
-	// everything might already be loaded
-	if (okForLoad())
-	{
-		loadObserver();
-		return;
-	}	
 
-	// delay insertion until the elements we want are added
-	gCheckIfReady.observe(document, { subtree: true, childList: true });
+    loadObserver();
 }
 
 document.addEventListener("readystatechange", bootstrap);
