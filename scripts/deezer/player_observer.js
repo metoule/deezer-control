@@ -131,51 +131,15 @@ function triggerRemoveDeezerData()
 // update content on first load
 (function()
 {
-	"use strict";
-		
+    "use strict";
+
 	// ensure the player is on the page
 	if (dzPlayer !== null)
-	{
-		var player_track_title = $(".player-track-title a");
-		var player_control_play = $(".control-play");
-		
-		var observerPlay = new MutationObserver(function(mutations) 
-		{
-			"use strict";
-			
-			var bUpdateInfo = false, i, mutation;
-			for (i = 0; i < mutations.length && !bUpdateInfo; i++)
-			{
-				mutation = mutations[i];
-				
-				// result of 'player_control_play' observer
-				if (mutation.type === "attributes")
-				{
-					bUpdateInfo  = mutation.oldValue !== mutation.target.getAttribute(mutation.attributeName);
-				}
-				// result of 'player_track_title' observer
-				else if (mutation.type === "characterData" || mutation.type === "childList")
-				{
-					bUpdateInfo = true;
-				}
-			}
+    {
+        Events.subscribe(window.Events.player.paused, updateDeezerControlData);
+        Events.subscribe(window.Events.user.addFavorite, updateDeezerControlData);
+        Events.subscribe(window.Events.user.deleteFavorite, updateDeezerControlData);
 
-			if (bUpdateInfo)
-			{
-				updateDeezerControlData();
-			}
-		});
-		
-		player_track_title.each(function ()  { observerPlay.observe(this, { childList: true, characterData: true, subtree: true }); });
-		player_control_play.each(function () { observerPlay.observe(this, { childList: true, characterData: true, subtree: true }); });
-
-		// observe change in DOM, and attach observerPlay to all the "love" icons
-		var oberserLoveIcons = new MutationObserver(function(mutations) 
-		{
-			$(".svg-icon-love-outline").each(function(){ observerPlay.observe(this, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'style', 'data-action'] }); });
-		});
-		oberserLoveIcons.observe(document, { childList: true, subtree: true });
-		
 		updateDeezerControlData();
 	}
 	// failure to initialize
