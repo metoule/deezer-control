@@ -30,7 +30,10 @@ HotKeysListener.prototype.handleEvent = function (e)
 		else if (eventMatchHotKey(e, LOCSTO.nextHotKey))
 		{
 			chrome.runtime.sendMessage({ type: "controlPlayer", command: "next", source: "hotkey" });
-		}
+        }
+        else if (eventMatchHotKey(e, LOCSTO.addToFavoriteHotKey)) {
+            chrome.runtime.sendMessage({ type: "controlPlayer", command: "like", source: "hotkey" });
+        }
 		else if (eventMatchHotKey(e, LOCSTO.whatZatSongHotKey))
 		{
 			chrome.runtime.sendMessage({ type: "showNotif", source: "hotkey" });

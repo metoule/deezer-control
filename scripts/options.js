@@ -66,6 +66,7 @@ function preparePage_hotKeys()
 	restoreHotkey('prevHotKey');
 	restoreHotkey('playPauseHotKey');
 	restoreHotkey('nextHotKey');
+	restoreHotkey('addToFavoriteHotKey');
 	restoreHotkey('whatZatSongHotKey');
 	restoreHotkey('jumpToDeezerHotKey');
 
@@ -205,6 +206,7 @@ function saveHotKeys()
 	storeHotKey('prevHotKey');
 	storeHotKey('playPauseHotKey');
 	storeHotKey('nextHotKey');
+	storeHotKey('addToFavoriteHotKey');
 	storeHotKey('whatZatSongHotKey');
 	storeHotKey('jumpToDeezerHotKey');
 	LOCSTO.saveHotKeys();
