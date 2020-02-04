@@ -30,14 +30,14 @@ jobs:
     - name: Upload Chrome Extension Webstore artifact
       uses: actions/upload-artifact@v1
       with:
-        name: deezer_control_${{ github.event.release.name }}
+        name: deezer_control_${{ github.event.release.name }}.zip
         path: deezer_control_${{ github.event.release.name }}.zip
-    - name: Chrome Addon Action
-      uses: trmcnvn/chrome-addon@v2
-      with:
-        extension:  'cmkmelneeccijablfclenghkcbopdemg'
-        zip: deezer_control_${{ github.event.release.name }}.zip
-        client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
-        client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-        refresh-token: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+    #- name: Chrome Addon Action
+    #  uses: trmcnvn/chrome-addon@v2
+    #  with:
+    #    extension:  'cmkmelneeccijablfclenghkcbopdemg'
+    #    zip: deezer_control_${{ github.event.release.name }}.zip
+    #    client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
+    #    client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+    #    refresh-token: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
         
