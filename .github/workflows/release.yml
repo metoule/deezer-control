@@ -1,0 +1,43 @@
+name: CI
+
+on: 
+  release:
+    types: [published]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set version ${{ github.event.release.name }}!
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: 'manifest.json'
+      env:
+        version: ${{ github.event.release.name }}
+    - name: Create zip file
+      run: |
+        zip  -u deezer_control_${{ github.event.release.name }}.zip LICENSE.txt
+        zip  -u deezer_control_${{ github.event.release.name }}.zip manifest.json
+        zip  -u deezer_control_${{ github.event.release.name }}.zip *.html
+        zip -ur deezer_control_${{ github.event.release.name }}.zip css
+        zip -ur deezer_control_${{ github.event.release.name }}.zip imgs
+        zip -ur deezer_control_${{ github.event.release.name }}.zip _locales
+        zip -ur deezer_control_${{ github.event.release.name }}.zip scripts 
+        echo Zip created!
+    - name: Upload Chrome Extension Webstore artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: deezer_control_${{ github.event.release.name }}
+        path: deezer_control_${{ github.event.release.name }}.zip
+    - name: Chrome Addon Action
+      uses: trmcnvn/chrome-addon@v2
+      with:
+        extension:  'cmkmelneeccijablfclenghkcbopdemg'
+        zip: deezer_control_${{ github.event.release.name }}.zip
+        client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
+        client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        refresh-token: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        
