@@ -19,17 +19,18 @@ jobs:
         version: ${{ github.event.release.name }}
     - name: Create zip file
       run: |
-        zip -u deezer_${{ github.event.release.name }}.zip LICENSE.txt
-        zip -u deezer_${{ github.event.release.name }}.zip manifest.json
-        zip -u deezer_${{ github.event.release.name }}.zip *.html
-        zip -ur deezer_${{ github.event.release.name }}.zip css
-        zip -ur deezer_${{ github.event.release.name }}.zip imgs
-        zip -ur deezer_${{ github.event.release.name }}.zip _locales
-        zip -ur deezer_${{ github.event.release.name }}.zip scripts 
+        zip  -u deezer_control_${{ github.event.release.name }}.zip LICENSE.txt
+        zip  -u deezer_control_${{ github.event.release.name }}.zip manifest.json
+        zip  -u deezer_control_${{ github.event.release.name }}.zip *.html
+        zip -ur deezer_control_${{ github.event.release.name }}.zip css
+        zip -ur deezer_control_${{ github.event.release.name }}.zip imgs
+        zip -ur deezer_control_${{ github.event.release.name }}.zip _locales
+        zip -ur deezer_control_${{ github.event.release.name }}.zip scripts 
         echo Zip created!
     - name: Upload Chrome Extension Webstore artifact
       uses: actions/upload-artifact@v1
       with:
-        path: deezer_${{ github.event.release.name }}.zip
+        name: deezer_control_${{ github.event.release.name }}.zip
+        path: deezer_control_${{ github.event.release.name }}.zip
         
         
