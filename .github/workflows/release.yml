@@ -11,7 +11,7 @@ jobs:
     steps:
     #- uses: actions/checkout@v2
     - name: Run a one-line script
-      run: echo Hello, world ${{ github.event.name }} !
+      run: echo Hello, world ${{ github.event.release.name }} !
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,
