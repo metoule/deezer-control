@@ -1,6 +1,6 @@
 name: CI
 
-on [release]:
+on: [release]
 
 jobs:
   build:
