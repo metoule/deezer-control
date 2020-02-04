@@ -14,5 +14,8 @@ jobs:
       run: echo Hello, world ${{ github.event.release.name }} !
     - name: Run a multi-line script
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        echo ${{ github.event_name }},
+        echo ${{ github.event }},
+        echo ${{ github.event.action }},
+        echo ${{ github.event.release }},
+        echo ${{ github.event.release.name }},
