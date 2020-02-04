@@ -18,4 +18,4 @@ jobs:
         echo ${{ github.event }},
         echo ${{ github.event.action }},
         echo ${{ github.event.release }},
-        echo ${{ github.event.release.name }},
+        echo ${{ github.event.release.name }}
