@@ -1,6 +1,8 @@
 name: CI
 
-on: [release]
+on: 
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -10,11 +12,22 @@ jobs:
     steps:
     #- uses: actions/checkout@v2
     - name: Run a one-line script
-      run: echo Hello, world ${{ github.event.release.name }} !
-    - name: Run a multi-line script
+      run: echo Releasing version ${{ github.event.release.name }}!
+    - name: Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: 'manifest.json'
+      env:
+        version: ${{ github.event.release.name }}
+    - name: Create zip file
       run: |
-        echo ${{ github.event_name }},
-        echo ${{ github.event }},
-        echo ${{ github.event.action }},
-        echo ${{ github.event.release }},
-        echo ${{ github.event.release.name }}
+        zip -ur deezer_${{ github.event.release.name }}.zip css,
+        zip -ur deezer_${{ github.event.release.name }}.zip imgs,
+        zip -ur deezer_${{ github.event.release.name }}.zip _locales,
+        zip -ur deezer_${{ github.event.release.name }}.zip scripts
+    - name: Upload Chrome Extension Webstore artifact
+      uses: actions/upload-artifact@v1
+      with:
+        path: deezer_${{ github.event.release.name }}.zip
+        
+        
