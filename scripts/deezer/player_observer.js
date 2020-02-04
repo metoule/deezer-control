@@ -20,34 +20,50 @@ function updateDeezerControlData()
 	
 	try 
 	{
-		dzCurrentSong = dzPlayer.getCurrentSong() || { ALB_PICTURE: '', ART_ID: '', ALB_ID: '' };;
-	} catch(e) {}
+		dzCurrentSong = dzPlayer.getCurrentSong() || { ALB_PICTURE: '', ART_ID: '', ALB_ID: '' };
+	} catch (e) {
+		// NOP
+	}
 
 	try 
 	{
 		dzPrevSong = dzPlayer.getPrevSong() || { ALB_PICTURE: '' };
-	} catch(e) {}
+	} catch (e) {
+		// NOP
+	}
 
 	try 
 	{
 		dzNextSong = dzPlayer.getNextSong() || { ALB_PICTURE: '' };
-	} catch(e) {}
+	} catch (e) {
+		// NOP
+	}
 	
 	isPlaying = dzPlayer.isPlaying();
+
+	var metadata = {
+		artist: dzPlayer.getArtistName(), 
+		track: dzPlayer.getSongTitle(), 
+		album: dzPlayer.getAlbumTitle(), 
+		albumPic: GetCoverFromAlbumId(dzCurrentSong.ALB_PICTURE), 
+	};
 	
 	DeezerControlData.setAttribute('dz_is_active',   true);
 	DeezerControlData.setAttribute('dz_playing',	 isPlaying);
-	DeezerControlData.setAttribute('dz_artist',	     dzPlayer.getArtistName());
-	DeezerControlData.setAttribute('dz_track',	     dzPlayer.getSongTitle());
+	DeezerControlData.setAttribute('dz_artist',	     metadata.artist);
+	DeezerControlData.setAttribute('dz_track',	     metadata.track);
 	DeezerControlData.setAttribute('dz_is_liked',	 userData.isFavorite('song', dzCurrentSong.SNG_ID));
 	DeezerControlData.setAttribute('dz_artist_id',   dzCurrentSong.ART_ID);
 	DeezerControlData.setAttribute('dz_album_id',    dzCurrentSong.ALB_ID);
-	DeezerControlData.setAttribute('dz_cover',	     GetCoverFromAlbumId(dzCurrentSong.ALB_PICTURE));
+	DeezerControlData.setAttribute('dz_cover',	     metadata.albumPic);
 	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverFromAlbumId(dzPrevSong.ALB_PICTURE));
 	DeezerControlData.setAttribute('dz_next_cover',  GetCoverFromAlbumId(dzNextSong.ALB_PICTURE));
 	DeezerControlData.setAttribute('dz_is_prev_active', isPrevActive);
 	DeezerControlData.setAttribute('dz_is_next_active', isNextActive);
 	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 
+
+	// update media session artwork
+	updateMediaSession(metadata);
 }
 
 // process actions
@@ -128,6 +144,33 @@ function triggerRemoveDeezerData()
 	document.getElementById('removeMe').textContent = "now"; 
 }
 
+function registerMediaSession() {
+	if (!('mediaSession' in navigator)) {
+		return;
+	}
+
+	navigator.mediaSession.setActionHandler('play', deezerControlMethod_play);
+	navigator.mediaSession.setActionHandler('pause', deezerControlMethod_pause);
+	navigator.mediaSession.setActionHandler('previoustrack', deezerControlMethod_prev);
+	navigator.mediaSession.setActionHandler('nexttrack', deezerControlMethod_next);
+}
+
+function updateMediaSession(metadata) {
+	if (!('mediaSession' in navigator)) {
+		return;
+	}
+
+	navigator.mediaSession.metadata = new MediaMetadata({
+		title: metadata.track,
+		artist: metadata.artist,
+		album: metadata.album,
+		artwork: [{
+			sizes: "250x250", 
+			src: metadata.albumPic, 
+		}]
+	});
+}
+
 // update content on first load
 (function()
 {
@@ -140,6 +183,7 @@ function triggerRemoveDeezerData()
         Events.subscribe(window.Events.user.addFavorite, updateDeezerControlData);
         Events.subscribe(window.Events.user.deleteFavorite, updateDeezerControlData);
 
+		registerMediaSession();
 		updateDeezerControlData();
 	}
 	// failure to initialize
