@@ -25,7 +25,8 @@ jobs:
         zip -ur deezer_${{ github.event.release.name }}.zip css,
         zip -ur deezer_${{ github.event.release.name }}.zip imgs,
         zip -ur deezer_${{ github.event.release.name }}.zip _locales,
-        zip -ur deezer_${{ github.event.release.name }}.zip scripts
+        zip -ur deezer_${{ github.event.release.name }}.zip scripts, 
+        echo Zip created!
     - name: Upload Chrome Extension Webstore artifact
       uses: actions/upload-artifact@v1
       with:
