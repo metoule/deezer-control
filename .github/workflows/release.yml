@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set version ${{ github.event.release.name }}!
+    - name: Set version ${{ github.event.release.name }}
       uses: microsoft/variable-substitution@v1
       with:
         files: 'manifest.json'
