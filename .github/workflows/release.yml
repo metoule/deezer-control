@@ -28,10 +28,11 @@ jobs:
         zip -ur deezer_control_${{ github.event.release.name }}.zip scripts 
         echo Zip created!
     - name: Upload Chrome Extension Webstore artifact
-      uses: actions/upload-artifact@v1
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        name: deezer_control_${{ github.event.release.name }}.zip
-        path: deezer_control_${{ github.event.release.name }}.zip
+        files: deezer_control_${{ github.event.release.name }}.zip
+        
     #- name: Chrome Addon Action
     #  uses: trmcnvn/chrome-addon@v2
     #  with:
