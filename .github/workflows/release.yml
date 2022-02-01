@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: ${{ github.head_ref }}
+        ref: master
         fetch-depth: 0 
 
     - name: Set version ${{ github.event.release.name }}!
