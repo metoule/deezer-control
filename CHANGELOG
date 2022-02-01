@@ -1,3 +1,8 @@
+2.16 - 
+
+2.15 - 04/02/2020
+ * Added support of the new Chrome Global Media Controls pane
+
 2.14 - 28/10/2018
  * Use Deezer events instead of a DOM observer to monitor track changes
 
