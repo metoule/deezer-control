@@ -177,18 +177,16 @@ function updateMediaSession(metadata) {
     "use strict";
 
 	// ensure the player is on the page
-	if (dzPlayer !== null)
-    {
-        Events.subscribe(window.Events.player.paused, updateDeezerControlData);
-        Events.subscribe(window.Events.user.addFavorite, updateDeezerControlData);
-        Events.subscribe(window.Events.user.deleteFavorite, updateDeezerControlData);
-
-		registerMediaSession();
-		updateDeezerControlData();
-	}
-	// failure to initialize
-	else 
-	{
+	if (!dzPlayer) {
 		triggerRemoveDeezerData();
+		return;
 	}
+
+    Events.subscribe(Events.player.paused, updateDeezerControlData);
+    Events.subscribe(Events.user.addFavorite, updateDeezerControlData);
+    Events.subscribe(Events.user.deleteFavorite, updateDeezerControlData);
+
+	registerMediaSession();
+	updateDeezerControlData();
+
 })();
