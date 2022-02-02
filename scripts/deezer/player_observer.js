@@ -5,7 +5,7 @@ function GetCoverFromAlbumId(albumId)
 	if (albumId === undefined || albumId === null)
 		albumId = "";
 	
-	return "http://cdn-images.deezer.com/images/cover/" + albumId + "/250x250-000000-80-0-0.jpg";
+	return "https://e-cdn-images.dzcdn.net/images/cover/" + albumId + "/250x250-000000-80-0-0.jpg";
 }
 
 // get data from JS object dzPlayer
