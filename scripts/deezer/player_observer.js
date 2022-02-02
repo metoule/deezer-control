@@ -129,13 +129,13 @@ function deezerControlMethod_like()
 function deezerControlMethod_linkCurrentSong()
 {
 	"use strict";
-	loadBox('album/' + document.getElementById('DeezerControlData').getAttribute('dz_album_id'));
+	loadBox('/album/' + document.getElementById('DeezerControlData').getAttribute('dz_album_id'));
 }
 
 function deezerControlMethod_linkCurrentArtist()
 {
 	"use strict";
-	loadBox('artist/' + document.getElementById('DeezerControlData').getAttribute('dz_artist_id'));
+	loadBox('/artist/' + document.getElementById('DeezerControlData').getAttribute('dz_artist_id'));
 }
 
 //trigger the observer on removeMe
