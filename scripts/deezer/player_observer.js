@@ -1,11 +1,71 @@
 
-function GetCoverFromAlbumId(albumId)
+function GetCover(type, albumId)
 {
-	"use strict";
-	if (albumId === undefined || albumId === null)
-		albumId = "";
-	
-	return "https://e-cdn-images.dzcdn.net/images/cover/" + albumId + "/250x250-000000-80-0-0.jpg";
+	albumId = albumId || '';
+	return "https://e-cdns-images.dzcdn.net/images/" + type + '/' + albumId + "/250x250-000000-80-0-0.jpg";
+}
+
+function GetCoverFromAlbumId(streamId) {
+	return GetCover('cover', streamId);
+}
+
+function GetCoverFromStreamId(streamId) {
+	return GetCover('misc', streamId);
+}
+
+function GetCoverFromPodcastId(podcastId) {
+	return GetCover('talk', podcastId);
+}
+
+function getSongMetadata() {
+	dzCurrentSong = dzPlayer.getCurrentSong() || {};
+	dzPrevSong = dzPlayer.getPrevSong() || {};
+	dzNextSong = dzPlayer.getNextSong() || {};
+
+	return {
+		artist: dzCurrentSong.ART_NAME,
+		track: dzCurrentSong.SNG_TITLE,
+		albumPic: GetCoverFromAlbumId(dzCurrentSong.ALB_PICTURE),
+		isFavorite: userData.isFavorite('song', dzCurrentSong.SNG_ID),
+		artistLink: '/artist/' + dzCurrentSong.ART_ID,
+		albumLink: '/album/' + dzCurrentSong.ALB_ID,
+		prevCover: GetCoverFromAlbumId(dzPrevSong.ALB_PICTURE),
+		nextCover: GetCoverFromAlbumId(dzNextSong.ALB_PICTURE),
+	};
+}
+
+function getRadioMetadata() {
+	dzCurrentSong = dzPlayer.getCurrentSong() || {};
+	dzPrevSong = dzPlayer.getPrevSong() || {};
+	dzNextSong = dzPlayer.getNextSong() || {};
+
+	return {
+		artist: '',
+		track: dzCurrentSong.LIVESTREAM_TITLE,
+		albumPic: GetCoverFromStreamId(dzCurrentSong.LIVESTREAM_IMAGE_MD5),
+		isFavorite: userData.isFavorite('live_stream', dzCurrentSong.LIVE_ID),
+		artistLink: '',
+		albumLink: '/radio',
+		prevCover: GetCoverFromStreamId(dzPrevSong.LIVESTREAM_IMAGE_MD5),
+		nextCover: GetCoverFromAlbumId(dzNextSong.LIVESTREAM_IMAGE_MD5),
+	};
+}
+
+function getPodcastMetadata() {
+	dzCurrentSong = dzPlayer.getCurrentSong() || {};
+	dzPrevSong = dzPlayer.getPrevSong() || {};
+	dzNextSong = dzPlayer.getNextSong() || {};
+
+	return {
+		artist: dzCurrentSong.SHOW_NAME,
+		track: dzCurrentSong.EPISODE_TITLE,
+		albumPic: GetCoverFromPodcastId(dzCurrentSong.EPISODE_IMAGE_MD5 || dzCurrentSong.SHOW_ART_MD5),
+		isFavorite: userData.isFavorite('show', dzCurrentSong.SHOW_ID),
+		artistLink: '/show/' + dzCurrentSong.SHOW_ID,
+		albumLink: '/episode/' + dzCurrentSong.EPISODE_ID,
+		prevCover: GetCoverFromPodcastId(dzPrevSong.EPISODE_IMAGE_MD5 || dzPrevSong.SHOW_ART_MD5),
+		nextCover: GetCoverFromPodcastId(dzNextSong.EPISODE_IMAGE_MD5 || dzNextSong.SHOW_ART_MD5),
+	};
 }
 
 // get data from JS object dzPlayer
@@ -13,51 +73,35 @@ function updateDeezerControlData()
 {
 	"use strict";
 	var DeezerControlData = document.getElementById('DeezerControlData'),
-		dzCurrentSong, dzPrevSong, dzNextSong,
-		isPlaying = true,
+		isPlaying = dzPlayer.isPlaying(),
 		isPrevActive = dzPlayer.getPrevSong() !== null, 
 		isNextActive = dzPlayer.getNextSong() !== null;
-	
-	try 
-	{
-		dzCurrentSong = dzPlayer.getCurrentSong() || { ALB_PICTURE: '', ART_ID: '', ALB_ID: '' };
-	} catch (e) {
-		// NOP
+
+	var metadata = {};
+	switch (dzPlayer.getMediaType()) {
+		case 'song':
+			metadata = getSongMetadata();
+			break;
+
+		case 'live_stream':
+			metadata = getRadioMetadata();
+			break;
+
+		case 'episode':
+			metadata = getPodcastMetadata();
+			break;
 	}
 
-	try 
-	{
-		dzPrevSong = dzPlayer.getPrevSong() || { ALB_PICTURE: '' };
-	} catch (e) {
-		// NOP
-	}
-
-	try 
-	{
-		dzNextSong = dzPlayer.getNextSong() || { ALB_PICTURE: '' };
-	} catch (e) {
-		// NOP
-	}
-	
-	isPlaying = dzPlayer.isPlaying();
-
-	var metadata = {
-		artist: dzPlayer.getArtistName(), 
-		track: dzPlayer.getSongTitle(), 
-		album: dzPlayer.getAlbumTitle(), 
-		albumPic: GetCoverFromAlbumId(dzCurrentSong.ALB_PICTURE), 
-	};
-	
 	DeezerControlData.setAttribute('dz_is_active',   true);
 	DeezerControlData.setAttribute('dz_playing',	 isPlaying);
 	DeezerControlData.setAttribute('dz_artist',	     metadata.artist);
 	DeezerControlData.setAttribute('dz_track',	     metadata.track);
-	DeezerControlData.setAttribute('dz_is_liked',	 userData.isFavorite('song', dzCurrentSong.SNG_ID));
-	DeezerControlData.setAttribute('dz_artist_id',   dzCurrentSong.ART_ID);
-	DeezerControlData.setAttribute('dz_album_id',    dzCurrentSong.ALB_ID);
+	DeezerControlData.setAttribute('dz_is_liked',	 metadata.isFavorite);
+	DeezerControlData.setAttribute('dz_artist_link', metadata.artistLink);
+	DeezerControlData.setAttribute('dz_album_link',  metadata.albumLink);
 	DeezerControlData.setAttribute('dz_cover',	     metadata.albumPic);
-	DeezerControlData.setAttribute('dz_prev_cover',  GetCoverFromAlbumId(dzPrevSong.ALB_PICTURE));
-	DeezerControlData.setAttribute('dz_next_cover',  GetCoverFromAlbumId(dzNextSong.ALB_PICTURE));
+	DeezerControlData.setAttribute('dz_prev_cover',  metadata.prevCover);
+	DeezerControlData.setAttribute('dz_next_cover',  metadata.nextCover);
 	DeezerControlData.setAttribute('dz_is_prev_active', isPrevActive);
 	DeezerControlData.setAttribute('dz_is_next_active', isNextActive);
 	document.getElementById('lastUpdate').textContent = Math.floor(new Date().getTime()); 
@@ -129,19 +173,13 @@ function deezerControlMethod_like()
 function deezerControlMethod_linkCurrentSong()
 {
 	"use strict";
-	loadBox('/album/' + document.getElementById('DeezerControlData').getAttribute('dz_album_id'));
+	loadBox(document.getElementById('DeezerControlData').getAttribute('dz_album_link'));
 }
 
 function deezerControlMethod_linkCurrentArtist()
 {
 	"use strict";
-	loadBox('/artist/' + document.getElementById('DeezerControlData').getAttribute('dz_artist_id'));
-}
-
-//trigger the observer on removeMe
-function triggerRemoveDeezerData()
-{
-	document.getElementById('removeMe').textContent = "now"; 
+	loadBox(document.getElementById('DeezerControlData').getAttribute('dz_artist_link'));
 }
 
 function registerMediaSession() {
@@ -176,9 +214,10 @@ function updateMediaSession(metadata) {
 {
     "use strict";
 
-	// ensure the player is on the page
+	// ensure the player is on the page, 
+	// otherwise trigger the observer on removeMe
 	if (!dzPlayer) {
-		triggerRemoveDeezerData();
+		document.getElementById('removeMe').textContent = "now";
 		return;
 	}
 

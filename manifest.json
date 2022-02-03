@@ -41,7 +41,7 @@
     "tabs",
     "webNavigation"
   ],
-  "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdn-images.dzcdn.net/images/cover/ https://*.sndcdn.com/ https://*.radiofg.com/ https://*.last.fm/;",
+  "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdns-images.dzcdn.net/images/ https://*.sndcdn.com/ https://*.radiofg.com/ https://*.last.fm/;",
   "optional_permissions": [
     "<all_urls>"
   ],
