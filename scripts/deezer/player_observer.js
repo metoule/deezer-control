@@ -161,13 +161,7 @@ function deezerControlMethod_next()
 function deezerControlMethod_like()
 {
 	"use strict";
-	var songId = dzPlayer.getCurrentSong('SNG_ID'),
-		data = { type: 'song', id: songId };
-	
-	if (userData.isFavorite('song', songId))
-		favorite.remove(data);
-	else
-		favorite.add(data);
+	$('.track-actions button.svg-icon-group-btn.option-btn').click();
 }
 
 function deezerControlMethod_linkCurrentSong()
