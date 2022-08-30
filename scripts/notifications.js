@@ -76,7 +76,7 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 		var notifButton = JSON.parse(LOCSTO.session.notifData).buttons[buttonIndex];
 		if (notifButton.title === this.buttonPrev.title)
 		{
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'prev', source: "notif" });
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'previoustrack', source: "notif" });
 		}
 		else if (notifButton.title === this.buttonPlay.title)
 		{
@@ -88,7 +88,7 @@ var NEW_NOTIFS = NEW_NOTIFS || {
 		}
 		else if (notifButton.title === this.buttonNext.title)
 		{
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'next',  source: "notif" });
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: 'nexttrack',  source: "notif" });
 		}
 	}
 	

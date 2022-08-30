@@ -21,7 +21,7 @@ HotKeysListener.prototype.handleEvent = function (e)
 		
 		if (eventMatchHotKey(e, LOCSTO.prevHotKey))
 		{
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: "prev", source: "hotkey" });
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: "previoustrack", source: "hotkey" });
 		}
 		else if (eventMatchHotKey(e, LOCSTO.playPauseHotKey))
 		{
@@ -29,7 +29,7 @@ HotKeysListener.prototype.handleEvent = function (e)
 		} 
 		else if (eventMatchHotKey(e, LOCSTO.nextHotKey))
 		{
-			chrome.runtime.sendMessage({ type: "controlPlayer", command: "next", source: "hotkey" });
+			chrome.runtime.sendMessage({ type: "controlPlayer", command: "nexttrack", source: "hotkey" });
         }
         else if (eventMatchHotKey(e, LOCSTO.addToFavoriteHotKey)) {
             chrome.runtime.sendMessage({ type: "controlPlayer", command: "like", source: "hotkey" });

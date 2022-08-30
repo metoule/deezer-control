@@ -12,10 +12,10 @@ function preparePopup()
 	loadStyle();
 
 	// add interactivity
-	$("#control-prev").click(function ()  { executePlayerAction('prev');  return false; });
+	$("#control-prev").click(function ()  { executePlayerAction('previoustrack');  return false; });
 	$("#control-pause").click(function () { executePlayerAction('pause'); return false; });
 	$("#control-play").click(function ()  { executePlayerAction('play');  return false; });
-	$("#control-next").click(function ()  { executePlayerAction('next');  return false; });
+	$("#control-next").click(function ()  { executePlayerAction('nexttrack');  return false; });
 	$("#control-like").click(function ()  { executePlayerAction('like');  return false; });
 	$('#now_playing_info_track').click(function ()  { executeDoAction('linkCurrentSong');   return false; });
 	$('#now_playing_info_artist').click(function () { executeDoAction('linkCurrentArtist'); return false; });

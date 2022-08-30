@@ -76,19 +76,13 @@ function sendJsonPlayerInfo()
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) 
 {
 	"use strict";
-	
-	var aAction = request.action, 
-		aDzPlaying;
 
-	// in case of media keys, we don't know if it's pause or play
-	if (request.name === "controlPlayer" && aAction === "playpause")
-	{
-		aDzPlaying = document.getElementById('DeezerControlData').getAttribute('dz_playing');
-		aAction = aDzPlaying === "true" ? "pause" : "play";
-	}
-
-	// possible action: play, pause, prev, next, like, linkCurrentSong, linkCurrentArtist
-	location.href = "javascript: deezerControlMethod_" + aAction + "()";
+	// possible action: play, pause, previoustrack, nexttrack, like, linkCurrentSong, linkCurrentArtist
+	document.getElementById('DeezerControlData').dispatchEvent(new CustomEvent('deezerControl', {
+		detail: {
+			action: request.action,
+		}
+	}));
 	
 	// no callback is used, return false
 	return false;
