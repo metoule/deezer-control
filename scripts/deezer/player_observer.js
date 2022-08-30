@@ -122,7 +122,7 @@
 	}
 
 	// get data from JS object dzPlayer
-	function updateDeezerControlData() {
+	function updateDeezerControlData(event, data) {
 		"use strict";
 		var DeezerControlData = document.getElementById('DeezerControlData'),
 			isPlaying = dzPlayer.isPlaying(),
@@ -143,6 +143,11 @@
 				metadata = getPodcastMetadata();
 				break;
 		}
+
+		// the data parameter depends on the event type
+		if (event && event.namespace === 'PLAYER.pause') {
+			isPlaying = !data;
+        }
 
 		DeezerControlData.setAttribute('dz_is_active', true);
 		DeezerControlData.setAttribute('dz_playing', isPlaying);
