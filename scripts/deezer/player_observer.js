@@ -32,8 +32,9 @@
 		}
 
 		executeAction(action) {
-			if (!dzPlayer || !dzPlayer.control)
+			if (!dzPlayer || !dzPlayer.control) {
 				return;
+			}
 
 			// in case of media keys, we don't know if it's pause or play
 			if (action === 'playpause') {
@@ -167,15 +168,19 @@
 		updateMediaSession(metadata);
 	}
 
+	function executeMediaSessionAction(e) {
+		deezerControl.executeAction(e.action);
+    }
+
 	function registerMediaSession() {
 		if (!('mediaSession' in navigator)) {
 			return;
 		}
 
-		navigator.mediaSession.setActionHandler('play', deezerControl.executeAction);
-		navigator.mediaSession.setActionHandler('pause', deezerControl.executeAction);
-		navigator.mediaSession.setActionHandler('previoustrack', deezerControl.executeAction);
-		navigator.mediaSession.setActionHandler('nexttrack', deezerControl.executeAction);
+		navigator.mediaSession.setActionHandler('play', executeMediaSessionAction);
+		navigator.mediaSession.setActionHandler('pause', executeMediaSessionAction);
+		navigator.mediaSession.setActionHandler('previoustrack', executeMediaSessionAction);
+		navigator.mediaSession.setActionHandler('nexttrack', executeMediaSessionAction);
 	}
 
 	function updateMediaSession(metadata) {
