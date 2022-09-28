@@ -211,7 +211,8 @@
 		deezerControl.executeAction(evt.detail.action);
 	});
 
-    Events.subscribe(Events.player.paused, updateDeezerControlData);
+	Events.subscribe(Events.player.paused, updateDeezerControlData);
+	Events.subscribe(Events.player.trackChange, updateDeezerControlData);
     Events.subscribe(Events.user.addFavorite, updateDeezerControlData);
     Events.subscribe(Events.user.deleteFavorite, updateDeezerControlData);
 
