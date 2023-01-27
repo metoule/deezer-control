@@ -20,6 +20,7 @@
 		}
 
 		like() {
+		// TODO handle show and live_stream
 			$('.track-actions button.svg-icon-group-btn.option-btn').click();
 		}
 
@@ -71,6 +72,11 @@
 		return GetCover('talk', podcastId);
 	}
 
+	function isFavorite(type, id) {
+		// TODO handle show and live_stream
+		return $('.track-actions button.svg-icon-group-btn.option-btn > svg').data('testid') === 'HeartFillIcon';
+	}
+
 	function getSongMetadata() {
 		dzCurrentSong = dzPlayer.getCurrentSong() || {};
 		dzPrevSong = dzPlayer.getPrevSong() || {};
@@ -80,7 +86,7 @@
 			artist: dzCurrentSong.ART_NAME,
 			track: dzCurrentSong.SNG_TITLE,
 			albumPic: GetCoverFromAlbumId(dzCurrentSong.ALB_PICTURE),
-			isFavorite: userData.isFavorite('song', dzCurrentSong.SNG_ID),
+			isFavorite: isFavorite('song', dzCurrentSong.SNG_ID),
 			artistLink: '/artist/' + dzCurrentSong.ART_ID,
 			albumLink: '/album/' + dzCurrentSong.ALB_ID,
 			prevCover: GetCoverFromAlbumId(dzPrevSong.ALB_PICTURE),
@@ -97,7 +103,7 @@
 			artist: '',
 			track: dzCurrentSong.LIVESTREAM_TITLE,
 			albumPic: GetCoverFromStreamId(dzCurrentSong.LIVESTREAM_IMAGE_MD5),
-			isFavorite: userData.isFavorite('live_stream', dzCurrentSong.LIVE_ID),
+			isFavorite: isFavorite('live_stream', dzCurrentSong.LIVE_ID),
 			artistLink: '',
 			albumLink: '/radio',
 			prevCover: GetCoverFromStreamId(dzPrevSong.LIVESTREAM_IMAGE_MD5),
@@ -114,7 +120,7 @@
 			artist: dzCurrentSong.SHOW_NAME,
 			track: dzCurrentSong.EPISODE_TITLE,
 			albumPic: GetCoverFromPodcastId(dzCurrentSong.EPISODE_IMAGE_MD5 || dzCurrentSong.SHOW_ART_MD5),
-			isFavorite: userData.isFavorite('show', dzCurrentSong.SHOW_ID),
+			isFavorite: isFavorite('show', dzCurrentSong.SHOW_ID),
 			artistLink: '/show/' + dzCurrentSong.SHOW_ID,
 			albumLink: '/episode/' + dzCurrentSong.EPISODE_ID,
 			prevCover: GetCoverFromPodcastId(dzPrevSong.EPISODE_IMAGE_MD5 || dzPrevSong.SHOW_ART_MD5),
@@ -218,8 +224,8 @@
 
 	Events.subscribe(Events.player.paused, updateDeezerControlData);
 	Events.subscribe(Events.player.trackChange, updateDeezerControlData);
-    Events.subscribe(Events.user.addFavorite, updateDeezerControlData);
-    Events.subscribe(Events.user.deleteFavorite, updateDeezerControlData);
+	Events.subscribe(Events.user.addFavorite, updateDeezerControlData);
+	Events.subscribe(Events.user.deleteFavorite, updateDeezerControlData);
 
 	registerMediaSession();
 	updateDeezerControlData();
