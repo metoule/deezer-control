@@ -44,7 +44,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 // if no popup is set, it means that we should open a new tab with default player
-chrome.browserAction.onClicked.addListener(function () {
+chrome.action.onClicked.addListener(function () {
   'use strict';
 
   // extension has just been updated, a click will open the option page
@@ -55,7 +55,7 @@ chrome.browserAction.onClicked.addListener(function () {
     LOCSTO.newOptionsToShow = false;
     LOCSTO.saveNewOptionsToShow();
 
-    chrome.browserAction.setBadgeText({ text: '' });
+    chrome.action.setBadgeText({ text: '' });
     setUpPopup();
 
     propagatePlayingDataToAllTabs();
@@ -140,19 +140,19 @@ function setUpPopup() {
 
   // extension has just been updated, show new items
   if (LOCSTO.newOptionsToShow) {
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' });
-    chrome.browserAction.setBadgeText({ text: chrome.app.getDetails().version });
-    chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('showNewItemsTitle') });
-    chrome.browserAction.setPopup({ popup: '' }); // don't create a popup, we want to open the options page
+    chrome.action.setBadgeBackgroundColor({ color: '#FF0000' });
+    chrome.action.setBadgeText({ text: chrome.app.getDetails().version });
+    chrome.action.setTitle({ title: chrome.i18n.getMessage('showNewItemsTitle') });
+    chrome.action.setPopup({ popup: '' }); // don't create a popup, we want to open the options page
   }
   // else: normal use case
   else if (LOCSTO.session.playersTabs.length === 0) {
     LOCSTO.session.deezerData = null; // reset playing data
-    chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
-    chrome.browserAction.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
+    chrome.action.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
+    chrome.action.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
     NOTIFS.destroyNotif();
   } else {
-    chrome.browserAction.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
+    chrome.action.setPopup({ popup: '/popup.html' }); // at least one deezer tab is opened, create a popup
   }
 }
 
@@ -355,7 +355,7 @@ function propagatePlayingDataToAllTabs() {
     var newTitle = '';
     if (LOCSTO.session.deezerData !== null)
       newTitle = LOCSTO.session.deezerData.dz_track + ' - ' + LOCSTO.session.deezerData.dz_artist;
-    chrome.browserAction.setTitle({ title: newTitle });
+    chrome.action.setTitle({ title: newTitle });
   }
 
   // precache covers
