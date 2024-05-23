@@ -12,7 +12,8 @@
   },
   "action": {
     "default_icon": "imgs/icons/deezer_19x19.png",
-    "default_title": "__MSG_defaultTitle__"
+    "default_title": "__MSG_defaultTitle__",
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "scripts/service_worker.js",
