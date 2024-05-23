@@ -1,3 +1,5 @@
+import Version from './Version.js';
+
 function fillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues) {
   'use strict';
   var aMyNewObject = {},
@@ -21,44 +23,6 @@ function fillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues) {
 
   return aMyNewObject;
 }
-
-//------------------------------------------------------------------------------------------------------
-//
-//------------------------------------------------------------------------------------------------------
-var Version = function Version(strVersion) {
-  'use strict';
-  var regexS = '(\\d+)(\\.(\\d+))?(\\.(\\d+))?',
-    regex = new RegExp(regexS),
-    results = regex.exec(strVersion);
-
-  // if no match, default to version 0.0.0
-  if (results === null) {
-    results = regex.exec('0.0.0');
-  }
-
-  this.major = parseInt(results[1] || 0, 10);
-  this.minor = parseInt(results[3] || 0, 10);
-  this.rev = parseInt(results[5] || 0, 10);
-};
-
-Version.prototype.toString = function () {
-  'use strict';
-  return this.major + '.' + this.minor + '.' + this.rev;
-};
-
-// returns -1 if this < otherVersion, 0 if this == otherVersion, and +1 if otherVersion < this
-Version.prototype.compare = function (otherVersion) {
-  'use strict';
-  if (this.major !== otherVersion.major) {
-    return this.major - otherVersion.major;
-  }
-
-  if (this.minor !== otherVersion.minor) {
-    return this.minor - otherVersion.minor;
-  }
-
-  return this.rev - otherVersion.rev;
-};
 
 //------------------------------------------------------------------------------------------------------
 //

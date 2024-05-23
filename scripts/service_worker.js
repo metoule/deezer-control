@@ -1,2 +1,4 @@
+import Version from './Version.js';
 
-console.log('service worker loaded');
+const version = new Version("2.0.15");
+console.log('service worker loaded', version);
