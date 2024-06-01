@@ -38,7 +38,8 @@
     "*://*.deezer.com/*",
     "notifications",
     "tabs",
-    "webNavigation"
+    "webNavigation",
+	"storage"
   ],
   "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdns-images.dzcdn.net/images/;",
   "optional_permissions": [

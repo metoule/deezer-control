@@ -125,6 +125,15 @@ var LOCSTO = LOCSTO || {
 		var installedVersion = new Version(this.get('installedVersion')), 
 			extensionVersion = new Version(chrome.app.getDetails().version),
 			this_ = this; // for async function calls
+
+        // migrate from window.localStorage to chrome.storage.sync
+        chrome.storage.sync.get(null, function(items) {
+            if (items) {
+                return;
+            }
+
+            this_.storeToChromeStorage();
+        });
             
 		// model update finished, store newly installed version
 		this.set('installedVersion', extensionVersion.toString());
@@ -181,8 +190,31 @@ var LOCSTO = LOCSTO || {
 		{
 			LOCSTO.remove(iKey);
 			window.localStorage.setItem(iKey, JSON.stringify(iValue));
+            this.storeToChromeStorage();
 		} catch (ignore) {}
 	},
+
+    storeToChromeStorage() {
+        "use strict";
+        chrome.storage.sync.set({
+            installedVersion: this.get('installedVersion'),
+            options: {
+                popup: { style: this.popupStyle },
+                notifications: this.notifications,
+                misc: this.miscOptions,
+                hasNewOptions: this.newOptionsToShow,
+                hotkeys: {
+                    prev: this.prevHotKey,
+                    playPause: this.playPauseHotKey,
+                    next: this.nextHotKey,
+                    addToFavorite: this.addToFavoriteHotKey,
+                    whatZatSong: this.whatZatSongHotKey,
+                    jumpToDeezer: this.jumpToDeezerHotKey
+                },
+            },
+            session: this.session,
+        });
+    },
 	
 	get : function(iKey) 
 	{
