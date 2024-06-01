@@ -4,3 +4,4 @@ syntax:glob
 .project
 .settings
 .vs
+node_modules

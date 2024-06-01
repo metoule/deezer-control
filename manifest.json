@@ -15,37 +15,18 @@
     "default_title": "__MSG_defaultTitle__"
   },
   "background": {
-    "scripts": [
-      "scripts/localstorage.js",
-      "scripts/notifications.js",
-      "scripts/background.js"
-    ],
+    "scripts": ["scripts/localstorage.js", "scripts/notifications.js", "scripts/background.js"],
     "persistent": false
   },
   "options_page": "options.html",
   "content_scripts": [
     {
-      "matches": [
-        "*://*.deezer.com/*"
-      ],
-      "js": [
-        "scripts/player_listener.js",
-        "scripts/deezer/bootstrap.js"
-      ]
+      "matches": ["*://*.deezer.com/*"],
+      "js": ["scripts/player_listener.js", "scripts/deezer/bootstrap.js"]
     }
   ],
-  "permissions": [
-    "*://*.deezer.com/*",
-    "notifications",
-    "tabs",
-    "webNavigation",
-	"storage"
-  ],
+  "permissions": ["*://*.deezer.com/*", "notifications", "tabs", "webNavigation", "storage"],
   "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdns-images.dzcdn.net/images/;",
-  "optional_permissions": [
-    "<all_urls>"
-  ],
-  "web_accessible_resources": [
-    "scripts/deezer/player_observer.js"
-  ]
+  "optional_permissions": ["<all_urls>"],
+  "web_accessible_resources": ["scripts/deezer/player_observer.js"]
 }
