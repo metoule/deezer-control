@@ -125,49 +125,16 @@ var LOCSTO = LOCSTO || {
 		var installedVersion = new Version(this.get('installedVersion')), 
 			extensionVersion = new Version(chrome.app.getDetails().version),
 			this_ = this; // for async function calls
-		
-		// new in version 2.0
-		//  * keyCode for hotkeys are integers rather than strings
-		//  * renamed notifications keys
-		//  * removed notifs fade away delay and notifs style (irrelevant with the new notifs)
-		if (installedVersion.compare(new Version("2.0")) < 0)
-		{
-			this.prevHotKey.keyCode 		= parseInt(this.prevHotKey.keyCode, 10);
-			this.playPauseHotKey.keyCode 	= parseInt(this.playPauseHotKey.keyCode, 10);
-			this.nextHotKey.keyCode 		= parseInt(this.nextHotKey.keyCode, 10);
-			this.whatZatSongHotKey.keyCode 	= parseInt(this.whatZatSongHotKey.keyCode, 10);
-			this.jumpToDeezerHotKey.keyCode = parseInt(this.jumpToDeezerHotKey.keyCode, 10);
-			this.saveHotKeys();
-			
-			this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, alwaysOn: false, visible: false, onHotKeyOnly: false });
-			this.notifications.neverHides = this.notifications.alwaysOn;
-			this.notifications.onSongChange = this.notifications.visible;
-			delete this.notifications.alwaysOn;
-			delete this.notifications.visible;
-			this.saveNotifications();
-			
-			chrome.permissions.contains({ origins: [ "<all_urls>" ] }, function(granted) 
-			{
-				this_.miscOptions.hasHotkeysPermission = granted;
-				this_.saveMiscOptions();
-			});
-			
-			// new options to show in 2.0
-			this.newOptionsToShow = true;
-			this.saveNewOptionsToShow();
-		}
-		
-		// new in version 2.7
-		//  * removed notifications neverHides, which doesn't work anymore
-		if (installedVersion.compare(new Version("2.7")) < 0)
-		{
-			this.notifications = fillDictWithDefaults(this.get('notifications'), { never: true, neverHides: false, onSongChange: false, onHotKeyOnly: false });
-			if (this.notifications.neverHides)
-				this.notifications.onSongChange = true;
-			delete this.notifications.neverHides;
-			this.saveNotifications();
-		}
-		
+
+        // migrate from window.localStorage to chrome.storage.sync
+        chrome.storage.sync.get(null, function(items) {
+            if (items) {
+                return;
+            }
+
+            this_.storeToChromeStorage();
+        });
+            
 		// model update finished, store newly installed version
 		this.set('installedVersion', extensionVersion.toString());
 	},
@@ -223,8 +190,31 @@ var LOCSTO = LOCSTO || {
 		{
 			LOCSTO.remove(iKey);
 			window.localStorage.setItem(iKey, JSON.stringify(iValue));
+            this.storeToChromeStorage();
 		} catch (ignore) {}
 	},
+
+    storeToChromeStorage() {
+        "use strict";
+        chrome.storage.sync.set({
+            installedVersion: this.get('installedVersion'),
+            options: {
+                popup: { style: this.popupStyle },
+                notifications: this.notifications,
+                misc: this.miscOptions,
+                hasNewOptions: this.newOptionsToShow,
+                hotkeys: {
+                    prev: this.prevHotKey,
+                    playPause: this.playPauseHotKey,
+                    next: this.nextHotKey,
+                    addToFavorite: this.addToFavoriteHotKey,
+                    whatZatSong: this.whatZatSongHotKey,
+                    jumpToDeezer: this.jumpToDeezerHotKey
+                },
+            },
+            session: this.session,
+        });
+    },
 	
 	get : function(iKey) 
 	{
