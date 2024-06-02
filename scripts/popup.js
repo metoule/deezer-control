@@ -61,7 +61,7 @@ function preparePopup() {
 function loadStyle(iPopupStyle) {
   'use strict';
 
-  var aPopupStyle = iPopupStyle || LOCSTO.popupStyle,
+  var aPopupStyle = iPopupStyle || LOCSTO.popup.style,
     aPopupCss = $('#popup_style_css');
   if (aPopupStyle !== null && aPopupCss.length) {
     aPopupCss.attr('href', 'css/' + aPopupStyle + '/popup.css');
