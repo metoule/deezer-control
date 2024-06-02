@@ -24,190 +24,127 @@ function fillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues) {
   return aMyNewObject;
 }
 
+const defaultHotKeys = {
+  playPause: {
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    keyCode: 179,
+  },
+  prev: {
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    keyCode: 177,
+  },
+  next: {
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    keyCode: 176,
+  },
+  addToFavorite: {
+    ctrlKey: false,
+    altKey: true,
+    shiftKey: false,
+    keyCode: 76,
+  },
+  whatZatSong: {
+    ctrlKey: false,
+    altKey: true,
+    shiftKey: false,
+    keyCode: 87,
+  },
+  jumpToDeezer: {
+    ctrlKey: false,
+    altKey: true,
+    shiftKey: false,
+    keyCode: 74,
+  },
+};
+
+export const hotkeyNames = Object.keys(defaultHotKeys);
+
 //------------------------------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------------------------------
-var LOCSTO = LOCSTO || {
-  loadOptions: function () {
-    'use strict';
-    this.popupStyle = this.get('popup_style') || 'large';
+export class LocalStorage {
+  async loadOptions() {
+    const storage = await chrome.storage.sync.get('options');
+    const options = storage.options || {};
+
+    this.installedVersion = options.installedVersion || '0.0.0';
+    this.popup = fillDictWithDefaults(options.popup, { style: 'large' });
 
     // notifications
-    this.notifications = fillDictWithDefaults(this.get('notifications'), {
+    this.notifications = fillDictWithDefaults(options.notifications, {
       never: true,
       onSongChange: false,
       onHotKeyOnly: false,
     });
 
     // hot keys
-    this.prevHotKey = fillDictWithDefaults(this.get('prevHotKey'), {
-      ctrlKey: false,
-      altKey: false,
-      shiftKey: false,
-      keyCode: 177,
-    });
-    this.playPauseHotKey = fillDictWithDefaults(this.get('playPauseHotKey'), {
-      ctrlKey: false,
-      altKey: false,
-      shiftKey: false,
-      keyCode: 179,
-    });
-    this.nextHotKey = fillDictWithDefaults(this.get('nextHotKey'), {
-      ctrlKey: false,
-      altKey: false,
-      shiftKey: false,
-      keyCode: 176,
-    });
-    this.addToFavoriteHotKey = fillDictWithDefaults(this.get('addToFavoriteHotKey'), {
-      ctrlKey: false,
-      altKey: true,
-      shiftKey: false,
-      keyCode: 76,
-    });
-    this.whatZatSongHotKey = fillDictWithDefaults(this.get('whatZatSongHotKey'), {
-      ctrlKey: false,
-      altKey: true,
-      shiftKey: false,
-      keyCode: 87,
-    });
-    this.jumpToDeezerHotKey = fillDictWithDefaults(this.get('jumpToDeezerHotKey'), {
-      ctrlKey: false,
-      altKey: true,
-      shiftKey: false,
-      keyCode: 74,
+    this.hotkeys = options.hotkeys || {};
+    hotkeyNames.forEach((name) => {
+      this.hotkeys[name] = fillDictWithDefaults(options.hotkeys[name], defaultHotKeys[name]);
     });
 
     // misc options
-    this.miscOptions = fillDictWithDefaults(this.get('miscOptions'), {
+    this.miscOptions = fillDictWithDefaults(options.misc, {
       limitDeezerToOneTab: true,
       hasHotkeysPermission: false,
     });
 
     // new options to show the user
-    this.newOptionsToShow = this.get('newOptionsToShow') || false;
-  },
+    this.newOptionsToShow = options.hasNewOptions || false;
+  }
 
-  loadSession: function () {
+  async loadSession() {
+    const storage = await chrome.storage.sync.get('session');
+    const session = storage.session || {};
+
     // session data, needed for event page reload
     // playersTabs: tab id of all opened players, ordered by playing order
     // playersData: infos on all opened players
     // deezerData: currently playing info
-    this.session = fillDictWithDefaults(this.get('session'), {
+    this.session = fillDictWithDefaults(session, {
       playersTabs: [],
       playersData: {},
       deezerData: null,
       notifData: null,
       jumpBackToActiveTab: { windowId: 0, tabId: 0 },
     });
-  },
+  }
 
-  updateModel: function () {
-    'use strict';
-    var installedVersion = new Version(this.get('installedVersion')),
-      extensionVersion = new Version(chrome.app.getDetails().version),
-      this_ = this; // for async function calls
+  async updateModel() {
+    const storage = await chrome.storage.sync.get('installedVersion');
+    const installedVersion = new Version(storage.installedVersion);
+    const extensionVersion = new Version(chrome.app.getDetails().version);
 
-    // migrate from window.localStorage to chrome.storage.sync
-    chrome.storage.sync.get(null, function (items) {
-      if (items) {
-        return;
-      }
-
-      this_.storeToChromeStorage();
-    });
+    // NOOP
 
     // model update finished, store newly installed version
-    this.set('installedVersion', extensionVersion.toString());
-  },
+    this.installedVersion = extensionVersion.toString();
+    await chrome.storage.sync.set({
+      installedVersion: extensionVersion.toString(),
+    });
+  }
 
-  savePopupStyle: function () {
-    'use strict';
-    this.set('popup_style', this.popupStyle);
-  },
-
-  saveHotKeys: function () {
-    'use strict';
-    this.set('prevHotKey', this.prevHotKey);
-    this.set('playPauseHotKey', this.playPauseHotKey);
-    this.set('nextHotKey', this.nextHotKey);
-    this.set('whatZatSongHotKey', this.whatZatSongHotKey);
-    this.set('jumpToDeezerHotKey', this.jumpToDeezerHotKey);
-  },
-
-  saveNotifications: function () {
-    'use strict';
-    this.set('notifications', this.notifications);
-  },
-
-  saveMiscOptions: function () {
-    'use strict';
-    this.set('miscOptions', this.miscOptions);
-  },
-
-  saveNewOptionsToShow: function () {
-    'use strict';
-    this.set('newOptionsToShow', this.newOptionsToShow);
-  },
-
-  saveSession: function () {
-    'use strict';
-    this.set('session', this.session);
-  },
-
-  /*
-   * generic methods
-   */
-
-  set: function (iKey, iValue) {
-    'use strict';
-    try {
-      LOCSTO.remove(iKey);
-      window.localStorage.setItem(iKey, JSON.stringify(iValue));
-      this.storeToChromeStorage();
-    } catch (ignore) {}
-  },
-
-  storeToChromeStorage() {
-    'use strict';
-    chrome.storage.sync.set({
-      installedVersion: this.get('installedVersion'),
+  async saveOptions() {
+    await chrome.storage.sync.set({
       options: {
-        popup: { style: this.popupStyle },
+        popup: this.popup,
         notifications: this.notifications,
         misc: this.miscOptions,
         hasNewOptions: this.newOptionsToShow,
-        hotkeys: {
-          prev: this.prevHotKey,
-          playPause: this.playPauseHotKey,
-          next: this.nextHotKey,
-          addToFavorite: this.addToFavoriteHotKey,
-          whatZatSong: this.whatZatSongHotKey,
-          jumpToDeezer: this.jumpToDeezerHotKey,
-        },
+        hotkeys: this.hotkeys,
       },
+    });
+  }
+
+  async saveSession() {
+    await chrome.storage.sync.set({
       session: this.session,
     });
-  },
-
-  get: function (iKey) {
-    'use strict';
-    var aLocalValue = window.localStorage.getItem(iKey);
-    try {
-      return JSON.parse(aLocalValue);
-    } catch (e) {
-      return aLocalValue;
-    }
-  },
-
-  remove: function (iKey) {
-    'use strict';
-    return window.localStorage.removeItem(iKey);
-  },
-
-  clear: function () {
-    'use strict';
-    window.localStorage.clear();
-  },
-};
-LOCSTO.loadOptions();
-LOCSTO.loadSession();
+  }
+}
