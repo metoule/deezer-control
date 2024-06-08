@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "0.0.0.1",
+  "version": "0.0.0",
   "name": "__MSG_extName__",
   "short_name": "__MSG_extShortName__",
   "description": "__MSG_extDesc__",
@@ -12,8 +12,7 @@
   },
   "action": {
     "default_icon": "imgs/icons/deezer_19x19.png",
-    "default_title": "__MSG_defaultTitle__",
-    "default_popup": "popup.html"
+    "default_title": "__MSG_defaultTitle__"
   },
   "background": {
     "service_worker": "scripts/service_worker.js",
@@ -28,7 +27,8 @@
   ],
   "permissions": ["notifications", "storage", "tabs", "webNavigation"],
   "host_permissions": ["*://*.deezer.com/*"],
-  "optional_host_permissions": ["*://*/*"],
+  "optional_permissions": ["scripting"],
+  "optional_host_permissions": ["<all_urls>"],
   "content_security_policy": {
     "extension_pages": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdns-images.dzcdn.net/images/;"
   },

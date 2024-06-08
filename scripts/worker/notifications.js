@@ -95,3 +95,48 @@ if (chrome.notifications !== undefined) {
     }
   });
 }
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  (async () => {
+    switch (request.type) {
+      case 'showNotif':
+        await showNotif(true);
+        break;
+    }
+  })();
+
+  return true;
+});
+
+function showNotif(iForceRedisplay) {
+  'use strict';
+
+  // if no deezer data, close notif, otherwise show it
+  if (LOCSTO.session.deezerData === null) {
+    NOTIFS.destroyNotif();
+  }
+  // we have data to show
+  else {
+    // update or create notification
+    if (LOCSTO.notifications.never) {
+      NOTIFS.destroyNotif();
+      return;
+    }
+
+    // force a full redisplay of the notifs
+    var forceRedisplay =
+      LOCSTO.notifications.onSongChange ||
+      (LOCSTO.notifications.onHotKeyOnly && gActionOnHotKey) ||
+      gActionOnNotifButton ||
+      iForceRedisplay === true;
+
+    // if we don't have permission to display notifications, close notif if present
+    chrome.permissions.contains({ permissions: ['notifications'] }, function (granted) {
+      if (granted) {
+        NOTIFS.createNotif(forceRedisplay);
+      } else {
+        NOTIFS.destroyNotif();
+      }
+    });
+  }
+}
