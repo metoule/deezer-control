@@ -90,7 +90,7 @@ export class LocalStorage {
     });
 
     // misc options
-    this.miscOptions = fillDictWithDefaults(options.misc, {
+    this.misc = fillDictWithDefaults(options.misc, {
       limitDeezerToOneTab: true,
       hasHotkeysPermission: false,
     });
@@ -119,7 +119,7 @@ export class LocalStorage {
   async updateModel() {
     const storage = await chrome.storage.sync.get('installedVersion');
     const installedVersion = new Version(storage.installedVersion);
-    const extensionVersion = new Version(chrome.app.getDetails().version);
+    const extensionVersion = new Version(chrome.runtime.getManifest().version);
 
     // NOOP
 
@@ -135,7 +135,7 @@ export class LocalStorage {
       options: {
         popup: this.popup,
         notifications: this.notifications,
-        misc: this.miscOptions,
+        misc: this.misc,
         hasNewOptions: this.newOptionsToShow,
         hotkeys: this.hotkeys,
       },

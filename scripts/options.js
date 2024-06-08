@@ -106,12 +106,12 @@ $(() => {
     // restore value
     $('#miscLimitDeezerToOneTab > .yes_no_bar')
       .children('button:eq(0)')
-      .toggleClass('btn_unselected', !LOCSTO.miscOptions.limitDeezerToOneTab)
-      .toggleClass('btn_selected', LOCSTO.miscOptions.limitDeezerToOneTab);
+      .toggleClass('btn_unselected', !LOCSTO.misc.limitDeezerToOneTab)
+      .toggleClass('btn_selected', LOCSTO.misc.limitDeezerToOneTab);
     $('#miscLimitDeezerToOneTab > .yes_no_bar')
       .children('button:eq(1)')
-      .toggleClass('btn_unselected', LOCSTO.miscOptions.limitDeezerToOneTab)
-      .toggleClass('btn_selected', !LOCSTO.miscOptions.limitDeezerToOneTab);
+      .toggleClass('btn_unselected', LOCSTO.misc.limitDeezerToOneTab)
+      .toggleClass('btn_selected', !LOCSTO.misc.limitDeezerToOneTab);
   }
 
   function displayHotKeysOptions(granted) {
@@ -226,7 +226,7 @@ $(() => {
   }
 
   async function saveHotkeysPermission(granted) {
-    LOCSTO.miscOptions.hasHotkeysPermission = granted;
+    LOCSTO.misc.hasHotkeysPermission = granted;
     await LOCSTO.saveOptions();
   }
 
@@ -254,7 +254,7 @@ $(() => {
     'use strict';
 
     // limit deezer to one tab
-    LOCSTO.miscOptions.limitDeezerToOneTab = $('#miscLimitDeezerToOneTab > .yes_no_bar')
+    LOCSTO.misc.limitDeezerToOneTab = $('#miscLimitDeezerToOneTab > .yes_no_bar')
       .children('button:eq(0)')
       .hasClass('btn_selected');
 
