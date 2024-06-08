@@ -1,7 +1,9 @@
-window.addEventListener('load', function (/*e*/) {
-  'use strict';
-  jQueryExtension();
-  preparePopup();
+$(() => {
+  $.fn.extend({
+    visibilityToggle: function (showOrHide) {
+      return this.css('visibility', showOrHide === true ? 'visible' : 'hidden');
+    },
+  });
 });
 
 function preparePopup() {
@@ -9,43 +11,43 @@ function preparePopup() {
   loadStyle();
 
   // add interactivity
-  $('#control-prev').click(function () {
+  $('#control-prev').on('click', () => {
     executePlayerAction('previoustrack');
     return false;
   });
 
-  $('#control-pause').click(function () {
+  $('#control-pause').on('click', () => {
     executePlayerAction('pause');
     return false;
   });
 
-  $('#control-play').click(function () {
+  $('#control-play').on('click', () => {
     executePlayerAction('play');
     return false;
   });
 
-  $('#control-next').click(function () {
+  $('#control-next').on('click', () => {
     executePlayerAction('nexttrack');
     return false;
   });
 
-  $('#control-like').click(function () {
+  $('#control-like').on('click', () => {
     executePlayerAction('like');
     return false;
   });
 
-  $('#now_playing_info_track').click(function () {
+  $('#now_playing_info_track').on('click', () => {
     executeDoAction('linkCurrentSong');
     return false;
   });
 
-  $('#now_playing_info_artist').click(function () {
+  $('#now_playing_info_artist').on('click', () => {
     executeDoAction('linkCurrentArtist');
     return false;
   });
 
   // add tooltip in case of ellipsis (onmouseover to force recompute in the event of style change)
-  $('#now_playing_info > span').mouseover(function () {
+  $('#now_playing_info > span').mouseover(() => {
     var title = '';
     if (this.offsetWidth < this.scrollWidth) {
       title = $(this).text();
@@ -80,46 +82,52 @@ function executeDoAction(iAction) {
   chrome.runtime.sendMessage({ type: 'doAction', action: iAction });
 }
 
-function refreshPopup() {
-  'use strict';
+function updatePopup(playingData) {
+  if (!playingData) {
+    $('#now_playing_info').hide();
+    $('#control-pause').hide();
+    $('#control-like').removeClass('is_liked').addClass('not_liked');
+    $('#cover').attr('src', 'imgs/unknown_cd.png');
+    return;
+  }
 
-  // get now playing info from background page
-  chrome.runtime.sendMessage({ type: 'getDeezerData' }, function (aNowPlayingData) {
-    if (aNowPlayingData !== null) {
-      // is song liked?
-      var isLiked = aNowPlayingData.dz_is_liked === 'true';
-      $('#control-like').toggleClass('not_liked', !isLiked).toggleClass('is_liked', isLiked);
+  // precache covers
+  new Image().src = playingData.dz_prev_cover;
+  new Image().src = playingData.dz_cover;
+  new Image().src = playingData.dz_next_cover;
 
-      // show pause or play button
-      var showPause = aNowPlayingData.dz_playing === 'true';
-      $('#control-play').css('display', 'inline-block').toggle(!showPause);
-      $('#control-pause').css('display', 'inline-block').toggle(showPause);
+  // is song liked?
+  var isLiked = playingData.dz_is_liked === 'true';
+  $('#control-like').toggleClass('not_liked', !isLiked).toggleClass('is_liked', isLiked);
 
-      // set track title and artist
-      $('#now_playing_info').show();
-      $('#now_playing_info_track').text(aNowPlayingData.dz_track);
-      $('#now_playing_info_artist').text(aNowPlayingData.dz_artist);
+  // show pause or play button
+  var showPause = playingData.dz_playing === 'true';
+  $('#control-play').css('display', 'inline-block').toggle(!showPause);
+  $('#control-pause').css('display', 'inline-block').toggle(showPause);
 
-      // show or hide prev / next buttons if needed
-      $('#control-prev').visibilityToggle(aNowPlayingData.dz_is_prev_active === 'true');
-      $('#control-next').visibilityToggle(aNowPlayingData.dz_is_next_active === 'true');
+  // set track title and artist
+  $('#now_playing_info').show();
+  $('#now_playing_info_track').text(playingData.dz_track);
+  $('#now_playing_info_artist').text(playingData.dz_artist);
 
-      // get the cover
-      $('#cover').attr('src', aNowPlayingData.dz_cover);
-    } else {
-      $('#now_playing_info').hide();
-      $('#control-pause').hide();
-      $('#control-like').removeClass('is_liked').addClass('not_liked');
-      $('#cover').attr('src', 'imgs/unknown_cd.png');
-    }
-  });
+  // show or hide prev / next buttons if needed
+  $('#control-prev').visibilityToggle(playingData.dz_is_prev_active === 'true');
+  $('#control-next').visibilityToggle(playingData.dz_is_next_active === 'true');
+
+  // get the cover
+  $('#cover').attr('src', playingData.dz_cover);
 }
 
-function jQueryExtension() {
-  'use strict';
-  $.fn.extend({
-    visibilityToggle: function (showOrHide) {
-      return this.css('visibility', showOrHide === true ? 'visible' : 'hidden');
-    },
-  });
-}
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  switch (request.type) {
+    case 'updateSession':
+      updatePopup(request.nowPlayingData);
+      break;
+  }
+
+  return false;
+});
+
+// initial load
+const playingData = await chrome.runtime.sendMessage({ type: 'getDeezerData' });
+updatePopup(playingData);
