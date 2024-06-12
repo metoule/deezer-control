@@ -1,36 +1,27 @@
-function eventMatchHotKey(e, iHotKey) {
-  'use strict';
-  return (
-    e.shiftKey === iHotKey.shiftKey &&
-    e.altKey === iHotKey.altKey &&
-    e.ctrlKey === iHotKey.ctrlKey &&
-    e.keyCode === iHotKey.keyCode
-  );
-}
+var deezerControlHotKeys;
+if (!deezerControlHotKeys) {
+  function eventMatchHotKey(e, iHotKey) {
+    return (
+      e.shiftKey === iHotKey.shiftKey &&
+      e.altKey === iHotKey.altKey &&
+      e.ctrlKey === iHotKey.ctrlKey &&
+      e.keyCode === iHotKey.keyCode
+    );
+  }
 
-var HotKeysListener = function HotKeysListener() {
-  window.addEventListener('keydown', this, false);
-};
+  function handleEvent(e) {
+    Object.keys(deezerControlHotKeys).forEach((hotkey) => {
+      if (eventMatchHotKey(e, deezerControlHotKeys[hotkey])) {
+        chrome.runtime.sendMessage({ type: 'hotkey', action: hotkey });
+      }
+    });
+  }
 
-HotKeysListener.prototype.handleEvent = function (e) {
-  'use strict';
-  chrome.runtime.sendMessage({ type: 'getLOCSTO' }, function (LOCSTO) {
-    if (!LOCSTO.miscOptions.hasHotkeysPermission) return;
+  // TODO access storage here to get hotkeys chrome.storage.sync.get()
+  // TODO add chrome.storage.onChanged listener to update hotkeys
 
-    if (eventMatchHotKey(e, LOCSTO.prevHotKey)) {
-      chrome.runtime.sendMessage({ type: 'controlPlayer', command: 'previoustrack', source: 'hotkey' });
-    } else if (eventMatchHotKey(e, LOCSTO.playPauseHotKey)) {
-      chrome.runtime.sendMessage({ type: 'controlPlayer', command: 'playpause', source: 'hotkey' });
-    } else if (eventMatchHotKey(e, LOCSTO.nextHotKey)) {
-      chrome.runtime.sendMessage({ type: 'controlPlayer', command: 'nexttrack', source: 'hotkey' });
-    } else if (eventMatchHotKey(e, LOCSTO.addToFavoriteHotKey)) {
-      chrome.runtime.sendMessage({ type: 'controlPlayer', command: 'like', source: 'hotkey' });
-    } else if (eventMatchHotKey(e, LOCSTO.whatZatSongHotKey)) {
-      chrome.runtime.sendMessage({ type: 'showNotif', source: 'hotkey' });
-    } else if (eventMatchHotKey(e, LOCSTO.jumpToDeezerHotKey)) {
-      chrome.runtime.sendMessage({ type: 'jumpToDeezer', source: 'hotkey' });
-    }
+  chrome.runtime.sendMessage({ type: 'loadHotKeys' }).then((hotkeys) => {
+    deezerControlHotKeys = hotkeys;
+    window.addEventListener('keydown', handleEvent, false);
   });
-};
-
-var HOTKEYS = HOTKEYS || new HotKeysListener();
+}

@@ -1,7 +1,7 @@
 function loadObserver() {
   // inject a new JS script that can interact with the JS objects of the page
   var s = document.createElement('script');
-  s.src = chrome.extension.getURL('scripts/deezer/player_observer.js');
+  s.src = chrome.runtime.getURL('scripts/deezer/player_observer.js');
   (document.head || document.documentElement).appendChild(s);
   s.onload = function () {
     'use strict';
