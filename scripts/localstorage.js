@@ -5,7 +5,7 @@ function fillDictWithDefaults(iDictWithRealValues, iDictWithDefaultValues) {
   var aMyNewObject = {},
     key;
 
-  if (iDictWithRealValues === null) {
+  if (!iDictWithRealValues) {
     iDictWithRealValues = {};
   }
 
@@ -84,9 +84,10 @@ export class LocalStorage {
     });
 
     // hot keys
-    this.hotkeys = options.hotkeys || {};
+    const optionsHotKeys = options.hotkeys || {};
+    this.hotkeys = {};
     hotkeyNames.forEach((name) => {
-      this.hotkeys[name] = fillDictWithDefaults(options.hotkeys[name], defaultHotKeys[name]);
+      this.hotkeys[name] = fillDictWithDefaults(optionsHotKeys[name], defaultHotKeys[name]);
     });
 
     // misc options

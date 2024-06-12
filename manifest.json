@@ -25,9 +25,8 @@
       "js": ["scripts/player_listener.js", "scripts/deezer/bootstrap.js"]
     }
   ],
-  "permissions": ["notifications", "storage", "tabs", "webNavigation"],
+  "permissions": ["notifications", "scripting", "storage", "tabs", "webNavigation"],
   "host_permissions": ["*://*.deezer.com/*"],
-  "optional_permissions": ["scripting"],
   "optional_host_permissions": ["<all_urls>"],
   "content_security_policy": {
     "extension_pages": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdns-images.dzcdn.net/images/;"
