@@ -26,7 +26,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       case 'remove_me':
         await removePlayerTabId(sender.tab.id);
         break;
+    }
+  })();
 
+  return false;
+});
+
+// using sendResponse requires return true
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  (async () => {
+    switch (request.type) {
       case 'getDeezerData':
         const LOCSTO = new LocalStorage();
         await LOCSTO.loadSession();

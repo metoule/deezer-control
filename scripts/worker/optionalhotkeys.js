@@ -22,12 +22,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         processHotKey(request.action);
         break;
 
-      case 'loadHotKeys':
-        sendResponse(await loadHotKeys());
-        break;
-
       case 'injectHotKeysJsOnAllTabs':
         injectHotKeysJsOnAllTabs();
+        break;
+    }
+  })();
+
+  return false;
+});
+
+// using sendResponse requires return true
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  (async () => {
+    switch (request.type) {
+      case 'loadHotKeys':
+        sendResponse(await loadHotKeys());
         break;
     }
   })();
