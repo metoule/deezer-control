@@ -101,7 +101,7 @@ export class LocalStorage {
   }
 
   async loadSession() {
-    const storage = await chrome.storage.sync.get('session');
+    const storage = await chrome.storage.session.get('session');
     const session = storage.session || {};
 
     // session data, needed for event page reload
@@ -113,7 +113,16 @@ export class LocalStorage {
       playersData: {},
       deezerData: null,
       notifData: null,
-      jumpBackToActiveTab: { windowId: 0, tabId: 0 },
+    });
+  }
+
+  async loadPreviousActiveTab() {
+    const storage = await chrome.storage.session.get('previousActiveTab');
+    const previousActiveTab = storage.previousActiveTab || {};
+
+    this.previousActiveTab = fillDictWithDefaults(previousActiveTab, {
+      windowId: 0,
+      tabId: 0,
     });
   }
 
@@ -144,8 +153,14 @@ export class LocalStorage {
   }
 
   async saveSession() {
-    await chrome.storage.sync.set({
+    await chrome.storage.session.set({
       session: this.session,
+    });
+  }
+
+  async savePreviousActiveTab() {
+    await chrome.storage.session.set({
+      previousActiveTab: this.previousActiveTab,
     });
   }
 }

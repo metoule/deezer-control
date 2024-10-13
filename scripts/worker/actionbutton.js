@@ -1,19 +1,8 @@
 import { LocalStorage } from '../localstorage.js';
 
 // if no popup is set, it means that we should open a new tab with default player
-chrome.action.onClicked.addListener(async () => {
-  const LOCSTO = new LocalStorage();
-  await LOCSTO.loadSession();
-
-  if (LOCSTO.session.playersTabs.length === 0) {
-    chrome.action.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
-    chrome.action.setPopup({ popup: '' }); // no deezer tab is opened, so don't create a popup
-    chrome.tabs.create({ url: 'https://www.deezer.com' });
-    return;
-  }
-
-  // at least one deezer tab is opened, create a popup
-  chrome.action.setPopup({ popup: '/popup.html' });
+chrome.action.onClicked.addListener(() => {
+  chrome.tabs.create({ url: 'https://www.deezer.com' });
 });
 
 // if no popup is set, it means that we should open a new tab with default player
@@ -64,8 +53,16 @@ chrome.action.onClicked.addListener(async () => {
 // }
 
 function updateActionTitle(nowPlayingData) {
-  const newTitle = nowPlayingData ? nowPlayingData.dz_track + ' - ' + nowPlayingData.dz_artist : '';
+  const track = nowPlayingData?.dz_track;
+  const artist = nowPlayingData?.dz_artist;
+  const newTitle = track && artist ? track + ' - ' + artist : undefined;
   chrome.action.setTitle({ title: newTitle });
+  chrome.action.setPopup({ popup: '/popup.html' });
+}
+
+function setupOpenDeezerAction() {
+  chrome.action.setTitle({ title: chrome.i18n.getMessage('defaultTitle') });
+  chrome.action.setPopup({ popup: '' });
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -76,4 +73,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   return false;
+});
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== 'session') {
+    return;
+  }
+
+  if (changes.session && changes.session.newValue.playersTabs.length === 0) {
+    setupOpenDeezerAction();
+  }
 });

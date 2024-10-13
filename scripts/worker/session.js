@@ -1,21 +1,5 @@
 import { LocalStorage } from '../localstorage.js';
 
-// save active tab any time it changes to be able to go back to it
-chrome.tabs.onActivated.addListener(async (tabInfo) => {
-  const LOCSTO = new LocalStorage();
-  await LOCSTO.loadSession();
-
-  const windowId = tabInfo.windowId;
-  const tabId = tabInfo.tabId;
-
-  // ignore active tab if current active player: we don't want to go back to it!
-  if (LOCSTO.session.playersTabs.indexOf(tabId) !== 0) {
-    LOCSTO.session.jumpBackToActiveTab.windowId = windowId;
-    LOCSTO.session.jumpBackToActiveTab.tabId = tabId;
-    await LOCSTO.saveSession();
-  }
-});
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   (async () => {
     switch (request.type) {
@@ -47,14 +31,38 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
+// save active tab any time it changes to be able to go back to it
+chrome.tabs.onActivated.addListener(async (tabInfo) => {
+  const LOCSTO = new LocalStorage();
+  await LOCSTO.loadSession();
+  await LOCSTO.loadPreviousActiveTab();
+
+  const windowId = tabInfo.windowId;
+  const tabId = tabInfo.tabId;
+
+  // ignore active tab if current active player: we don't want to go back to it!
+  if (LOCSTO.session.playersTabs.indexOf(tabId) !== 0) {
+    LOCSTO.previousActiveTab.windowId = windowId;
+    LOCSTO.previousActiveTab.tabId = tabId;
+    await LOCSTO.savePreviousActiveTab();
+  }
+});
+
 async function updateSession(playerTab, nowPlayingData) {
   const LOCSTO = new LocalStorage();
   await LOCSTO.loadSession();
+  await LOCSTO.loadOptions();
 
   console.log('updateSession', nowPlayingData);
 
   // player has just been loaded
   const playerTabId = playerTab.id;
+
+  // player is inactive, remove it
+  if (nowPlayingData.dz_is_active !== 'true') {
+    removePlayerTabId(playerTabId);
+    return;
+  }
 
   // check limit one page per player
   if (LOCSTO.session.playersTabs.indexOf(playerTabId) === -1) {
@@ -72,12 +80,6 @@ async function updateSession(playerTab, nowPlayingData) {
     }
 
     LOCSTO.session.playersTabs.push(playerTabId);
-  }
-
-  // player is inactive, remove it
-  if (nowPlayingData.dz_is_active !== 'true') {
-    removePlayerTabId(playerTabId);
-    return;
   }
 
   // update player info
@@ -134,6 +136,8 @@ async function removePlayerTabId(tabId) {
   if (LOCSTO.session.playersData.hasOwnProperty(tabId)) {
     delete LOCSTO.session.playersData[tabId];
   }
+
+  await LOCSTO.saveSession();
 }
 
 async function jumpToTab(tabId) {
@@ -145,27 +149,3 @@ async function jumpToTab(tabId) {
   chrome.windows.update(tab.windowId, { focused: true });
   chrome.tabs.update(tab.id, { selected: true });
 }
-
-async function cleanUpSession() {
-  const LOCSTO = new LocalStorage();
-  await LOCSTO.loadSession();
-
-  // clean up current players queue
-  let len = LOCSTO.session.playersTabs.length;
-  while (len--) {
-    // check if tab is still opened
-    const tabId = LOCSTO.session.playersTabs[len];
-    try {
-      await chrome.tabs.get(tabId);
-    } catch (e) {
-      LOCSTO.session.playersTabs.splice(len, 1);
-      if (LOCSTO.session.playersData.hasOwnProperty(tabId)) {
-        delete LOCSTO.session.playersData[tabId];
-      }
-    }
-  }
-
-  await LOCSTO.saveSession();
-}
-
-cleanUpSession();
