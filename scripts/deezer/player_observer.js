@@ -53,7 +53,7 @@
 
   function GetCover(type, albumId) {
     albumId = albumId || '';
-    return 'https://e-cdns-images.dzcdn.net/images/' + type + '/' + albumId + '/250x250-000000-80-0-0.jpg';
+    return 'https://e-cdns-images.dzcdn.net/images/' + type + '/' + albumId + '/500x500.jpg';
   }
 
   function GetCoverFromAlbumId(streamId) {
@@ -218,6 +218,7 @@
     deezerControl.executeAction(evt.detail.action);
   });
 
+  // Events is defined in the global scope by Deezer itself
   Events.subscribe(Events.player.paused, updateDeezerControlData);
   Events.subscribe(Events.player.trackChange, updateDeezerControlData);
   Events.subscribe(Events.user.addFavorite, updateDeezerControlData);

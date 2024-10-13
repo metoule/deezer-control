@@ -57,7 +57,7 @@ function getDeezerData() {
 // send player's data to the background page
 function sendJsonPlayerInfo() {
   'use strict';
-  chrome.runtime.sendMessage({ type: 'now_playing_updated', nowPlayingData: getDeezerData() });
+  chrome.runtime.sendMessage({ type: 'updateSession', nowPlayingData: getDeezerData() });
 }
 
 // perform actions on the deezer page

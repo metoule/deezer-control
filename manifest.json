@@ -1,6 +1,6 @@
 {
-  "manifest_version": 2,
-  "version": "0.0.0.1",
+  "manifest_version": 3,
+  "version": "0.0.0",
   "name": "__MSG_extName__",
   "short_name": "__MSG_extShortName__",
   "description": "__MSG_extDesc__",
@@ -10,13 +10,13 @@
     "48": "imgs/icons/deezer_48x48.png",
     "128": "imgs/icons/deezer_128x128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "imgs/icons/deezer_19x19.png",
     "default_title": "__MSG_defaultTitle__"
   },
   "background": {
-    "scripts": ["scripts/localstorage.js", "scripts/notifications.js", "scripts/background.js"],
-    "persistent": false
+    "service_worker": "scripts/service_worker.js",
+    "type": "module"
   },
   "options_page": "options.html",
   "content_scripts": [
@@ -25,8 +25,16 @@
       "js": ["scripts/player_listener.js", "scripts/deezer/bootstrap.js"]
     }
   ],
-  "permissions": ["*://*.deezer.com/*", "notifications", "tabs", "webNavigation", "storage"],
-  "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdns-images.dzcdn.net/images/;",
-  "optional_permissions": ["<all_urls>"],
-  "web_accessible_resources": ["scripts/deezer/player_observer.js"]
+  "permissions": ["notifications", "scripting", "storage", "tabs", "webNavigation"],
+  "host_permissions": ["*://*.deezer.com/*"],
+  "optional_host_permissions": ["<all_urls>"],
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://e-cdns-images.dzcdn.net/images/;"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["scripts/deezer/player_observer.js"],
+      "matches": ["*://*.deezer.com/*"]
+    }
+  ]
 }
